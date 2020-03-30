@@ -1,38 +1,26 @@
 #brand-story.pane
   .row
-    .small-12.medium-12.large-8.text-center
+    .small-12.medium-8.medium-offset-2.columns.text-center
       %h2
-        = t :community_headline
-      .row
-        .small-12.medium-4.columns.text-left
-          .home-icon-box
-            %a.search{href: "/shops"}
-          .home-icon-box-bottom
-            %h4
-              = t :community_step1
-            %p.text-normal
-              = t :community_step1_text
-        .small-12.medium-4.columns.text-left
-          .home-icon-box
-            %a.shop{href: "/shops"}
-          .home-icon-box-bottom
-            %h4
-              = t :community_step2
-            %p.text-normal
-              = t :community_step2_text
-        .small-12.medium-4.columns.text-left
-          .home-icon-box
-            %a.pick-up-delivery{href: "/shops"}
-          .home-icon-box-bottom
-            %h4
-              = t :community_step3
-            %p.text-normal
-              = t :community_step3_text
-.small-12.medium-4.columns.text-left
-          .home-icon-box
-            %a.pick-up-delivery{href: "/shops"}
-          .home-icon-box-bottom
-            %h4
-              = t :community_step4
-            %p.text-normal
-              = t :community_step4_text
+        = t :brandstory_headline
+      %p
+        = t :brandstory_intro
+
+      #brand-story-text.hide-show.slideable
+        %p
+          = t :brandstory_part1
+        %p
+          = t :brandstory_part2
+        %p
+          = t :brandstory_part3
+        %p
+          = t :brandstory_part4
+        %p
+          %strong
+            = t :brandstory_part5_strong
+        %p
+          = t :brandstory_part6
+
+      %a.text-vbig{"slide-toggle" => "#brand-story-text", "ng-click" => "toggleBrandStory()"}
+        %i.ofn-i_005-caret-down{"ng-hide" => "brandStoryExpanded"}
+        %i.ofn-i_006-caret-up{  "ng-show" => "brandStoryExpanded"}
