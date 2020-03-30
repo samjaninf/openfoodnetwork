@@ -2,19 +2,15 @@
   .footer-global
     .row
       .small-12.columns.text-center
-        .logo
-          %img{src: "/assets/logo-white-notext.png"}
-    .row
-      .small-12.medium-8.medium-offset-2.columns.text-center
         .alert-box
           = render 'shared/register_call'
 
   .footer-local
     .row
-      .small-12.medium-2.medium-offset-2.columns.text-center
+      .small-12.medium-3.columns.text-center
         %p.secure-icon
           %i.ofn-i_017-locked
-      .small-12.medium-6.columns.text-center
+      .small-12.medium-9.columns.text-left
         %p.text-big.secure-text
           = t '.footer_secure'
         %p.secure-text
@@ -22,12 +18,26 @@
       .small-12.medium-2.columns
 
     .row
-      .small-12.medium-8.medium-offset-2.columns.text-center
+      .small-12.columns.text-center
         %hr.hr-light
         %br
 
+.row
+      .small-12.medium-3.columns.text-left
+        %a{href: main_app.root_path}
+          %img{src: ContentConfig.footer_logo.url, width: "220"}
+        %p.text-small
+          = t '.footer_legal_call'
+          %a{href: Spree::Config.footer_tos_url, target: "_blank"}
+            = t '.footer_legal_tos'
+          &#124;
+          = t '.footer_legal_visit'
+          %a{href:"https://github.com/openfoodfoundation/openfoodnetwork", target: "_blank"} GitHub
+        %p.text-small
+          = t '.footer_legal_text_html', {content_license: link_to('CC BY-SA 3.0', 'https://creativecommons.org/licenses/by-sa/3.0/'), code_license: link_to('AGPL 3', 'https://tldrlegal.com/license/gnu-affero-general-public-license-v3-(agpl-3.0)' )}
+       
     .row
-      .small-6.medium-3.medium-offset-2.columns.text-left
+      .small-12.medium-3.columns.text-left
         // This is the instance-managed set of links:
         %h4
           = t '.footer_contact_headline'
@@ -57,7 +67,7 @@
         = render_markdown(ContentConfig.footer_links_md).html_safe
 
 
-      .small-6.medium-3.columns.text-left
+      .small-12.medium-3.columns.text-left
         %h4
           = t '.footer_nav_headline'
         %p
@@ -76,7 +86,7 @@
           %a{href: ContentConfig.footer_about_url}
             = t :label_about
 
-      .small-12.medium-2.columns.text-left
+      ..small-6.medium-3.columns.text-left
         %h4
           = t '.footer_join_headline'
         %p
@@ -88,25 +98,12 @@
         / Placeholder
 
     .row
-      .small-12.medium-8.medium-offset-2.columns.text-center
+      .small-12.columns.text-center
         %hr.hr-light
         %br
-
     .row
-      .small-12.medium-3.medium-offset-2.columns.text-left
-        %a{href: main_app.root_path}
-          %img{src: ContentConfig.footer_logo.url, width: "220"}
-      .small-12.medium-5.columns.text-left
-        %p.text-small
-          = t '.footer_legal_call'
-          %a{href: Spree::Config.footer_tos_url, target: "_blank"}
-            = t '.footer_legal_tos'
-          &#124;
-          = t '.footer_legal_visit'
-          %a{href:"https://github.com/openfoodfoundation/openfoodnetwork", target: "_blank"} GitHub
-        %p.text-small
-          = t '.footer_legal_text_html', {content_license: link_to('CC BY-SA 3.0', 'https://creativecommons.org/licenses/by-sa/3.0/'), code_license: link_to('AGPL 3', 'https://tldrlegal.com/license/gnu-affero-general-public-license-v3-(agpl-3.0)' )}
-        %p.text-small
+      .small-12.columns.text-center
+     %p.text-small
           %div
             - if Spree::Config.privacy_policy_url.present?
               = t '.footer_data_text_with_privacy_policy_html', {cookies_policy: cookies_policy_link.html_safe, privacy_policy: privacy_policy_link.html_safe }
