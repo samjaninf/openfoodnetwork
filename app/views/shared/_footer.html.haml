@@ -101,7 +101,7 @@
         %br
     .row
       .small-12.columns.text-center
-     %p.text-small
+        %p.text-small
           %div
             - if Spree::Config.privacy_policy_url.present?
               = t '.footer_data_text_with_privacy_policy_html', {cookies_policy: cookies_policy_link.html_safe, privacy_policy: privacy_policy_link.html_safe }
