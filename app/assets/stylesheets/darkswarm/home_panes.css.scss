@@ -135,6 +135,18 @@ background-color: white;
       &.pick-up-delivery {
         background-image: url("/assets/icon-mask-truck.png");
       }
+      &.community-1 {
+        background-image: url("/assets/icons/049-plant.svg");
+      }
+      &.community-2 {
+        background-image: url("/assets/icons/045-wheat.svg");
+      }
+      &.community-3 {
+        background-image: url("/assets/icons/050-barn.svg");
+      }
+      &.community-4 {
+        background-image: url("/assets/icons/049-bread.svg");
+      }
     }
   }
 
