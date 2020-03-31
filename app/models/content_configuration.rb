@@ -7,9 +7,9 @@ class ContentConfiguration < Spree::Preferences::FileConfiguration
   preference :logo, :file
   preference :logo_mobile, :file
   preference :logo_mobile_svg, :file
-  has_attached_file :logo, default_url: "/assets/ofn-logo.png"
+  has_attached_file :logo, default_url: "/assets/hto-logo-black.png"
   has_attached_file :logo_mobile
-  has_attached_file :logo_mobile_svg, default_url: "/assets/ofn-logo-mobile.svg"
+  has_attached_file :logo_mobile_svg, default_url: "/assets/hto-mobile.svg"
 
   # Home page
   preference :home_page_alert_html, :text
@@ -52,7 +52,7 @@ class ContentConfiguration < Spree::Preferences::FileConfiguration
 
   # Footer
   preference :footer_logo, :file
-  has_attached_file :footer_logo, default_url: "/assets/ofn-logo-footer.png"
+  has_attached_file :footer_logo, default_url: "/assets/hto-logo-black.png"
 
   # Other
   preference :footer_facebook_url, :string, default: "https://www.facebook.com/OpenFoodNet"
