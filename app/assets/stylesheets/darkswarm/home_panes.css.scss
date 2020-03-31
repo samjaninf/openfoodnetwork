@@ -122,15 +122,19 @@ background-color: white;
       background-size: auto 100%;
 
       &.search {
-        background-image: url("/assets/icon-mask-magnifier.png");
+        background-image: url("/assets/icons/farm.svg");
       }
 
       &.shop {
-        background-image: url("/assets/icon-mask-apple.png");
+        background-image: url("/assets/icons/farm-products.svg");
+      }
+
+      &.pay {
+        background-image: url("/assets/icons/laptop.svg");
       }
 
       &.pick-up-delivery {
-        background-image: url("/assets/icon-mask-truck.png");
+        background-image: url("/assets/icons/map.svg");
       }
       &.community-1 {
         background-image: url("/assets/icons/049-plant.svg");
