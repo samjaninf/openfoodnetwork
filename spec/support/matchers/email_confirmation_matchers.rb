@@ -3,7 +3,7 @@ RSpec::Matchers.define :send_confirmation_instructions do
     expect(&event_proc).to change { ActionMailer::Base.deliveries.count }.by 1
 
     message = ActionMailer::Base.deliveries.last
-    expect(message.subject).to eq "Please confirm your OFN account"
+    expect(message.subject).to eq "Please confirm your Harvest To Order account"
   end
 
   def supports_block_expectations?
