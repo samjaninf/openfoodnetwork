@@ -121,7 +121,7 @@ en_US:
       userguide: "Harvest To Order User Guide"
       email_admin_html: "You can manage your account by logging into the %{link} or by clicking on the cog in the top right hand side of the homepage, and selecting Administration."
       admin_panel: "Admin Panel"
-      email_community_html: "We also have an online forum for community discussion related to OFN software and the unique challenges of running a food enterprise. You are encouraged to join in. We are constantly evolving and your input into this forum will shape what happens next. %{link}"
+      email_community_html: "We also have an online forum for community discussion related to Harvest To Order software and the unique challenges of running a food enterprise. You are encouraged to join in. We are constantly evolving and your input into this forum will shape what happens next. %{link}"
       join_community: "Join the community"
     invite_manager:
       subject: "%{enterprise} has invited you to be a manager"
@@ -362,7 +362,7 @@ en_US:
         matomo_url: "Matomo URL"
         matomo_site_id: "Matomo Site ID"
         info_html: "Matomo is a Web and Mobile Analytics. You can either host Matomo locally or use a cloud-hosted service. See <a href='http://matomo.org' target='_blank'>matomo.org</a> for more information."
-        config_instructions_html: "Here you can configure the OFN Matomo integration. The Matomo URL below should point to the Matomo instance where the user tracking information will be sent to; if it is left empty, Matomo user tracking will be disabled. The Site ID field is not mandatory but useful if you are tracking more than one website on a single Matomo instance; it can be found on the Matomo instance console."
+        config_instructions_html: "Here you can configure Harvest To Order Matomo integration. The Matomo URL below should point to the Matomo instance where the user tracking information will be sent to; if it is left empty, Matomo user tracking will be disabled. The Site ID field is not mandatory but useful if you are tracking more than one website on a single Matomo instance; it can be found on the Matomo instance console."
     customers:
       index:
         new_customer: "New Customer"
