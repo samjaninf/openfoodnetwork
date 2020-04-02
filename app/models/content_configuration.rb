@@ -55,7 +55,7 @@ class ContentConfiguration < Spree::Preferences::FileConfiguration
   has_attached_file :footer_logo, default_url: "/assets/hto-logo-black.png"
 
   # Other
-  preference :footer_facebook_url, :string, default: "https://www.facebook.com/OpenFoodNet"
+  preference :footer_facebook_url, :string, default: "https://www.facebook.com/harvesttoorder/"
   preference :footer_twitter_url, :string, default: ""
   preference :footer_instagram_url, :string, default: ""
   preference :footer_linkedin_url, :string, default: ""
@@ -71,7 +71,7 @@ class ContentConfiguration < Spree::Preferences::FileConfiguration
     [Calendar](/)
   EOS
 
-  preference :footer_about_url, :string, default: "http://www.openfoodnetwork.org/ofn-local/open-food-network-australia/"
+  preference :footer_about_url, :string, default: ""
 
   # User Guide
   preference :user_guide_link, :string, default: 'https://guide.openfoodnetwork.org/'
