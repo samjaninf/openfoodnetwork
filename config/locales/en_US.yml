@@ -172,7 +172,7 @@ en_US:
       other:
         title: Other Failure (%{count} orders)
         explainer: Automatic processing of these orders failed for an unknown reason. This should not occur, please contact us if you are seeing this.
-  home: "OFN"
+  home: "Harvest To Order"
   title: Harvest To Order
   welcome_to: 'Welcome to '
   site_meta_description: "We begin from the ground up. With farmers and growers ready to tell their stories proudly and truly. With distributors ready to connect people with products fairly and honestly. With buyers who believe that better weekly shopping decisions can seriously change the world."
@@ -675,7 +675,7 @@ en_US:
           permalink_tip: "This permalink is used to create the url to your shop: %{link}your-shop-name/shop"
           link_to_front: Link to shop front
           link_to_front_tip: A direct link to your shopfront on the Harvest To Order.
-          ofn_uid: OFN UID
+          ofn_uid: HTO UID
           ofn_uid_tip: The unique id used to identify the enterprise on Harvest To Order.
         shipping_methods:
           name: Name
@@ -730,8 +730,8 @@ en_US:
           disconnect: "Disconnect account"
           confirm_modal:
             title: Connect with Stripe
-            part1: Stripe is a payment processing service that allows shops on the OFN to accept credit card payments from customers.
-            part2: To use this feature, you must connect your Stripe account to the OFN. Clicking 'I Agree' below will redirect to you the Stripe website where you can connect an existing Stripe account, or create a new one if you don't already have one.
+            part1: Stripe is a payment processing service that allows shops on Harvest To Order to accept credit card payments from customers.
+            part2: To use this feature, you must connect your Stripe account to Harvest To Order. Clicking 'I Agree' below will redirect to you the Stripe website where you can connect an existing Stripe account, or create a new one if you don't already have one.
             part3: This will allow the Harvest To Order to accept credit card payments from customers on your behalf. Please note that you will need to maintain your own Stripe account, pay the fees Stripe charges and handle any chargebacks and customer service yourself.
             i_agree: I Agree
             cancel: Cancel
@@ -781,7 +781,7 @@ en_US:
         producer: Producer
       change_type_form:
         producer_profile: Producer Profile
-        connect_ofn: Connect through OFN
+        connect_ofn: Connect through Harvest To Order
         always_free: ALWAYS FREE
         producer_description_text: Add your products to Harvest To Order, allowing hubs to stock your products in their stores.
         producer_shop: Producer Shop
@@ -1295,7 +1295,7 @@ en_US:
     cookies_policy:
       header: "How We Use Cookies"
       desc_part_1: "Cookies are very small text files that are stored on your computer when you visit some websites."
-      desc_part_2: "In OFN we are fully respectful of your privacy. We use only the cookies that are necessary for delivering you the service of selling/buying food online. We don’t sell any of your data. We might in the future propose you to share some of your data to build new commons services that could be useful for the ecosystem (like logistics services for short food systems) but we are not yet there, and we won’t do it without your authorization :-)"
+      desc_part_2: "At Harvest To Order we are fully respectful of your privacy. We use only the cookies that are necessary for delivering you the service of selling/buying food online. We don’t sell any of your data. We might in the future propose you to share some of your data to build new commons services that could be useful for the ecosystem (like logistics services for short food systems) but we are not yet there, and we won’t do it without your authorization :-)"
       desc_part_3: "We use cookies mainly to remember who you are if you 'log in' to the service, or to be able to remember the items you put in your cart even if you are not logged in. If you keep navigating on the website without clicking on “Accept cookies”, we assume you are giving us consent to store the cookies that are essential for the functioning of the website. Here is the list of cookies we use!"
       essential_cookies: "Essential Cookies"
       essential_cookies_desc: "The following cookies are strictly necessary for the operation of our website."
@@ -1345,7 +1345,7 @@ en_US:
   brandstory_part6: "We all love food. Now we can love our food system too."
   learn_body: "Explore models, stories and resources to support you to develop your fair food business or organisation.  Find training, events and other opportunities to learn from peers."
   learn_cta: "Get Inspired"
-  connect_body: "Search our full directories of producers, hubs and groups to find fair food traders near you.  List your business or organization on the OFN so buyers can find you.  Join the community to get advice and solve problems together."
+  connect_body: "Search our full directories of producers, hubs and groups to find fair food traders near you.  List your business or organization on Harvest To Order so buyers can find you.  Join the community to get advice and solve problems together."
   connect_cta: "Go Exploring"
   system_headline: "Get your locally sourced food in 4 simple steps,"
   system_step1: "1. Search"
@@ -1585,7 +1585,7 @@ en_US:
   groups_signup_pricing: Group Account
   groups_signup_studies: Case Studies
   groups_signup_contact: Ready to discuss?
-  groups_signup_contact_text: "Get in touch to discover what OFN can do for you:"
+  groups_signup_contact_text: "Get in touch to discover what Harvest To Order can do for you:"
   groups_signup_detail: "Here's the detail."
   login_invalid: "Invalid email or password"
   modal_hubs: "Food Hubs"
@@ -1639,13 +1639,13 @@ en_US:
   sell_producers: "Producers"
   sell_hubs: "Hubs"
   sell_groups: "Groups"
-  sell_producers_detail: "Set up a profile for your business on the OFN in just minutes.  At any time you can upgrade your profile to an online store and sell your products direct to customers."
-  sell_hubs_detail: "Set up a profile for your food enterprise or organization on the OFN. At any time you can upgrade your profile to a multi-producer shop."
+  sell_producers_detail: "Set up a profile for your business on the Harvest To Order in just minutes.  At any time you can upgrade your profile to an online store and sell your products direct to customers."
+  sell_hubs_detail: "Set up a profile for your food enterprise or organization on Harvest To Order. At any time you can upgrade your profile to a multi-producer shop."
   sell_groups_detail: "Set up a tailored directory of enterprises (producers and other food enterprises) for your region or for your organisation."
   sell_user_guide: "Find out more in our user guide."
-  sell_listing_price: "Listing on the OFN is free. When you start selling your products, we invite you to contribute a small percentage of your sales or some volunteer time to help support the platform and the people taking care of it. Please contact us for more information. "
-  sell_embed: "We can also embed an OFN shop in your personal website or build a customized local food network website for your region."
-  sell_ask_services: "Ask us about OFN services."
+  sell_listing_price: "Listing on Harvest To Orderis free. When you start selling your products, we invite you to contribute a small percentage of your sales or some volunteer time to help support the platform and the people taking care of it. Please contact us for more information. "
+  sell_embed: "We can also embed an Harvest To Order shop in your personal website or build a customized local food network website for your region."
+  sell_ask_services: "Ask us about Harvest To Order services."
   shops_title: Stores
   shops_headline: Shopping, transformed.
   shops_text: Food grows in cycles, farmers harvest in cycles, and we order food in cycles. If you find an order cycle closed, check back soon.
@@ -1856,7 +1856,7 @@ en_US:
         enterprise_final_step: "Final step!"
         enterprise_social_text: "How can people find %{enterprise} online?"
         website: "Website"
-        website_placeholder: "eg. openfoodnetwork.net"
+        website_placeholder: "eg. harvesttoorder.com"
         facebook: "Facebook"
         facebook_placeholder: "eg. www.facebook.com/PageNameHere"
         linkedin: "LinkedIn"
@@ -2291,7 +2291,7 @@ en_US:
   enterprise_register_success_notice: "Congratulations! Registration for %{enterprise} is complete!"
   enterprise_bulk_update_success_notice: "Enterprises updated successfully"
   enterprise_bulk_update_error: 'Update failed'
-  enterprise_shop_show_error: "The shop you are looking for doesn't exist or is inactive on OFN. Please check other shops."
+  enterprise_shop_show_error: "The shop you are looking for doesn't exist or is inactive on Harvest To Order. Please check other shops."
   order_cycles_create_notice: 'Your order cycle has been created.'
   order_cycles_update_notice: 'Your order cycle has been updated.'
   order_cycles_bulk_update_notice: 'Order cycles have been updated.'
@@ -3259,7 +3259,7 @@ en_US:
             If the above URL does nor work, try to copy and paste it into your browser.
             If you continue to have problems please feel free to contact us.
       confirmation_instructions:
-        subject: Please confirm your OFN account
+        subject: Please confirm your Harvest To Order account
     users:
       form:
         account_settings: Account Settings
