@@ -56,13 +56,13 @@ class ContentConfiguration < Spree::Preferences::FileConfiguration
 
   # Other
   preference :footer_facebook_url, :string, default: "https://www.facebook.com/OpenFoodNet"
-  preference :footer_twitter_url, :string, default: "https://twitter.com/OpenFoodNet"
-  preference :footer_instagram_url, :string, default: "https://www.instagram.com/openfoodnetworkuk/"
-  preference :footer_linkedin_url, :string, default: "https://www.linkedin.com/company/openfoodnetwork/"
+  preference :footer_twitter_url, :string, default: ""
+  preference :footer_instagram_url, :string, default: ""
+  preference :footer_linkedin_url, :string, default: ""
   preference :footer_googleplus_url, :string, default: ""
   preference :footer_pinterest_url, :string, default: ""
-  preference :footer_email, :string, default: "hello@openfoodnetwork.org"
-  preference :community_forum_url, :string, default: "http://community.openfoodnetwork.org"
+  preference :footer_email, :string, default: "contact@harvesttoorder.com"
+  preference :community_forum_url, :string, default: ""
   preference :footer_links_md, :text, default: <<-EOS.strip_heredoc
     [Newsletter sign-up](/)
 
