@@ -35,7 +35,7 @@
         %p.text-small
           = t '.footer_legal_text_html', {content_license: link_to('CC BY-SA 3.0', 'https://creativecommons.org/licenses/by-sa/3.0/'), code_license: link_to('AGPL 3', 'https://tldrlegal.com/license/gnu-affero-general-public-license-v3-(agpl-3.0)' )}
        
-      .small-12.medium-3.columns.text-left
+      .small-6.medium-3.columns.text-left
         // This is the instance-managed set of links:
         %h4
           = t '.footer_contact_headline'
@@ -83,7 +83,7 @@
           %a{href: ContentConfig.footer_about_url}
             = t :label_about
 
-      .small-6.medium-3.columns.text-left
+      .small-12.medium-3.columns.text-left
         %h4
           = t '.footer_join_headline'
         %p
