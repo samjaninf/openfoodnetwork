@@ -3,7 +3,7 @@ Darkswarm.factory "MapConfiguration", ->
     options:
       center:
         latitude: 44.5520
-        longitude: 69.6317
+        longitude: -69.6317
       zoom: 12
       additional_options:
         # mapTypeId: 'satellite'
