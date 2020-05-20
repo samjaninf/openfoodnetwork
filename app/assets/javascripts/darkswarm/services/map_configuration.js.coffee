@@ -4,6 +4,7 @@ Darkswarm.factory "MapConfiguration", ->
       center:
         latitude: 44.5520
         longitude: -69.6317
+      cluster_icon: 'assets/map_009-cluster.svg'
       zoom: 12
       additional_options:
         # mapTypeId: 'satellite'
