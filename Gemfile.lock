@@ -110,7 +110,7 @@ GEM
       activesupport (= 3.2.22.5)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
-    activerecord-import (1.0.4)
+    activerecord-import (1.0.5)
       activerecord (>= 3.2)
     activerecord-postgresql-adapter (0.0.1)
       pg
@@ -150,7 +150,7 @@ GEM
     bugsnag (6.13.1)
       concurrent-ruby (~> 1.0)
     builder (3.0.4)
-    byebug (9.0.6)
+    byebug (11.0.1)
     cancan (1.6.10)
     capybara (2.18.0)
       addressable
@@ -425,8 +425,8 @@ GEM
     jquery-rails (3.1.5)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
-    jquery-ui-rails (4.1.2)
-      railties (>= 3.1.0)
+    jquery-ui-rails (4.2.1)
+      railties (>= 3.2.16)
     json (1.8.6)
     json_spec (1.1.5)
       multi_json (~> 1.0)
@@ -450,7 +450,7 @@ GEM
     mime-types (1.25.1)
     mini_mime (1.0.1)
     mini_portile2 (2.4.0)
-    mini_racer (0.2.11)
+    mini_racer (0.2.14)
       libv8 (> 7.3)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
@@ -498,14 +498,14 @@ GEM
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
-    pry-byebug (3.4.3)
-      byebug (>= 9.0, < 9.1)
+    pry-byebug (3.7.0)
+      byebug (~> 11.0)
       pry (~> 0.10)
     public_suffix (4.0.3)
     rack (1.4.7)
     rack-cache (1.11.0)
       rack (>= 0.4)
-    rack-mini-profiler (2.0.1)
+    rack-mini-profiler (2.0.2)
       rack (>= 1.2.0)
     rack-protection (1.5.5)
       rack
@@ -650,7 +650,7 @@ GEM
     turbo-sprockets-rails3 (0.3.14)
       railties (> 3.2.8, < 4.0.0)
       sprockets (>= 2.2.0)
-    tzinfo (0.3.56)
+    tzinfo (0.3.57)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (1.7.0)
@@ -700,7 +700,7 @@ DEPENDENCIES
   aws-sdk
   blockenspiel
   bugsnag
-  byebug (~> 9.0.0)
+  byebug (~> 11.0.0)
   capybara (>= 2.18.0)
   catalog!
   coffee-rails (~> 3.2.1)
@@ -734,13 +734,13 @@ DEPENDENCIES
   immigrant
   jquery-migrate-rails
   jquery-rails (= 3.1.5)
-  jquery-ui-rails (~> 4.1.2)
+  jquery-ui-rails (~> 4.2)
   json_spec (~> 1.1.4)
   jwt (~> 2.2)
   kaminari (~> 0.14.1)
   knapsack
   letter_opener (>= 1.4.1)
-  mini_racer (= 0.2.11)
+  mini_racer (= 0.2.14)
   momentjs-rails
   newrelic_rpm (~> 3.0)
   oauth2 (~> 1.4.4)
@@ -750,7 +750,8 @@ DEPENDENCIES
   paper_trail (~> 5.2.3)
   paperclip (~> 3.4.1)
   pg (~> 0.21.0)
-  pry-byebug (>= 3.4.3)
+  pry (~> 0.12.0)
+  pry-byebug (~> 3.7.0)
   rack-mini-profiler (< 3.0.0)
   rack-rewrite
   rack-ssl
@@ -796,4 +797,4 @@ RUBY VERSION
    ruby 2.3.7p456
 
 BUNDLED WITH
-   1.17.2
+   1.17.3

@@ -89,8 +89,8 @@ en_US:
         unknown_error: "Oops! Something went wrong while creating your account. Please check your email address and try again."
     failure:
       invalid: |
-          Invalid email or password.
-          Were you a guest last time?  Perhaps you need to create an account or reset your password.
+        Invalid email or password.
+        Were you a guest last time?  Perhaps you need to create an account or reset your password.
       unconfirmed: "You have to confirm your account before continuing."
       already_registered: "This email address is already registered. Please log in to continue, or go back and use another email address."
     success:
@@ -174,7 +174,7 @@ en_US:
         explainer: Automatic processing of these orders failed for an unknown reason. This should not occur, please contact us if you are seeing this.
   home: "Harvest To Order"
   title: Harvest To Order
-  welcome_to: 'Welcome to '
+  welcome_to: "Welcome to "
   site_meta_description: "We begin from the ground up. With farmers and growers ready to tell their stories proudly and truly. With distributors ready to connect people with products fairly and honestly. With buyers who believe that better weekly shopping decisions can seriously change the world."
   search_by_name: Search by name or city...
   producers_join: US producers are now welcome to join the Harvest To Order.
@@ -236,10 +236,10 @@ en_US:
   summary: Summary
   detailed: Detailed
   updated: Updated
-  'yes': "Yes"
-  'no': "No"
-  y: 'Y'
-  n: 'N'
+  "yes": "Yes"
+  "no": "No"
+  y: "Y"
+  n: "N"
   powered_by: Powered by
   blocked_cookies_alert: "Your browser may be blocking cookies needed to use this shopfront. Click below to allow cookies and reload the page."
   allow_cookies: "Allow Cookies"
@@ -370,20 +370,20 @@ en_US:
         duplicate_code: "This code is used already."
         bill_address: "Billing Address"
         ship_address: "Shipping Address"
-        update_address_success: 'Address updated successfully.'
-        update_address_error: 'Sorry! Please input all of the required fields!'
-        edit_bill_address: 'Edit Billing Address'
-        edit_ship_address: 'Edit Shipping Address'
-        required_fileds: 'Required fields are denoted with an asterisk '
-        select_country: 'Select Country'
-        select_state: 'Select State'
-        edit: 'Edit'
-        update_address: 'Update Address'
-        confirm_delete: 'Sure to delete?'
+        update_address_success: "Address updated successfully."
+        update_address_error: "Sorry! Please input all of the required fields!"
+        edit_bill_address: "Edit Billing Address"
+        edit_ship_address: "Edit Shipping Address"
+        required_fileds: "Required fields are denoted with an asterisk "
+        select_country: "Select Country"
+        select_state: "Select State"
+        edit: "Edit"
+        update_address: "Update Address"
+        confirm_delete: "Sure to delete?"
         search_by_email: "Search by email/code..."
-        guest_label: 'Guest checkout'
+        guest_label: "Guest checkout"
       destroy:
-        has_associated_orders: 'Delete failed: customer has associated orders with his shop'
+        has_associated_orders: "Delete failed: customer has associated orders with his shop"
     contents:
       edit:
         title: Content
@@ -416,7 +416,7 @@ en_US:
       enterprise_role:
         manages: manages
     products:
-      unit_name_placeholder: 'eg. bunches'
+      unit_name_placeholder: "eg. bunches"
       index:
         unit: Unit
         display_as: Display As
@@ -568,8 +568,8 @@ en_US:
       controls:
         back_to_my_inventory: Back to my inventory
     orders:
-      invoice_email_sent: 'Invoice email has been sent'
-      order_email_resent: 'Order email has been resent'
+      invoice_email_sent: "Invoice email has been sent"
+      order_email_resent: "Order email has been resent"
       bulk_management:
         tip: "Use this page to alter product quantities across multiple orders. Products may also be removed from orders entirely, if required."
         shared: "Shared Resource?"
@@ -633,17 +633,17 @@ en_US:
         images:
           logo: Logo
           promo_image_placeholder: 'This image is displayed in "About Us"'
-          promo_image_note1: 'PLEASE NOTE:'
+          promo_image_note1: "PLEASE NOTE:"
           promo_image_note2: Any promo image uploaded here will be cropped to 1200 x 260.
           promo_image_note3: The promo image is displayed at the top of an enterprise's profile page and pop-ups.
         inventory_settings:
           text1: You may opt to manage stock levels and prices in via your
           inventory: inventory
           text2: >
-              If you are using the inventory tool, you can select whether new products
-              added by your suppliers need to be added to your inventory before they
-              can be stocked. If you are not using your inventory to manage your products
-              you should select the 'recommended' option below:
+            If you are using the inventory tool, you can select whether new products
+            added by your suppliers need to be added to your inventory before they
+            can be stocked. If you are not using your inventory to manage your products
+            you should select the 'recommended' option below:
           preferred_product_selection_from_inventory_only_yes: New products can be put into my shopfront (recommended)
           preferred_product_selection_from_inventory_only_no: New products must be added to my inventory before they can be put into my shopfront
         payment_methods:
@@ -678,12 +678,11 @@ en_US:
           ofn_uid: HTO UID
           ofn_uid_tip: The unique id used to identify the enterprise on Harvest To Order.
         shipping_methods:
-          name: Name
-          applies: Applies?
-          manage: Manage Shipping Methods
-          create_button: Create New Shipping Method
-          create_one_button: Create One Now
-          no_method_yet: You don't have any shipping methods yet.
+          name: "Name"
+          manage: "Manage Shipping Methods"
+          create_button: "Create New Shipping Method"
+          create_one_button: "Create One Now"
+          no_method_yet: "You don't have any shipping methods yet."
         shop_preferences:
           shopfront_requires_login: "Publicly visible shopfront?"
           shopfront_requires_login_tip: "Choose whether customers must login to view the shopfront or if it's visible to everybody."
@@ -704,17 +703,17 @@ en_US:
           enable_subscriptions_true: "Enabled"
           shopfront_message: "Shopfront Message"
           shopfront_message_placeholder: >
-              An optional message to welcome customers and explain how to shop with
-              you. If text is entered here it will be displayed in a home tab when
-              customers first arrive at your shopfront.
+            An optional message to welcome customers and explain how to shop with
+            you. If text is entered here it will be displayed in a home tab when
+            customers first arrive at your shopfront.
           shopfront_message_link_tooltip: "Insert / edit link"
           shopfront_message_link_prompt: "Please enter a URL to insert"
           shopfront_closed_message: "Shopfront Closed Message"
           shopfront_closed_message_placeholder: >
-              A message which provides a more detailed explanation about why your
-              shop is closed and/or when customers can expect it to open again. This
-              is displayed on your shop only when you have no active order cycles
-              (ie. shop is closed).
+            A message which provides a more detailed explanation about why your
+            shop is closed and/or when customers can expect it to open again. This
+            is displayed on your shop only when you have no active order cycles
+            (ie. shop is closed).
           shopfront_category_ordering: "Shopfront Category Ordering"
           open_date: "Open Date"
           close_date: "Close Date"
@@ -739,23 +738,23 @@ en_US:
           default_rules:
             by_default: By Default
             no_rules_yet: No default rules apply yet
-            add_new_button: '+ Add A New Default Rule'
+            add_new_button: "+ Add A New Default Rule"
           no_tags_yet: No tags apply to this enterprise yet
           no_rules_yet: No rules apply to this tag yet
-          for_customers_tagged: 'For customers tagged:'
-          add_new_rule: '+ Add A New Rule'
-          add_new_tag: '+ Add A New Tag'
+          for_customers_tagged: "For customers tagged:"
+          add_new_rule: "+ Add A New Rule"
+          add_new_tag: "+ Add A New Tag"
         users:
           email_confirmation_notice_html: "Email confirmation is pending. We've sent a confirmation email to %{email}."
           resend: Resend
-          owner: 'Owner'
+          owner: "Owner"
           contact: "Contact"
           contact_tip: "The manager who will receive enterprise emails for orders and notifications. Must have a confirmed email adress."
           owner_tip: The primary user responsible for this enterprise.
           notifications: Notifications
           notifications_tip: Notifications about orders will be send to this email address.
           notifications_placeholder: eg. Justin@truffles.com
-          notifications_note: 'Note: A new email address may need to be confirmed prior to use'
+          notifications_note: "Note: A new email address may need to be confirmed prior to use"
           managers: Managers
           managers_tip: The other users with permission to manage this enterprise.
           invite_manager: "Invite Manager"
@@ -814,7 +813,7 @@ en_US:
         i_am_producer: I am a Producer
         contact_name: Contact Name
       edit:
-        editing: 'Settings:'
+        editing: "Settings:"
         back_link: Back to enterprises list
       new:
         title: New Enterprise
@@ -831,9 +830,9 @@ en_US:
         welcome_title: Welcome to the Harvest To Order!
         welcome_text: You have successfully created a
         next_step: Next step
-        choose_starting_point: 'Choose your package:'
-        profile: 'Profile'
-        producer_profile: 'Producer Profile'
+        choose_starting_point: "Choose your package:"
+        profile: "Profile"
+        producer_profile: "Producer Profile"
       invite_manager:
         user_already_exists: "User already exists"
         error: "Something went wrong"
@@ -876,12 +875,12 @@ en_US:
         pickup_instructions_tip: These instructions are shown to customers after they complete an order
         pickup_time_placeholder: "Ready for (ie. Date / Time)"
         receival_instructions_placeholder: "Receival instructions"
-        add_fee: 'Add fee'
-        remove: 'Remove'
-        selected: 'selected'
+        add_fee: "Add fee"
+        remove: "Remove"
+        selected: "selected"
       add_exchange_form:
-        add_supplier: 'Add supplier'
-        add_distributor: 'Add distributor'
+        add_supplier: "Add supplier"
+        add_distributor: "Add distributor"
       advanced_settings:
         title: Advanced Settings
         choose_product_tip: You can restrict products incoming and outgoing to only %{inventory}'s inventory.
@@ -1021,7 +1020,7 @@ en_US:
       filters:
         query_placeholder: "Search by email..."
       setup_explanation:
-        just_a_few_more_steps: 'Just a few more steps before you can begin:'
+        just_a_few_more_steps: "Just a few more steps before you can begin:"
         enable_subscriptions: "Enable subscriptions for at least one of your shops"
         enable_subscriptions_step_1_html: 1. Go to the %{enterprises_link} page, find your shop, and click "Manage"
         enable_subscriptions_step_2: 2. Under "Shop Preferences", enable the Subscriptions option
@@ -1041,8 +1040,8 @@ en_US:
         review: 4. Review & Save
       subscription_line_items:
         this_is_an_estimate: |
-            The displayed prices are only an estimate and calculated at the time the subscription is changed.
-            If you change prices or fees, orders will be updated, but the subscription will still display the old values.
+          The displayed prices are only an estimate and calculated at the time the subscription is changed.
+          If you change prices or fees, orders will be updated, but the subscription will still display the old values.
         not_in_open_and_upcoming_order_cycles_warning: "There are no open or upcoming order cycles for this product."
       autocomplete:
         name_or_sku: "NAME OR SKU"
@@ -1731,7 +1730,7 @@ en_US:
   error_email: "must be email address"
   error_not_found_in_database: "%{name} not found in database"
   error_not_primary_producer: "%{name} is not enabled as a producer"
-  error_no_permission_for_enterprise: "\"%{name}\": you do not have permission to manage products for this enterprise"
+  error_no_permission_for_enterprise: '"%{name}": you do not have permission to manage products for this enterprise'
   item_handling_fees: "Item Handling Fees (included in item totals)"
   january: "January"
   february: "February"
@@ -1889,7 +1888,7 @@ en_US:
   shop_variant_quantity_min: "min"
   shop_variant_quantity_max: "max"
   follow: "Follow"
-  shop_for_products_html: "Shop for <span class=\"turquoise\">%{enterprise}</span> products at:"
+  shop_for_products_html: 'Shop for <span class="turquoise">%{enterprise}</span> products at:'
   change_shop: "Change shop to:"
   shop_at: "Shop now at:"
   price_breakdown: "Full price breakdown"
@@ -1914,9 +1913,9 @@ en_US:
   not_visible: not visible
   you_have_no_orders_yet: "You have no orders yet"
   show_only_complete_orders: "Only show complete orders"
-  successfully_created: '%{resource} has been successfully created!'
-  successfully_removed: '%{resource} has been successfully removed!'
-  successfully_updated: '%{resource} has been successfully updated!'
+  successfully_created: "%{resource} has been successfully created!"
+  successfully_removed: "%{resource} has been successfully removed!"
+  successfully_updated: "%{resource} has been successfully updated!"
   running_balance: "Running balance"
   outstanding_balance: "Outstanding balance"
   admin_enterprise_relationships: "Enterprise Permissions"
@@ -1972,7 +1971,7 @@ en_US:
   new_order_cycles: "New Order Cycles"
   new_order_cycle: "New Order Cycle"
   select_a_coordinator_for_your_order_cycle: "Select a coordinator for your order cycle"
-  notify_producers: 'Notify producers'
+  notify_producers: "Notify producers"
   edit_order_cycle: "Edit Order Cycle"
   roles: "Roles"
   update: "Update"
@@ -2076,10 +2075,10 @@ en_US:
   report_hubs: "Hubs:"
   report_payment: "Payment Methods:"
   report_distributor: "Distributor:"
-  report_payment_by: 'Payments By Type'
-  report_itemised_payment: 'Itemised Payment Totals'
-  report_payment_totals: 'Payment Totals'
-  report_all: 'all'
+  report_payment_by: "Payments By Type"
+  report_itemised_payment: "Itemised Payment Totals"
+  report_payment_totals: "Payment Totals"
+  report_all: "all"
   report_order_cycle: "Order Cycle:"
   report_enterprises: "Enterprises:"
   report_users: "Users:"
@@ -2275,31 +2274,31 @@ en_US:
   product_importer_file_error: "error: no file uploaded"
   product_importer_spreadsheet_error: "could not process file: invalid filetype"
   product_importer_products_save_error: did not save any products successfully
-  product_import_file_not_found_notice: 'File not found or could not be opened'
-  product_import_no_data_in_spreadsheet_notice: 'No data found in spreadsheet'
+  product_import_file_not_found_notice: "File not found or could not be opened"
+  product_import_no_data_in_spreadsheet_notice: "No data found in spreadsheet"
   order_choosing_hub_notice: Your hub has been selected.
   order_cycle_selecting_notice: Your order cycle has been selected.
   adjustments_tax_rate_error: "^Please check that the tax rate for this adjustment is correct."
   active_distributors_not_ready_for_checkout_message_singular: >-
-      The hub %{distributor_names} is listed in an active order cycle, but does not
-      have valid shipping and payment methods. Until you set these up, customers will
-      not be able to shop at this hub.
+    The hub %{distributor_names} is listed in an active order cycle, but does not
+    have valid shipping and payment methods. Until you set these up, customers will
+    not be able to shop at this hub.
   active_distributors_not_ready_for_checkout_message_plural: >-
-      The hubs %{distributor_names} are listed in an active order cycle, but do not
-      have valid shipping and payment methods. Until you set these up, customers will
-      not be able to shop at these hubs.
+    The hubs %{distributor_names} are listed in an active order cycle, but do not
+    have valid shipping and payment methods. Until you set these up, customers will
+    not be able to shop at these hubs.
   enterprise_fees_update_notice: Your enterprise fees have been updated.
   enterprise_register_package_error: "Please select a package"
   enterprise_register_error: "Could not complete registration for %{enterprise}"
   enterprise_register_success_notice: "Congratulations! Registration for %{enterprise} is complete!"
   enterprise_bulk_update_success_notice: "Enterprises updated successfully"
-  enterprise_bulk_update_error: 'Update failed'
+  enterprise_bulk_update_error: "Update failed"
   enterprise_shop_show_error: "The shop you are looking for doesn't exist or is inactive on Harvest To Order. Please check other shops."
-  order_cycles_create_notice: 'Your order cycle has been created.'
-  order_cycles_update_notice: 'Your order cycle has been updated.'
-  order_cycles_bulk_update_notice: 'Order cycles have been updated.'
+  order_cycles_create_notice: "Your order cycle has been created."
+  order_cycles_update_notice: "Your order cycle has been updated."
+  order_cycles_bulk_update_notice: "Order cycles have been updated."
   order_cycles_clone_notice: "Your order cycle %{name} has been cloned."
-  order_cycles_email_to_producers_notice: 'Emails to be sent to producers have been queued for sending.'
+  order_cycles_email_to_producers_notice: "Emails to be sent to producers have been queued for sending."
   order_cycles_no_permission_to_coordinate_error: "None of your enterprises have permission to coordinate an order cycle"
   order_cycles_no_permission_to_create_error: "You don't have permission to create an order cycle coordinated by that enterprise"
   back_to_orders_list: "Back to order list"
@@ -2312,8 +2311,8 @@ en_US:
     pending: Pending
     shipped: Shipped
   js:
-    saving: 'Saving...'
-    changes_saved: 'Changes saved.'
+    saving: "Saving..."
+    changes_saved: "Changes saved."
     save_changes_first: Save changes first.
     all_changes_saved: All changes saved
     unsaved_changes: You have unsaved changes
@@ -2340,19 +2339,19 @@ en_US:
           title: Tag Rules
           overview: Overview
           overview_text: >
-              Tag rules provide a way to describe which items are visible or otherwise
-              to which customers. Items can be Shipping Methods, Payment Methods,
-              Products and Order Cycles.
+            Tag rules provide a way to describe which items are visible or otherwise
+            to which customers. Items can be Shipping Methods, Payment Methods,
+            Products and Order Cycles.
           by_default_rules: "'By Default...' Rules"
           by_default_rules_text: >
-              Default rules allow you to hide items so that they are not visible by
-              default. This behavior can then be overriden by non-default rules for
-              customers with particular tags.
+            Default rules allow you to hide items so that they are not visible by
+            default. This behavior can then be overriden by non-default rules for
+            customers with particular tags.
           customer_tagged_rules: "'Customers Tagged...' Rules"
           customer_tagged_rules_text: >
-              By creating rules related to a specific customer tag, you can override
-              the default behavior (whether it be to show or to hide items) for customers
-              with the specified tag.
+            By creating rules related to a specific customer tag, you can override
+            the default behavior (whether it be to show or to hide items) for customers
+            with the specified tag.
       panels:
         save: SAVE
         saved: SAVED
@@ -2361,60 +2360,60 @@ en_US:
           hub_profile: Hub Profile
           hub_profile_cost: "COST: ALWAYS FREE"
           hub_profile_text1: >
-              People can find and contact you on the Harvest To Order. Your enterprise
-              will be visible on the map, and will be searchable in listings.
+            People can find and contact you on the Harvest To Order. Your enterprise
+            will be visible on the map, and will be searchable in listings.
           hub_profile_text2: >
-              Having a profile, and making connections within your local food system
-              through the Harvest To Order will always be free.
+            Having a profile, and making connections within your local food system
+            through the Harvest To Order will always be free.
           hub_shop: Hub Shop
           hub_shop_text1: >
-              Your enterprise is the backbone of your local food system. You aggregate
-              produce from other enterprises and can sell it through your shop on
-              the Harvest To Order.
+            Your enterprise is the backbone of your local food system. You aggregate
+            produce from other enterprises and can sell it through your shop on
+            the Harvest To Order.
           hub_shop_text2: >
-              Hubs can take many forms, whether they be a food co-op, a buying group,
-              a CSA program, or a local grocery store.
+            Hubs can take many forms, whether they be a food co-op, a buying group,
+            a CSA program, or a local grocery store.
           hub_shop_text3: >
-              If you also want to sell your own products, you will need to switch
-              this enterprise to be a producer.
+            If you also want to sell your own products, you will need to switch
+            this enterprise to be a producer.
           choose_package: Please Choose a Package
           choose_package_text1: >
-              Your enterprise will not be fully activated until a package is selected
-              from the options on the left.
+            Your enterprise will not be fully activated until a package is selected
+            from the options on the left.
           choose_package_text2: >
-              Click on an option to see more detailed information about each package,
-              and hit the red SAVE button when you are done!
+            Click on an option to see more detailed information about each package,
+            and hit the red SAVE button when you are done!
           profile_only: Profile Only
           profile_only_cost: "COST: ALWAYS FREE"
           profile_only_text1: >
-              A profile makes you visible and contactable to others and is a way to
-              share your story.
+            A profile makes you visible and contactable to others and is a way to
+            share your story.
           profile_only_text2: >
-              If you prefer to focus on producing food, and want to leave the work
-              of selling it to someone else, you won't require a shop on the Open
-              Food Network.
+            If you prefer to focus on producing food, and want to leave the work
+            of selling it to someone else, you won't require a shop on the Open
+            Food Network.
           profile_only_text3: >
-              Add your products to Harvest To Order, allowing hubs to stock your
-              products in their stores.
+            Add your products to Harvest To Order, allowing hubs to stock your
+            products in their stores.
           producer_shop: Producer Shop
           producer_shop_text1: >
-              Sell your products directly to customers through your very own Open
-              Food Network shopfront.
+            Sell your products directly to customers through your very own Open
+            Food Network shopfront.
           producer_shop_text2: >
-              A Producer Shop is for your produce only, if you want to sell produce
-              grown/produced off site, please select 'Producer Hub'.
+            A Producer Shop is for your produce only, if you want to sell produce
+            grown/produced off site, please select 'Producer Hub'.
           producer_hub: Producer Hub
           producer_hub_text1: >
-              Your enterprise is the backbone of your local food system. You can sell
-              your own produce as well as produce aggregated from other enterprises
-              through your shopfront on the Harvest To Order.
+            Your enterprise is the backbone of your local food system. You can sell
+            your own produce as well as produce aggregated from other enterprises
+            through your shopfront on the Harvest To Order.
           producer_hub_text2: >
-              Producer Hubs can take many forms, whether they be a CSA, a veggie-box
-              program, or a food co-op with a rooftop garden.
+            Producer Hubs can take many forms, whether they be a CSA, a veggie-box
+            program, or a food co-op with a rooftop garden.
           producer_hub_text3: >
-              The Harvest To Order aims to support as many hub models as possible,
-              so no matter your situation, we want to provide the tools you need to
-              run your organization or local food business.
+            The Harvest To Order aims to support as many hub models as possible,
+            so no matter your situation, we want to provide the tools you need to
+            run your organization or local food business.
           get_listing: Get a listing
           always_free: ALWAYS FREE
           sell_produce_others: Sell produce from others
@@ -2423,20 +2422,20 @@ en_US:
         enterprise_producer:
           producer: Producer
           producer_text1: >
-              Producers make yummy things to eat or drink. You're a producer if you
-              grow it, raise it, brew it, bake it, ferment it, milk it or mold it.
+            Producers make yummy things to eat or drink. You're a producer if you
+            grow it, raise it, brew it, bake it, ferment it, milk it or mold it.
           producer_text2: >
-              Producers can also perform other functions, such as aggregating food
-              from other enterprises and selling it through a shop on the Open Food
-              Network.
+            Producers can also perform other functions, such as aggregating food
+            from other enterprises and selling it through a shop on the Open Food
+            Network.
           non_producer: Non-producer
           non_producer_text1: >
-              Non-producers do not produce any food themselves, meaning that they
-              cannot create their own products for sale through the Harvest To Order.
+            Non-producers do not produce any food themselves, meaning that they
+            cannot create their own products for sale through the Harvest To Order.
           non_producer_text2: >
-              Instead, non-producers specialise in linking producers to the end eater,
-              whether it be by aggregating, grading, packing, selling or delivering
-              food.
+            Instead, non-producers specialise in linking producers to the end eater,
+            whether it be by aggregating, grading, packing, selling or delivering
+            food.
           producer_desc: Producers of food
           producer_example: eg. GROWERS, BAKERS, BREWERS, MAKERS
           non_producer_desc: All other food enterprises
@@ -2541,18 +2540,18 @@ en_US:
     out_of_stock:
       reduced_stock_available: Reduced stock available
       out_of_stock_text: >
-          While you've been shopping, the stock levels for one or more of the products
-          in your cart have reduced. Here's what's changed:
+        While you've been shopping, the stock levels for one or more of the products
+        in your cart have reduced. Here's what's changed:
       now_out_of_stock: is now out of stock.
       only_n_remainging: "now only has %{num} remaining."
     variants:
       on_demand:
-        'yes': "On demand"
+        "yes": "On demand"
     variant_overrides:
       on_demand:
         use_producer_settings: "Use producer stock settings"
-        'yes': "Yes"
-        'no': "No"
+        "yes": "Yes"
+        "no": "No"
       inventory_products: "Inventory Products"
       hidden_products: "Hidden Products"
       new_products: "New Products"
@@ -2567,10 +2566,10 @@ en_US:
       changing_on_hand_stock: Changing on hand stock levels...
       stock_reset: Stocks reset to defaults.
     tag_rules:
-      show_hide_variants: 'Show or Hide variants in my shopfront'
-      show_hide_shipping: 'Show or Hide shipping methods at checkout'
-      show_hide_payment: 'Show or Hide payment methods at checkout'
-      show_hide_order_cycles: 'Show or Hide order cycles in my shopfront'
+      show_hide_variants: "Show or Hide variants in my shopfront"
+      show_hide_shipping: "Show or Hide shipping methods at checkout"
+      show_hide_payment: "Show or Hide payment methods at checkout"
+      show_hide_order_cycles: "Show or Hide order cycles in my shopfront"
       visible: VISIBLE
       not_visible: NOT VISIBLE
     services:
@@ -2582,21 +2581,21 @@ en_US:
       edit_profile: "edit profile"
       add_products_to_inventory: "add products to inventory"
     resources:
-      could_not_delete_customer: 'Could not delete customer'
+      could_not_delete_customer: "Could not delete customer"
     product_import:
       confirmation: |
-          This will set stock level to zero on all products for this
-          enterprise that are not present in the uploaded file.
+        This will set stock level to zero on all products for this
+        enterprise that are not present in the uploaded file.
     order_cycles:
       create_failure: "Failed to create order cycle"
-      update_success: 'Your order cycle has been updated.'
+      update_success: "Your order cycle has been updated."
       update_failure: "Failed to update order cycle"
       no_distributors: There are no distributors in this order cycle. This order cycle will not be visible to customers until you add one. Would you like to continue saving this order cycle?'
     enterprises:
       producer: "Producer"
       non_producer: "Non-Producer"
     customers:
-      select_shop: 'Please select a shop first'
+      select_shop: "Please select a shop first"
       could_not_create: Sorry! Could not create
     subscriptions:
       closes: closes
@@ -3030,9 +3029,6 @@ en_US:
           zone: "Zone"
           calculator: "Calculator"
           display: "Display"
-          both: "Both"
-          front_end: "Front End"
-          back_end: "Back End"
           no_shipping_methods_found: "No shipping methods found"
         new:
           new_shipping_method: "New Shipping Method"
@@ -3044,9 +3040,6 @@ en_US:
         form:
           categories: "Categories"
           zones: "Zones"
-          both: "Both"
-          front_end: "Front End"
-          back_end: "Back End"
       payment_methods:
         new:
           new_payment_method: "New Payment Method"
@@ -3088,7 +3081,7 @@ en_US:
           product_description: "Product Description"
           image: "Image"
           or: "or"
-        unit_name_placeholder: 'eg. bunches'
+        unit_name_placeholder: "eg. bunches"
         index:
           header:
             title: Bulk Edit Products
@@ -3121,10 +3114,10 @@ en_US:
         table:
           select_and_search: "Select filters and click on %{option} to access your data."
         bulk_coop:
-          bulk_coop_supplier_report: 'Bulk Co-op - Totals by Supplier'
-          bulk_coop_allocation: 'Bulk Co-op - Allocation'
-          bulk_coop_packing_sheets: 'Bulk Co-op - Packing Sheets'
-          bulk_coop_customer_payments: 'Bulk Co-op - Customer Payments'
+          bulk_coop_supplier_report: "Bulk Co-op - Totals by Supplier"
+          bulk_coop_allocation: "Bulk Co-op - Allocation"
+          bulk_coop_packing_sheets: "Bulk Co-op - Packing Sheets"
+          bulk_coop_customer_payments: "Bulk Co-op - Customer Payments"
         enterprise_fee_summaries:
           filters:
             date_range: "Date Range"
@@ -3166,6 +3159,15 @@ en_US:
         autocomplete:
           producer_name: "Producer"
           unit: "Unit"
+      shared:
+        sortable_header:
+          name: "Name"
+          number: "Number"
+          state: "State"
+          payment_state: "Payment State"
+          shipment_state: "Shipment State"
+          email: "Email"
+          total: "Total"
       general_settings:
         edit:
           legal_settings: "Legal Settings"
@@ -3190,10 +3192,9 @@ en_US:
           or_enter_new_card: "Or, enter details for a new card:"
           remember_this_card: Remember this card?
     date_picker:
-      format: '%Y-%m-%d'
-      js_format: 'yy-mm-dd'
+      format: "%Y-%m-%d"
+      js_format: "yy-mm-dd"
     orders:
-      error_flash_for_unavailable_items: "An item in your cart has become unavailable."
       edit:
         login_to_view_order: "Please log in to view your order."
       bought:
@@ -3254,13 +3255,13 @@ en_US:
     user_mailer:
       reset_password_instructions:
         request_sent_text: |
-            A request to reset your password has been made.
-            If you did not make this request, simply ignore this email.
+          A request to reset your password has been made.
+          If you did not make this request, simply ignore this email.
         link_text: >
-            If you did make this request just click the link below.
+          If you did make this request just click the link below.
         issue_text: |
-            If the above URL does nor work, try to copy and paste it into your browser.
-            If you continue to have problems please feel free to contact us.
+          If the above URL does nor work, try to copy and paste it into your browser.
+          If you continue to have problems please feel free to contact us.
       confirmation_instructions:
         subject: Please confirm your Harvest To Order account
     users:
@@ -3308,4 +3309,3 @@ en_US:
         allow_charges?: "Allow Charges?"
     localized_number:
       invalid_format: has an invalid format. Please enter a number.
-  
