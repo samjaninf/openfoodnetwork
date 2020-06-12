@@ -32,6 +32,7 @@ module ProductImport
       {
         'g' => { scale: 1, unit: 'weight' },
         'kg' => { scale: 1000, unit: 'weight' },
+        'lb' => { scale: 453.592, unit: 'weight' },
         't' => { scale: 1_000_000, unit: 'weight' },
         'ml' => { scale: 0.001, unit: 'volume' },
         'l' => { scale: 1, unit: 'volume' },
