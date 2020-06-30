@@ -24,7 +24,7 @@
     = stylesheet_link_tag "darkswarm/all"
     = csrf_meta_tags
 
-  %body{class: body_classes, ng: {app: "Darkswarm"}}
+  %body{class: body_classes, "body-scroll" => true , ng: {app: "Darkswarm"}}
     / [if lte IE 8]
       = render partial: "shared/ie_warning"
       = javascript_include_tag "iehack"
@@ -58,9 +58,9 @@
     = inject_current_hub
     = inject_current_user
     = inject_rails_flash
-    - cache CacheService::FragmentCaching.ams_all_taxons_key do
+    - cache(*CacheService::FragmentCaching.ams_all_taxons) do
       = inject_taxons
-    - cache CacheService::FragmentCaching.ams_all_properties_key do
+    - cache(*CacheService::FragmentCaching.ams_all_properties) do
       = inject_properties
     = inject_current_order
     = inject_currency_config

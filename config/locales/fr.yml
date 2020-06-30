@@ -23,6 +23,8 @@ fr:
         base: "Carte de crédit"
       order_cycle:
         orders_close_at: Date de fermeture
+      variant_override:
+        count_on_hand: "En stock"
     errors:
       models:
         spree/user:
@@ -368,8 +370,10 @@ fr:
         title: "Configuration Matomo"
         matomo_url: "URL de l'instance sur Matomo"
         matomo_site_id: "ID de l'instance sur Matomo"
-        info_html: "Matomo est un outil d'analyse de trafic web (ordinateur et téléphone). Vous pouvez installer vous-même Matomo ou utiliser une version hébergée. Voir <a href='http://matomo.org' target='_blank'>matomo.org</a> pour plus d'information."
+        matomo_tag_manager_url: "URL du Matomo Tag Manager"
+        info_html: "Matomo est un outil de suivi de traffic et de comportement des utilisateurs. Matomo est open source et validée par la CNIL française car non intrusif dans les données personnelles des utilisateurs. Pour plus d'infos : <a href='http://matomo.org' target='_blank'>matomo.org</a>."
         config_instructions_html: "Pour utiliser Matomo, vous devez configurer l'intégration avec Open Food France. L'URL de l'instance sur Matomo correspond à l'url du site internet visé par le suivi de la navigation utilisateur. Si le champ est vide, Matomo n'effectuera aucune analyse sur ce site. L'ID de l'instance sur Matomo n'est pas obligatoire, mais nécessaire si vous souhaitez analyser plusieurs sites web sur une seule instance Matomo. Cet ID peut être trouvé sur l'espace administrateur Matomo."
+        config_instructions_tag_manager_html: "Ajouter l'URL du Tag Manager rend actif Matomo Tag Manager. Cet outil vous permet de suivre des évènements en particulier. Pour trouver l'URL rendez-vous sur l' \"Install Code section\" du Tag Manager. Attention à bien copier le bon contener et le bon environnement, car ils font varier l'URL."
     customers:
       index:
         new_customer: "Nouvel acheteur"
@@ -475,6 +479,7 @@ fr:
         line_number: "Ligne %{number} :"
         encoding_error: "Veuillez vérifier le paramètre de langue de votre code source et vous assurer qu'il est encodé en UTF-8"
         unexpected_error: "L'import de fichier produits à rencontré une erreur inconnue à l'ouverture du fichier : %{error_message}"
+        malformed_csv: "L'outil d'import a rencontré un fichier CSV avec le ou les problèmes suivants : %{error_message}"
       index:
         notice: "Notice"
         beta_notice: "Cette fonctionnalité est en mode bêta : il est possible que vous rencontriez des erreurs en l'utilisant. N'hésitez pas à contacter le support utilisateurs."
@@ -1144,13 +1149,18 @@ fr:
     menu:
       cart:
         cart: "Panier"
+      cart_sidebar:
+        checkout: "Etape suivante (coordonnées)"
+        edit_cart: "Modifier le panier"
+        items_in_cart_singular: "%{num} élément dans le panier"
+        items_in_cart_plural: "%{num} éléments dans le panier"
+        close: "Fermer"
+        cart_empty: "Le panier est vide"
+        take_me_shopping: "Continuer mes achats"
       signed_in:
         profile: "Profil"
       mobile_menu:
         cart: "Panier"
-      joyride:
-        checkout: "Poursuivre la commande"
-        already_ordered_products: "Déjà commandé dans ce cycle de vente"
     register_call:
       selling_on_ofn: "Vous souhaitez proposer vos produits sur Open Food France?"
       register: "Démarrez ici"
@@ -2768,6 +2778,7 @@ fr:
   customer_details: "Informations acheteur"
   adjustments: "Ajustements"
   payments: "Paiements"
+  return_authorizations: "Autorisations de retours"
   payment: "Paiement"
   payment_method: "Méthode de paiement"
   shipment: "Livraison"
@@ -2961,6 +2972,12 @@ fr:
     options: "Options"
     actions:
       update: "Mettre à jour"
+    shared:
+      error_messages:
+        errors_prohibited_this_record_from_being_saved:
+          one: "1 erreur n'a pas permis de sauvegarder:"
+          other: "%{count} erreurs ne permettent pas de sauvegarder:"
+        there_were_problems_with_the_following_fields: "Ils a eu des soucis avec les champs suivants"
     errors:
       messages:
         blank: "Champ obligatoire"
@@ -3272,6 +3289,7 @@ fr:
           display_as_placeholder: 'ex. 2 kg'
           display_name_placeholder: 'ex. Tomates'
         autocomplete:
+          out_of_stock: "En rupture de stock"
           producer_name: "Producteur"
           unit: "Unité"
       shared:

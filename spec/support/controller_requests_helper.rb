@@ -39,17 +39,17 @@ module ControllerRequestsHelper
 
   def process_json_action(action, params = {}, session = nil, flash = nil, method = "get")
     process_action_with_route(action,
-                         params.reverse_merge!(format: :json),
-                         session,
-                         flash,
-                         method)
+                              params.reverse_merge!(format: :json),
+                              session,
+                              flash,
+                              method)
   end
 
   def process_action_with_route(action, params = {}, session = nil, flash = nil, method = "GET")
     process(action,
+            method,
             params.reverse_merge!(use_route: :main_app),
             session,
-            flash,
-            method)
+            flash)
   end
 end
