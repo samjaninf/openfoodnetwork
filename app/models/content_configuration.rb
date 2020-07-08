@@ -15,7 +15,7 @@ class ContentConfiguration < Spree::Preferences::FileConfiguration
   preference :home_page_alert_html, :text
   preference :home_hero, :file
   preference :home_show_stats, :boolean, default: true
-  has_attached_file :home_hero, default_url: "/assets/home/home.jpg"
+  has_attached_file :home_hero, default_url: "/default_images/home.jpg"
 
   # Map
   preference :open_street_map_enabled, :boolean, default: false

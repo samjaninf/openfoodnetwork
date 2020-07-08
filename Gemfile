@@ -75,8 +75,8 @@ gem 'truncate_html', '0.9.2'
 gem 'unicorn'
 
 gem 'actionpack-action_caching'
-# AMS is pinned to 0.8.4 because 0.9.x is a complete re-write, as is 0.10.x
-# Once Rails is updated to 5.x we should bump directly to 0.10.x
+# AMS 0.9.x and 0.10.x are very different from 0.8.4 and the upgrade is not straight forward
+#   AMS is deprecated, we will introduce an alternative at some point
 gem "active_model_serializers", "0.8.4"
 gem 'activerecord-session_store'
 gem 'acts-as-taggable-on', '~> 4.0'
@@ -109,7 +109,7 @@ gem 'test-unit', '~> 3.3'
 gem 'coffee-rails', '~> 4.2.2'
 gem 'compass-rails'
 
-gem 'mini_racer', '0.2.14'
+gem 'mini_racer', '0.2.15'
 
 gem 'uglifier', '>= 1.0.3'
 
@@ -144,6 +144,7 @@ group :test, :development do
   gem 'letter_opener', '>= 1.4.1'
   gem 'rspec-rails', ">= 3.5.2"
   gem 'rspec-retry'
+  gem 'rswag'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers'
   gem 'timecop'
