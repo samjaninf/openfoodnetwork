@@ -9,7 +9,7 @@
       %meta{name: "robots", content: "noindex"}
     %title= content_for?(:title) ? "#{yield(:title)} - #{t(:title)}".html_safe : "#{t(:welcome_to)} #{t(:title)}"
     - if Rails.env.production?
-      = favicon_link_tag
+      = favicon_link_tag "/favicon.ico"
     - else
       = favicon_link_tag "/favicon-staging.ico"
     %script{:type=>"text/javascript"}
