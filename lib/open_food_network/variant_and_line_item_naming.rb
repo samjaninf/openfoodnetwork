@@ -19,7 +19,10 @@ module OpenFoodNetwork
                end
 
       # values.map(&:presentation).to_sentence(words_connector: ", ", two_words_connector: ", ")
-    values.map { |option_value| presentation(option_value) }.to_sentence(words_connector: ", ", two_words_connector: ", ")
+    values.map { |option_value|
+      
+      presentation(option_value)
+    }.to_sentence(words_connector: ", ", two_words_connector: ", ")
     end
 
     def presentation(option_value)
