@@ -38,8 +38,8 @@ angular.module("admin.products").factory "VariantUnitManager", ->
           name: 'kL'
           system: 'metric'
 
-    @variantUnitOptions: ->
       # options = for unit_type, scale_with_name of @unitNames
+    @variantUnitOptions: ->
       options = for unit_type, _ of @units
         for scale in @unitScales(unit_type)
           name = @getUnitName(scale, unit_type)
