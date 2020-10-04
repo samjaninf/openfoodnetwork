@@ -145,6 +145,10 @@ en:
       not_array_error: "must be an array"
       invalid_element_error: "must contain only valid integers"
 
+  datetime_picker_ui:
+    current_text: Now
+    close_text: Done
+    time_text: Time
   enterprise_mailer:
     confirmation_instructions:
       subject: "Please confirm the email address for %{enterprise}"
@@ -652,7 +656,7 @@ en:
         order_date: "Completed at"
         max: "Max"
         product_unit: "Product: Unit"
-        weight_volume: "Weight/Volume"
+        weight_volume: "Weight/Volume (g)"
         ask: "Ask?"
         page_title: "Bulk Order Management"
         actions_delete: "Delete Selected"
@@ -690,6 +694,8 @@ en:
           acn_placeholder: eg. 123 456 789
           display_invoice_logo: Display logo in invoices
           invoice_text: Add customized text at the end of invoices
+          terms_and_conditions: "Terms and Conditions"
+          remove_terms_and_conditions: "Remove File"
         contact:
           name: Name
           name_placeholder: eg. Gustav Plum
@@ -712,6 +718,8 @@ en:
           promo_image_note1: 'PLEASE NOTE:'
           promo_image_note2: Any promo image uploaded here will be cropped to 1200 x 260.
           promo_image_note3: The promo image is displayed at the top of an enterprise's profile page and pop-ups.
+          remove_logo: "Remove Image"
+          remove_promo_image: "Remove Image"
         inventory_settings:
           text1: You may opt to manage stock levels and prices in via your
           inventory: inventory
@@ -778,6 +786,10 @@ en:
           enable_subscriptions_tip: "Enable subscriptions functionality?"
           enable_subscriptions_false: "Disabled"
           enable_subscriptions_true: "Enabled"
+          customer_names_in_reports: "Customer Names in Reports"
+          customer_names_tip: "Enable your suppliers to see your customers names in reports"
+          customer_names_false: "Disabled"
+          customer_names_true: "Enabled"
           shopfront_message: "Shopfront Message"
           shopfront_message_placeholder: >
             An optional message to welcome customers and explain how to shop with you. If text is entered here it will be displayed in a home tab when customers first arrive at your shopfront.
@@ -892,14 +904,6 @@ en:
       new:
         title: New Enterprise
         back_link: Back to enterprises list
-      remove_logo:
-        remove: "Remove Image"
-        removed_successfully: "Logo removed successfully"
-        immediate_removal_warning: "The logo will be removed immediately after you confirm."
-      remove_promo_image:
-        remove: "Remove Image"
-        removed_successfully: "Promo image removed successfully"
-        immediate_removal_warning: "The promo image will be removed immediately after you confirm."
       welcome:
         welcome_title: Welcome to the Open Food Network!
         welcome_text: You have successfully created a
@@ -1207,6 +1211,8 @@ en:
       destroy_attachment_does_not_exist: "Logo does not exist"
     enterprise_promo_image:
       destroy_attachment_does_not_exist: "Promo image does not exist"
+    enterprise_terms_and_conditions:
+      destroy_attachment_does_not_exist: "Terms and Conditions file does not exist"
     orders:
       failed_to_update: "Failed to update order"
 
@@ -1219,6 +1225,9 @@ en:
     already_ordered:
       cart: "cart"
       message_html: "You have an order for this order cycle already. Check the %{cart} to see the items you ordered before. You can also cancel items as long as the order cycle is open."
+    terms_and_conditions:
+      message_html: "By placing this order you agree to the %{terms_and_conditions_link}."
+      link_text: "Terms of Service"
     failed: "The checkout failed. Please let us know so that we can process your order."
   shops:
     hubs:
@@ -2429,6 +2438,7 @@ See the %{link} to find out more about %{sitename}'s features and to start using
   enterprise_name_error: "has already been taken. If this is your enterprise and you would like to claim ownership, or if you would like to trade with this enterprise please contact the current manager of this profile at %{email}."
   enterprise_owner_error: "^%{email} is not permitted to own any more enterprises (limit is %{enterprise_limit})."
   enterprise_role_uniqueness_error: "^That role is already present."
+  enterprise_terms_and_conditions_type_error: "Only PDFs are allowed"
   inventory_item_visibility_error: must be true or false
   product_importer_file_error: "error: no file uploaded"
   product_importer_spreadsheet_error: "could not process file: invalid filetype"
@@ -2694,6 +2704,15 @@ See the %{link} to find out more about %{sitename}'s features and to start using
         error_saving: "Error saving subscription"
         new:
           please_select_a_shop: "Please select a shop"
+      enterprises:
+        form:
+          images:
+            removed_logo_successfully: "Logo removed successfully"
+            immediate_logo_removal_warning: "The logo will be removed immediately after you confirm."
+            removed_promo_image_successfully: "Promo image removed successfully"
+            immediate_promo_image_removal_warning: "The promo image will be removed immediately after you confirm."
+            immediate_terms_and_conditions_removal_warning: "The Terms and Conditions file will be removed immediately after you confirm."
+            removed_terms_and_conditions_successfully: "Terms and Conditions file removed successfully"
     insufficient_stock: "Insufficient stock available, only %{on_hand} remaining"
     out_of_stock:
       reduced_stock_available: Reduced stock available
@@ -2767,6 +2786,11 @@ See the %{link} to find out more about %{sitename}'s features and to start using
       signup_or_login: "Start By Signing Up (or logging in)"
       have_an_account: "Already have an account?"
       action_login: "Log in now."
+    stripe_elements:
+      unknown_error_from_stripe: |
+        There was a problem setting up your card in our payments gateway.
+        Please refresh the page and try again, if it fails a second time,
+        please contact us for support.
 
   # Singular and plural forms of commonly used words.
   # We use these entries to pluralize unit names in every language.
@@ -2911,6 +2935,8 @@ See the %{link} to find out more about %{sitename}'s features and to start using
   adjustments: "Adjustments"
   payments: "Payments"
   return_authorizations: "Return Authorizations"
+  credit_owed: "Credit Owed"
+  new_adjustment: "New Adjustment"
 
   payment: "Payment"
   payment_method: "Payment Method"
@@ -3134,6 +3160,11 @@ See the %{link} to find out more about %{sitename}'s features and to start using
           one: "1 error prohibited this record from being saved:"
           other: "%{count} errors prohibited this record from being saved:"
         there_were_problems_with_the_following_fields: "There were problems with the following fields"
+      payments_list:
+        date_time: "Date/time"
+        amount: "Amount"
+        payment_method: "Payment Method"
+        payment_state: "Payment State"
     errors:
       messages:
         blank: "can't be blank"
@@ -3403,6 +3434,8 @@ See the %{link} to find out more about %{sitename}'s features and to start using
           bulk_coop_allocation: 'Bulk Co-op - Allocation'
           bulk_coop_packing_sheets: 'Bulk Co-op - Packing Sheets'
           bulk_coop_customer_payments: 'Bulk Co-op - Customer Payments'
+        customer_names_message:
+          customer_names_tip: "If customer names are hidden for orders you have supplied, you can contact the distributor and ask if they can update their shop preferences to allow their suppliers to view customer names."
       users:
         index:
           listing_users: "Listing Users"
@@ -3635,3 +3668,8 @@ See the %{link} to find out more about %{sitename}'s features and to start using
       shipment:
         cannot_ready: "Cannot ready shipment."
       invalid_taxonomy_id: "Invalid taxonomy id."
+    activerecord:
+      models:
+        spree/payment:
+          one: Payment
+          other: Payments

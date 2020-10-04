@@ -13,11 +13,9 @@ describe Admin::StripeAccountsController, type: :controller do
     end
 
     it "redirects to Stripe Authorization url constructed OAuth" do
-      spree_get :connect
-      expect(response.location).to match %r(\Ahttps://connect.stripe.com)
-      uri = URI.parse(response.location)
-      params = CGI.parse(uri.query)
-      expect(params.keys).to include 'client_id', 'response_type', 'state', 'scope'
+      spree_get :connect, enterprise_id: 1 # A deterministic id results in a deterministic state JWT token
+
+      expect(response).to redirect_to("https://connect.stripe.com/oauth/authorize?state=eyJhbGciOiJIUzI1NiJ9.eyJlbnRlcnByaXNlX2lkIjoiMSJ9.jSSFGn0bLhwuiQYK5ORmHWW7aay1l030bcfGwn1JbFg&scope=read_write&client_id=some_id&response_type=code")
     end
   end
 
@@ -78,6 +76,12 @@ describe Admin::StripeAccountsController, type: :controller do
 
   describe "#status" do
     let(:params) { { format: :json, enterprise_id: enterprise.id } }
+
+    around do |example|
+      original_stripe_connect_enabled = Spree::Config[:stripe_connect_enabled]
+      example.run
+      Spree::Config.set(stripe_connect_enabled: original_stripe_connect_enabled)
+    end
 
     before do
       allow(Stripe).to receive(:api_key) { "sk_test_12345" }

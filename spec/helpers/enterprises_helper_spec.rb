@@ -237,9 +237,15 @@ describe EnterprisesHelper, type: :helper do
     end
 
     context "when StripeConnect payment methods are present" do
-      let!(:pm3) { create(:stripe_payment_method, distributors: [distributor], preferred_enterprise_id: distributor.id) }
-      let!(:pm4) { create(:stripe_payment_method, distributors: [distributor], preferred_enterprise_id: some_other_distributor.id) }
+      let!(:pm3) { create(:stripe_connect_payment_method, distributors: [distributor], preferred_enterprise_id: distributor.id) }
+      let!(:pm4) { create(:stripe_connect_payment_method, distributors: [distributor], preferred_enterprise_id: some_other_distributor.id) }
       let(:available_payment_methods) { helper.available_payment_methods }
+
+      around do |example|
+        original_stripe_connect_enabled = Spree::Config[:stripe_connect_enabled]
+        example.run
+        Spree::Config.set(stripe_connect_enabled: original_stripe_connect_enabled)
+      end
 
       before do
         allow(helper).to receive(:current_distributor) { distributor }

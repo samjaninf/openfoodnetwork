@@ -53,20 +53,6 @@ angular.module("admin.products").factory "OptionValueNamer", (VariantUnitManager
       [value, unit_name]
 
     scale_for_unit_value: ->
-      # # Find the largest available unit where unit_value comes to >= 1 when expressed in it.
-      # # If there is none available where this is true, use the smallest available unit.
-      # unit = ([scale, unit_name] for scale, unit_name of VariantUnitManager.unitNames[@variant.product.variant_unit] when @variant.unit_value / scale >= 1).reduce (unit, [scale, unit_name]) ->
-      #   if (unit && scale > unit[0]) || !unit?
-      #     [scale, unit_name]
-      #   else
-      #     unit
-      # , null
-      # if !unit?
-      #   unit = ([scale, unit_name] for scale, unit_name of VariantUnitManager.unitNames[@variant.product.variant_unit]).reduce (unit, [scale, unit_name]) ->
-      #     if scale < unit[0] then [scale, unit_name] else unit
-      #   , [Infinity,""]
-
-      # unit
       # Find the largest available and compatible unit where unit_value comes
       # to >= 1 when expressed in it.
       # If there is none available where this is true, use the smallest

@@ -274,7 +274,6 @@ sv:
         order_no: "Ordernummer"
         max: "Max"
         product_unit: "Produkt: Enhet"
-        weight_volume: "Vikten/Volymen"
         ask: "Fråga efter?"
         page_title: "Hantering av storköp"
         actions_delete: "Ta bort valda produkten"
@@ -1364,7 +1363,6 @@ sv:
   spree_user_enterprise_limit_error: "^ %{email} har inte rätt att äga några fler företag (gränsen är %{enterprise_limit})."
   spree_variant_product_error: måste ha minst en variant
   your_profil_live: "Din profil direkt"
-  on_ofn_map: "Öppna kartan över Open Food Network"
   see: "Se"
   live: "direkt"
   manage: "Hantera"
@@ -1928,6 +1926,11 @@ sv:
     weight: Vikt (kg)
     actions:
       update: "Uppdatera"
+    shared:
+      payments_list:
+        amount: "Belopp"
+        payment_method: "Betalningsmetod"
+        payment_state: "Betalningsstatus"
     errors:
       messages:
         blank: "kan inte vara blank"

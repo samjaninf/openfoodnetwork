@@ -119,6 +119,9 @@ en_IN:
     integer_array_validator:
       not_array_error: "must be an array"
       invalid_element_error: "must contain only valid integers"
+  datetime_picker_ui:
+    close_text: Done
+    time_text: Time
   enterprise_mailer:
     confirmation_instructions:
       subject: "Please confirm the email address for %{enterprise}"
@@ -592,7 +595,6 @@ en_IN:
         order_date: "Completed at"
         max: "Max"
         product_unit: "Product: Unit"
-        weight_volume: "Weight/Volume"
         ask: "Ask?"
         page_title: "Bulk Order Management"
         actions_delete: "Delete Selected"
@@ -651,6 +653,8 @@ en_IN:
           promo_image_note1: 'PLEASE NOTE:'
           promo_image_note2: Any promo image uploaded here will be cropped to 1200 x 260.
           promo_image_note3: The promo image is displayed at the top of an enterprise's profile page and pop-ups.
+          remove_logo: "Remove Image"
+          remove_promo_image: "Remove Image"
         inventory_settings:
           text1: You may opt to manage stock levels and prices in via your
           inventory: inventory
@@ -717,6 +721,8 @@ en_IN:
           enable_subscriptions_tip: "Enable subscriptions functionality?"
           enable_subscriptions_false: "Disabled"
           enable_subscriptions_true: "Enabled"
+          customer_names_false: "Disabled"
+          customer_names_true: "Enabled"
           shopfront_message: "Shopfront Message"
           shopfront_message_placeholder: >
               An optional message to welcome customers and explain how to shop with
@@ -834,14 +840,6 @@ en_IN:
       new:
         title: New Enterprise
         back_link: Back to enterprises list
-      remove_logo:
-        remove: "Remove Image"
-        removed_successfully: "Logo removed successfully"
-        immediate_removal_warning: "The logo will be removed immediately after you confirm."
-      remove_promo_image:
-        remove: "Remove Image"
-        removed_successfully: "Promo image removed successfully"
-        immediate_removal_warning: "The promo image will be removed immediately after you confirm."
       welcome:
         welcome_title: Welcome to the Open Food Network!
         welcome_text: You have successfully created a
@@ -2047,7 +2045,6 @@ en_IN:
   spree_user_enterprise_limit_error: "^%{email} is not permitted to own any more enterprises (limit is %{enterprise_limit})."
   spree_variant_product_error: must have at least one variant
   your_profil_live: "Your profile live"
-  on_ofn_map: "on the Open Food Network map"
   see: "See"
   live: "live"
   manage: "Manage"
@@ -2566,6 +2563,13 @@ en_IN:
         error_saving: "Error saving subscription"
         new:
           please_select_a_shop: "Please select a shop"
+      enterprises:
+        form:
+          images:
+            removed_logo_successfully: "Logo removed successfully"
+            immediate_logo_removal_warning: "The logo will be removed immediately after you confirm."
+            removed_promo_image_successfully: "Promo image removed successfully"
+            immediate_promo_image_removal_warning: "The promo image will be removed immediately after you confirm."
     insufficient_stock: "Insufficient stock available, only %{on_hand} remaining"
     out_of_stock:
       reduced_stock_available: Reduced stock available
@@ -2969,6 +2973,10 @@ en_IN:
           one: "1 error prohibited this record from being saved:"
           other: "%{count} errors prohibited this record from being saved:"
         there_were_problems_with_the_following_fields: "There were problems with the following fields"
+      payments_list:
+        amount: "Amount"
+        payment_method: "Payment Method"
+        payment_state: "Payment State"
     errors:
       messages:
         blank: "can't be blank"

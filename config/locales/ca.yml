@@ -120,6 +120,10 @@ ca:
     integer_array_validator:
       not_array_error: "ha de ser una matriu"
       invalid_element_error: "ha de contenir només nombres enters vàlids"
+  datetime_picker_ui:
+    current_text: Ara
+    close_text: Fet
+    time_text: Hora
   enterprise_mailer:
     confirmation_instructions:
       subject: "Sisplau, confirma l'adreça electrònica d'%{enterprise}"
@@ -227,6 +231,7 @@ ca:
   enterprises: Organitzacions
   enterprise_groups: Grups
   reports: Informes
+  listing_reports: Llistat d'informes
   variant_overrides: Inventari
   import: Importa
   spree_products: Productes Spree
@@ -596,7 +601,7 @@ ca:
         order_date: "Completada a"
         max: "Màx"
         product_unit: "Producte: Unitat"
-        weight_volume: "Pes/Volum"
+        weight_volume: "Pes / Volum (g)"
         ask: "Preguntar?"
         page_title: "Gestió de les comandes en bloc"
         actions_delete: "Suprimeix seleccionats"
@@ -633,6 +638,8 @@ ca:
           acn_placeholder: p. ex. 123 456 789
           display_invoice_logo: Mostreu el logotip a les factures
           invoice_text: Afegeix text personalitzat al final de les factures
+          terms_and_conditions: "Termes i condicions"
+          remove_terms_and_conditions: "Elimina el fitxer"
         contact:
           name: Nom
           name_placeholder: 'p. ex: Josep Ribes'
@@ -655,6 +662,8 @@ ca:
           promo_image_note1: 'ATENCIÓ:'
           promo_image_note2: Qualsevol imatge promocional que es carregui aquí es tallarà a 1200 x 260.
           promo_image_note3: 'La imatge promocional es mostra a la part superior de la pàgina de perfil i finestres emergents d''una organització '
+          remove_logo: "Elimina la imatge "
+          remove_promo_image: "Elimina la imatge "
         inventory_settings:
           text1: 'Pots optar per gestionar els nivells d''existències i els preus a través del teu '
           inventory: inventari
@@ -722,6 +731,10 @@ ca:
           enable_subscriptions_tip: "Habilitar la funcionalitat de subscripcions?"
           enable_subscriptions_false: "Deshabilitat"
           enable_subscriptions_true: "Habilitat"
+          customer_names_in_reports: "Noms de consumidores als informes"
+          customer_names_tip: "Habiliteu als proveïdors veure els noms dels vostres clients als informes"
+          customer_names_false: "Deshabilitat"
+          customer_names_true: "Habilitat"
           shopfront_message: "Missatge de la botiga"
           shopfront_message_placeholder: >
               Un missatge opcional per donar la benvinguda als clients i explicar
@@ -841,14 +854,6 @@ ca:
       new:
         title: Nova organització
         back_link: 'Tornar a la llista d''organitzacions '
-      remove_logo:
-        remove: "Elimina la imatge"
-        removed_successfully: "Logotip eliminat correctament"
-        immediate_removal_warning: "El logotip s'eliminarà immediatament després de confirmar."
-      remove_promo_image:
-        remove: "Elimina la imatge "
-        removed_successfully: "Imatge promocional eliminada correctament"
-        immediate_removal_warning: "La imatge promocional s'eliminarà immediatament després de confirmar."
       welcome:
         welcome_title: Benvingut a Katuma - Open Food Network!
         welcome_text: Heu creat correctament un
@@ -1146,12 +1151,17 @@ ca:
       destroy_attachment_does_not_exist: "El logotip no existeix"
     enterprise_promo_image:
       destroy_attachment_does_not_exist: "La imatge promocional no existeix"
+    enterprise_terms_and_conditions:
+      destroy_attachment_does_not_exist: "El fitxer de termes i condicions no existeix"
     orders:
       failed_to_update: "No s'ha pogut actualitzar la comanda"
   checkout:
     already_ordered:
       cart: "cistella"
       message_html: "Ja teniu una comanda per a aquest cicle de comanda. Consulteu %{cart} per veure els articles que heu demanat anteriorment. També podeu cancel·lar articles sempre que el cicle de comanda estigui obert."
+    terms_and_conditions:
+      message_html: "En fer aquesta comanda accepteu %{terms_and_conditions_link}."
+      link_text: "Termes del servei"
     failed: "La comanda ha fallat. Informeu-nos perquè puguem processar la vostra comanda."
   shops:
     hubs:
@@ -2055,7 +2065,6 @@ ca:
   spree_user_enterprise_limit_error: "^ %{email} no està autoritzat a tenir més organitzacions (el límit és %{enterprise_limit})."
   spree_variant_product_error: ha de tenir com a mínim una variant
   your_profil_live: "El teu perfil online"
-  on_ofn_map: "al mapa d'Open Food Network"
   see: "Veure"
   live: "online"
   manage: "Gestiona"
@@ -2298,6 +2307,7 @@ ca:
   enterprise_name_error: "ja ha estat agafat. Si aquesta és la vostra organització i voleu reclamar-ne la propietat o si voleu comerciar amb aquesta organització, poseu-vos en contacte amb l'administradora actual d'aquest perfil %{email}."
   enterprise_owner_error: "^ %{email} no està autoritzat a tenir més organitzacions (el límit és %{enterprise_limit})."
   enterprise_role_uniqueness_error: "^ Aquest rol ja està present."
+  enterprise_terms_and_conditions_type_error: "Només s’admeten fitxers PDF"
   inventory_item_visibility_error: ha de ser veritable o falsa
   product_importer_file_error: "error: no s'ha carregat cap fitxer"
   product_importer_spreadsheet_error: "no s'ha pogut processar el fitxer: tipus de fitxer no vàlid"
@@ -2540,7 +2550,7 @@ ca:
           paid: "pagat"
           pending: "pendents"
           processing: "processant"
-          void: "buit"
+          void: "pendent"
           invalid: "invàlid"
       resend_user_email_confirmation:
         resend: "Reenviar"
@@ -2572,6 +2582,15 @@ ca:
         error_saving: "S'ha produït un error en desar la subscripció"
         new:
           please_select_a_shop: "Si us plau, seleccioneu una botiga"
+      enterprises:
+        form:
+          images:
+            removed_logo_successfully: "Logotip eliminat correctament"
+            immediate_logo_removal_warning: "El logotip s'eliminarà immediatament després de confirmar."
+            removed_promo_image_successfully: "Imatge promocional eliminada correctament"
+            immediate_promo_image_removal_warning: "La imatge promocional s'eliminarà immediatament després de confirmar."
+            immediate_terms_and_conditions_removal_warning: "El fitxer de termes i condicions s’eliminarà immediatament després de confirmar-ho."
+            removed_terms_and_conditions_successfully: "El fitxer de termes i condicions s’ha eliminat correctament"
     insufficient_stock: "No hi ha prou estoc disponible, només queda %{on_hand}"
     out_of_stock:
       reduced_stock_available: Estoc reduït disponible
@@ -2645,6 +2664,9 @@ ca:
       signup_or_login: "Comenceu registrant-vos (o iniciant sessió)"
       have_an_account: "Ja tens un compte?"
       action_login: "Inicia la sessió ara."
+    stripe_elements:
+      unknown_error_from_stripe: |
+          Hi ha hagut un problema al configurar la vostra targeta a la nostra passarel·la de pagaments. Actualitzeu la pàgina i torneu-ho a provar; si falla una segona vegada, poseu-vos en contacte amb nosaltres per obtenir assistència.
   inflections:
     each:
       one: "cadascun"
@@ -2775,6 +2797,8 @@ ca:
   adjustments: "Ajustaments"
   payments: "Pagaments"
   return_authorizations: "Autoritzacions de devolució"
+  credit_owed: "Crèdit a deure"
+  new_adjustment: "Nou ajustament"
   payment: "Pagament"
   payment_method: "Mètode de pagament"
   shipment: "Enviament"
@@ -2843,8 +2867,8 @@ ca:
     continue: "Continua"
     fill_in_customer_info: "Ompliu la informació de la consumidora"
     new_payment: "Nou pagament"
-    capture: "Captura"
-    void: "Buit"
+    capture: "Pagat"
+    void: "Pendent"
     login: "Inicia sessió"
     password: "Contrasenya"
     signature: "Signatura"
@@ -2975,6 +2999,11 @@ ca:
           one: "Un error va prohibir guardar aquest registre:"
           other: "%{count} errors han impedit guardar aquest registre:"
         there_were_problems_with_the_following_fields: "Hi ha hagut problemes amb els camps següents"
+      payments_list:
+        date_time: "Data i hora"
+        amount: "Quantitat"
+        payment_method: "Mètode de pagament"
+        payment_state: "Estat del pagament"
     errors:
       messages:
         blank: "no es pot deixar en blanc"
@@ -3056,7 +3085,7 @@ ca:
         index:
           listing_orders: "Llistat comandes"
           new_order: "Nova comanda"
-          capture: "Captura"
+          capture: "Pagat"
           ship: "Enviament"
           edit: "Editar"
           order_not_updated: "La comanda no s'ha pogut actualitzar"
@@ -3190,7 +3219,7 @@ ca:
             error_saving_payment: Error en desar el pagament
             submitting_payment: S'està lliurant el pagament...
           paypal:
-            no_payment_via_admin_backend: Els pagaments amb Paypal no es poden capturar des de l'administració
+            no_payment_via_admin_backend: Els pagaments amb Paypal no es poden marcar com pagats des de l'administració
       products:
         image_upload_error: "No s'ha reconegut la imatge del producte. Carregueu una imatge en format PNG o JPG."
         new:
@@ -3244,6 +3273,8 @@ ca:
           bulk_coop_allocation: 'Compra grupal - Assignació'
           bulk_coop_packing_sheets: 'Compra grupal - Fulls de preparació de cistelles'
           bulk_coop_customer_payments: 'Compra grupal - Pagaments de les consumidores'
+        customer_names_message:
+          customer_names_tip: "Si els noms de les consumidores per a les comandes que heu subministrat apareixen amagats, podeu contactar amb la distribuïdora i preguntar-los si poden actualitzar les seves preferències de la botiga per permetre als seus proveïdors visualitzar els noms de les consumidores."
       users:
         index:
           listing_users: "Llistat d'usuàries"
@@ -3350,7 +3381,7 @@ ca:
       paid: pagat
       pending: pendents
       processing: processant
-      void: buit
+      void: pendent
       invalid: invàlid
     order_mailer:
       cancel_email:
@@ -3476,3 +3507,8 @@ ca:
       shipment:
         cannot_ready: "No es pot fer l'enviament."
       invalid_taxonomy_id: "Identificador de taxonomia no vàlid."
+    activerecord:
+      models:
+        spree/payment:
+          one: Pagament
+          other: Pagaments

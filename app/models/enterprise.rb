@@ -1,3 +1,7 @@
+# frozen_string_literal: false
+
+require 'spree/core/s3_support'
+
 class Enterprise < ActiveRecord::Base
   SELLS = %w(unspecified none own any).freeze
   ENTERPRISE_SEARCH_RADIUS = 100
@@ -6,11 +10,9 @@ class Enterprise < ActiveRecord::Base
   preference :shopfront_closed_message, :text, default: ""
   preference :shopfront_taxon_order, :string, default: ""
   preference :shopfront_order_cycle_order, :string, default: "orders_close_at"
+  preference :show_customer_names_to_suppliers, :boolean, default: false
 
-  # This is hopefully a temporary measure, pending the arrival of multiple named inventories
-  # for shops. We need this here to allow hubs to restrict visible variants to only those in
-  # their inventory if they so choose
-  # TODO: delegate this to a separate model instead of abusing Preferences.
+  # Allow hubs to restrict visible variants to only those in their inventory
   preference :product_selection_from_inventory_only, :boolean, default: false
 
   has_paper_trail only: [:owner_id, :sells], on: [:update]
@@ -73,9 +75,15 @@ class Enterprise < ActiveRecord::Base
                     },
                     url: '/images/enterprises/promo_images/:id/:style/:basename.:extension',
                     path: 'public/images/enterprises/promo_images/:id/:style/:basename.:extension'
-
   validates_attachment_content_type :logo, content_type: %r{\Aimage/.*\Z}
   validates_attachment_content_type :promo_image, content_type: %r{\Aimage/.*\Z}
+
+  has_attached_file :terms_and_conditions,
+                    url: '/files/enterprises/terms_and_conditions/:id/:basename.:extension',
+                    path: 'public/files/enterprises/terms_and_conditions/:id/:basename.:extension'
+  validates_attachment_content_type :terms_and_conditions,
+                                    content_type: "application/pdf",
+                                    message: I18n.t(:enterprise_terms_and_conditions_type_error)
 
   include Spree::Core::S3Support
   supports_s3 :logo

@@ -106,6 +106,8 @@ pt:
     integer_array_validator:
       not_array_error: "deve ser uma lista"
       invalid_element_error: "deve conter apenas números válidos"
+  datetime_picker_ui:
+    time_text: Hora
   enterprise_mailer:
     confirmation_instructions:
       subject: "Por favor confirme o endereço de email de %{enterprise}"
@@ -558,7 +560,6 @@ pt:
         order_date: "Concluído Em"
         max: "Máximo"
         product_unit: "Produto: Unidade"
-        weight_volume: "Peso/Volume"
         ask: "Perguntar?"
         page_title: "Gestão de Encomendas em Massa"
         actions_delete: "Apagar o Selecionado"
@@ -617,6 +618,8 @@ pt:
           promo_image_note1: 'POR FAVOR OBSERVE:'
           promo_image_note2: Qualquer imagem promocional carregada aqui será cortada para 1200 x 260.
           promo_image_note3: A imagem promocional é exibida no topo da página de perfil da organização e em janelas pop-up.
+          remove_logo: "Remover Imagem"
+          remove_promo_image: "Remover Imagem"
         inventory_settings:
           text1: Pode optar por gerir o seu nível de stock e preços através do seu
           inventory: inventário
@@ -680,6 +683,8 @@ pt:
           enable_subscriptions_tip: "Activar a funcionalidade das subscrições?"
           enable_subscriptions_false: "Desactivado"
           enable_subscriptions_true: "Activo"
+          customer_names_false: "Desactivado"
+          customer_names_true: "Activo"
           shopfront_message: "Mensagem da Loja"
           shopfront_message_link_tooltip: "Inserir / editar link"
           shopfront_message_link_prompt: "Por favor insira um URL"
@@ -793,14 +798,6 @@ pt:
       new:
         title: Nova Organização
         back_link: Voltar à lista de organizações
-      remove_logo:
-        remove: "Remover Imagem"
-        removed_successfully: "Logotipo removido com sucesso"
-        immediate_removal_warning: "O logotipo será removido imediatamente após a confirmação."
-      remove_promo_image:
-        remove: "Remover Imagem"
-        removed_successfully: "Imagem promocional removida com sucesso"
-        immediate_removal_warning: "A imagem promocional será removida imediatamente após confirmação."
       welcome:
         welcome_title: Bem-vindo à Open Food Network!
         welcome_text: Você criou com sucesso uma
@@ -1950,7 +1947,6 @@ pt:
   spree_user_enterprise_limit_error: "^%{email} não tem autorização para ter mais organizações (o limite é %{enterprise_limit})."
   spree_variant_product_error: tem de ter pelo menos uma variante
   your_profil_live: "O seu perfil online"
-  on_ofn_map: "no mapa da Open Food Network"
   see: "Ver"
   live: "online"
   manage: "Gerir"
@@ -2440,6 +2436,13 @@ pt:
       subscriptions:
         new:
           please_select_a_shop: "Por favor selecione uma loja"
+      enterprises:
+        form:
+          images:
+            removed_logo_successfully: "Logotipo removido com sucesso"
+            immediate_logo_removal_warning: "O logotipo será removido imediatamente após a confirmação."
+            removed_promo_image_successfully: "Imagem promocional removida com sucesso"
+            immediate_promo_image_removal_warning: "A imagem promocional será removida imediatamente após confirmação."
     insufficient_stock: "Stock disponível insuficiente, apenas %{on_hand} disponíveis"
     out_of_stock:
       reduced_stock_available: Stock reduzido disponível
@@ -2733,6 +2736,11 @@ pt:
     weight: Peso (por kg)
     actions:
       update: "Atualizar"
+    shared:
+      payments_list:
+        amount: "Quantia"
+        payment_method: "Método de Pagamento"
+        payment_state: "Estado do Pagamento"
     errors:
       messages:
         blank: "não pode ser vazio"

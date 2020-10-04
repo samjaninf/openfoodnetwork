@@ -9,11 +9,11 @@ es:
         shipment_state: Estado del envío
         completed_at: Completado en
         number: Número
-        state: Provincia
+        state: Estado
         email: E-mail del consumidor
       spree/payment:
         amount: Cantidad
-        state: Provincia
+        state: Estado
         source: Source
       spree/product:
         primary_taxon: "categoría del producto"
@@ -120,6 +120,10 @@ es:
     integer_array_validator:
       not_array_error: "debe ser una matriz"
       invalid_element_error: "debe contener solo enteros válidos"
+  datetime_picker_ui:
+    current_text: Ahora
+    close_text: Hecho
+    time_text: Hora
   enterprise_mailer:
     confirmation_instructions:
       subject: "Confirma la dirección de correo electrónico de %{enterprise}"
@@ -227,6 +231,7 @@ es:
   enterprises: Organizaciones
   enterprise_groups: Redes
   reports: Informes
+  listing_reports: Listado de reportes
   variant_overrides: Inventario
   import: Importar
   spree_products: Productos Spree
@@ -596,7 +601,7 @@ es:
         order_date: "Completado en"
         max: "Max"
         product_unit: "Producto: Unidad"
-        weight_volume: "Peso/Volumen"
+        weight_volume: "Peso / Volumen (g)"
         ask: "¿Pregunta?"
         page_title: "Gestor de Multiples Pedidos"
         actions_delete: "Borrar Seleccionados"
@@ -633,6 +638,8 @@ es:
           acn_placeholder: ej. 123 456 789
           display_invoice_logo: Mostrar logo en facturas
           invoice_text: Añadir texto personalizado al final de las facturas
+          terms_and_conditions: "Términos y Condiciones"
+          remove_terms_and_conditions: "Eliminar archivo"
         contact:
           name: Nombre
           name_placeholder: ej. Gustav Plum
@@ -655,6 +662,8 @@ es:
           promo_image_note1: 'ATENCIÓN:'
           promo_image_note2: La imagen será recortada a  1200 x 260.
           promo_image_note3: La imagen se mostrará en la parte superior del perfil de la organización y en pop-ups.
+          remove_logo: "Eliminar la imagen"
+          remove_promo_image: "Eliminar la imagen"
         inventory_settings:
           text1: Puedes optar por administrar los niveles de stock y los precios a través de tu
           inventory: inventario
@@ -722,6 +731,10 @@ es:
           enable_subscriptions_tip: "¿Habilitar la funcionalidad de suscripciones?"
           enable_subscriptions_false: "Deshabilitado"
           enable_subscriptions_true: "Habilitado"
+          customer_names_in_reports: "Nombres de consumidoras en informes"
+          customer_names_tip: "Permita que sus proveedores vean los nombres de sus consumidoras en los informes"
+          customer_names_false: "Deshabilitado"
+          customer_names_true: "Habilitado"
           shopfront_message: "Mensaje de la Tienda"
           shopfront_message_placeholder: >
               Mensaje de bienvenida opcional para compradores, explica como comprar
@@ -840,14 +853,6 @@ es:
       new:
         title: Nueva Organización
         back_link: Volver a la lista de organizaciones
-      remove_logo:
-        remove: "Eliminar la imagen"
-        removed_successfully: "Logotipo eliminado con éxito"
-        immediate_removal_warning: "El logotipo se eliminará inmediatamente después de confirmar."
-      remove_promo_image:
-        remove: "Eliminar la imagen"
-        removed_successfully: "Imagen promocional eliminada con éxito"
-        immediate_removal_warning: "La imagen promocional se eliminará inmediatamente después de confirmar."
       welcome:
         welcome_title: Bienvenida a Open Food Network!
         welcome_text: Has creado correctamente un
@@ -1145,12 +1150,17 @@ es:
       destroy_attachment_does_not_exist: "El logotipo no existe"
     enterprise_promo_image:
       destroy_attachment_does_not_exist: "La imagen promocional no existe"
+    enterprise_terms_and_conditions:
+      destroy_attachment_does_not_exist: "El archivo de términos y condiciones no existe"
     orders:
       failed_to_update: "Error al actualizar pedido"
   checkout:
     already_ordered:
       cart: "carrito"
       message_html: "Ya realizó un pedido para este ciclo de pedido. Compruebe el %{cart}para ver los artículos que pidió. También puede cancelar artículos mientras el ciclo de pedido siga abierto."
+    terms_and_conditions:
+      message_html: "Al realizar este pedido acepta %{terms_and_conditions_link}."
+      link_text: "Términos de servicio"
     failed: "La finalización de compra falló, por favor comunicate con nosotros para procesar la orden."
   shops:
     hubs:
@@ -2054,7 +2064,6 @@ es:
   spree_user_enterprise_limit_error: "^ %{email} no está autorizado a tener más organizaciones (el límite es %{enterprise_limit})."
   spree_variant_product_error: Debes tener al menos una variante
   your_profil_live: "Tu perfil online"
-  on_ofn_map: "en el mapa Open Food Network"
   see: "Ver"
   live: "En directo"
   manage: "Gestionar"
@@ -2137,7 +2146,7 @@ es:
   report_header_ship_street_2: Calle de envío 2
   report_header_ship_city: Ciudad de envío
   report_header_ship_postcode: Código postal de envío
-  report_header_ship_state: Provincia de envío
+  report_header_ship_state: Estado del envío
   report_header_billing_street: Calle de facturación
   report_header_billing_street_2: Calle de facturación 2
   report_header_billing_street_3: Calle de facturación 3
@@ -2297,6 +2306,7 @@ es:
   enterprise_name_error: "ya está en uso. Si esta es su organización y le gustaría reclamar la propiedad, o si desea negociar con esta organización, comuníquese con el gestor actual de este perfil al %{email}."
   enterprise_owner_error: "^ %{email} no está autorizado a tener más organizaciones (el límite es %{enterprise_limit})."
   enterprise_role_uniqueness_error: "^Este rol ya está presente."
+  enterprise_terms_and_conditions_type_error: "Solo se permiten archivos PDF"
   inventory_item_visibility_error: Debe ser verdadero o falso
   product_importer_file_error: "Error: no se ha subido ningún archivo"
   product_importer_spreadsheet_error: "No se pudo procesar el archivo: tipo de archivo inválido"
@@ -2540,7 +2550,7 @@ es:
           paid: "pagado"
           pending: "pendiente"
           processing: "procesando"
-          void: "vacío"
+          void: "pendiente"
           invalid: "inválido"
       resend_user_email_confirmation:
         resend: "Reenviar"
@@ -2572,6 +2582,15 @@ es:
         error_saving: "Error al salvar suscripción "
         new:
           please_select_a_shop: "Por favor seleccione una tienda"
+      enterprises:
+        form:
+          images:
+            removed_logo_successfully: "Logotipo eliminado con éxito"
+            immediate_logo_removal_warning: "El logotipo se eliminará inmediatamente después de confirmar."
+            removed_promo_image_successfully: "Imagen promocional eliminada con éxito"
+            immediate_promo_image_removal_warning: "La imagen promocional se eliminará inmediatamente después de confirmar."
+            immediate_terms_and_conditions_removal_warning: "El archivo de términos y condiciones se eliminará inmediatamente después de que confirme."
+            removed_terms_and_conditions_successfully: "Archivo de términos y condiciones eliminado correctamente"
     insufficient_stock: "Stock insuficiente disponible, solo quedan %{on_hand}"
     out_of_stock:
       reduced_stock_available: Stock reducido disponible
@@ -2645,6 +2664,9 @@ es:
       signup_or_login: "Empieza registrándose (o iniciando sesión)"
       have_an_account: "¿Ya tiene una cuenta?"
       action_login: "Inicie sesión ahora."
+    stripe_elements:
+      unknown_error_from_stripe: |
+          Hubo un problema al configurar su tarjeta en nuestra pasarela de pagos. Actualice la página y vuelva a intentarlo; si falla por segunda vez, comuníquese con nosotros para obtener asistencia.
   inflections:
     each:
       one: "each"
@@ -2775,6 +2797,8 @@ es:
   adjustments: "Ajustes"
   payments: "Pagos"
   return_authorizations: "Autorizaciones de devolución"
+  credit_owed: "Crédito debido"
+  new_adjustment: "Nuevo ajuste"
   payment: "Pago"
   payment_method: "Método de pago"
   shipment: "Envío"
@@ -2843,8 +2867,8 @@ es:
     continue: "Continuar"
     fill_in_customer_info: "Por favor complete la información de la consumidora"
     new_payment: "Nuevo pago"
-    capture: "Captura"
-    void: "Vacío"
+    capture: "Pagado"
+    void: "Pendiente"
     login: "Iniciar sesión"
     password: "Contraseña"
     signature: "Firma"
@@ -2975,6 +2999,11 @@ es:
           one: "1 error prohibió guardar este registro:"
           other: "%{count} errores impidieron que se guardara este registro:"
         there_were_problems_with_the_following_fields: "Hubo problemas con los siguientes campos"
+      payments_list:
+        date_time: "Fecha y hora"
+        amount: "Cantidad"
+        payment_method: "Método de pago"
+        payment_state: "Estado del pago"
     errors:
       messages:
         blank: "no puede estar vacío"
@@ -3056,7 +3085,7 @@ es:
         index:
           listing_orders: "Pedidos de listado"
           new_order: "Nuevo pedido"
-          capture: "Captura"
+          capture: "Pagado"
           ship: "Envío"
           edit: "Editar"
           order_not_updated: "El pedido no se pudo actualizar"
@@ -3075,7 +3104,7 @@ es:
           shipment_state: "Estado del envío"
           completed_at: "Completado en"
           number: "Número"
-          state: "Provincia"
+          state: "Estado"
           email: "E-mail del consumidor"
         invoice:
           issued_on: "Emitido el"
@@ -3190,7 +3219,7 @@ es:
             error_saving_payment: Error al guardar el pago
             submitting_payment: Enviando pago...
           paypal:
-            no_payment_via_admin_backend: Los pagos de PayPal no se pueden capturar desde la administración
+            no_payment_via_admin_backend: Los pagos de PayPal no se pueden marcar como pagados desde la administración
       products:
         image_upload_error: "La imagen del producto no fue reconocida. Por favor, cargue una imagen en formato PNG o JPG."
         new:
@@ -3244,6 +3273,8 @@ es:
           bulk_coop_allocation: 'Bulk Co-op - Asignación'
           bulk_coop_packing_sheets: 'Bulk Co-op - Hojas de Empaquetado'
           bulk_coop_customer_payments: 'Bulk Co-op - Pagos de las Consumidoras'
+        customer_names_message:
+          customer_names_tip: "Si los nombres de las consumidoras están ocultos para los pedidos que ha suministrado, puede comunicarse con la distribuidora y preguntar si pueden actualizar sus preferencias de tienda para permitir que sus proveedores vean los nombres de las consumidoras."
       users:
         index:
           listing_users: "Listado de Usuarias"
@@ -3350,7 +3381,7 @@ es:
       paid: pagado
       pending: pendiente
       processing: procesando
-      void: vacío
+      void: pendiente
       invalid: inválido
     order_mailer:
       cancel_email:
@@ -3476,3 +3507,8 @@ es:
       shipment:
         cannot_ready: "No se puede completar envío"
       invalid_taxonomy_id: "El identificador de taxonomía es inválido."
+    activerecord:
+      models:
+        spree/payment:
+          one: Pago
+          other: Pagos

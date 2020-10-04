@@ -120,11 +120,15 @@ tr:
     integer_array_validator:
       not_array_error: "Sıralı olmalı"
       invalid_element_error: "Yalnızca geçerli tam sayılar içermelidir"
+  datetime_picker_ui:
+    current_text: Şimdi
+    close_text: Tamam
+    time_text: Zaman
   enterprise_mailer:
     confirmation_instructions:
       subject: "Lütfen %{enterprise} için e-posta adresini doğrulayın"
     welcome:
-      subject: "%{enterprise} şimdi %{sitename} 'de"
+      subject: "%{enterprise} şimdi %{sitename} 'nda"
       email_welcome: "Aramıza Hoşgeldiniz "
       email_registered: "şimdi bir parçası"
       email_userguide_html: "Dükkan veya Pazar hesapları ayarları ile ilgili ayrıntılı desteğe sahip Kullanıcı Kılavuzu burada: %{link}"
@@ -227,6 +231,7 @@ tr:
   enterprises: İşletmeler
   enterprise_groups: AĞLAR
   reports: Raporlar
+  listing_reports: Listeleme Raporları
   variant_overrides: Stok
   import: Aktar
   spree_products: Spree Ürünleri
@@ -596,7 +601,7 @@ tr:
         order_date: "Tamamlanma Tarihi:"
         max: "En Fazla"
         product_unit: "Ürün: Birim"
-        weight_volume: "Ağırlık / Hacim"
+        weight_volume: "Ağırlık / Hacim "
         ask: "Sor?"
         page_title: "TOPLU SİPARİŞ YÖNETİMİ"
         actions_delete: "Seçilenleri Sil"
@@ -633,6 +638,8 @@ tr:
           acn_placeholder: Örn. 0530 123 45 67
           display_invoice_logo: Faturalarda logoyu göster
           invoice_text: Faturaların sonuna özelleştirilmiş metin ekle
+          terms_and_conditions: "Şartlar ve Koşullar"
+          remove_terms_and_conditions: "Dosyayı Kaldır"
         contact:
           name: Ad
           name_placeholder: Örn. Toprak Güneş
@@ -655,6 +662,8 @@ tr:
           promo_image_note1: 'DİKKAT:'
           promo_image_note2: Kapak resmi 1200 x 260 formatına göre kırpılacaktır.
           promo_image_note3: Kapak resmi, işletmenin profil sayfasının üstünde görüntülenir.
+          remove_logo: "Resmi Kaldır"
+          remove_promo_image: "Resmi Kaldır"
         inventory_settings:
           text1: 'Stok seviyelerini ve fiyatları şuradan yönetebilirsiniz:'
           inventory: Stok
@@ -700,7 +709,7 @@ tr:
           name: "Ad"
           applies: "AKTİF?"
           manage: "Teslimat Yöntemlerini Yönet"
-          create_button: "Yenİ Teslİmat Yöntemİ Oluştur"
+          create_button: "Yeni Teslimat Yöntemi Oluştur"
           create_one_button: "Şimdi Oluştur"
           no_method_yet: "Henüz herhangi bir teslimat yönteminiz yok."
         shop_preferences:
@@ -721,6 +730,10 @@ tr:
           enable_subscriptions_tip: "Üyelik işlevselliği etkinleştirilsin mi?"
           enable_subscriptions_false: "Kapalı"
           enable_subscriptions_true: "Etkin"
+          customer_names_in_reports: "Raporlardaki Müşteri İsimleri"
+          customer_names_tip: "Tedarikçilerinizin raporlardaki müşteri isimlerini görmesine izin verin"
+          customer_names_false: "Kapalı"
+          customer_names_true: "Etkin"
           shopfront_message: "DÜKKAN MESAJINIZ"
           shopfront_message_placeholder: >
               Müşterilerinize merhaba diyebilir, dükkanınız ve alışveriş şartlarınız
@@ -838,14 +851,6 @@ tr:
       new:
         title: Yeni İşletme
         back_link: İşletmeler LİSTESİNE gerİ dön
-      remove_logo:
-        remove: "Resmi Kaldır"
-        removed_successfully: "Logo başarıyla kaldırıldı"
-        immediate_removal_warning: "Onayladıktan hemen sonra logo kaldırılacaktır."
-      remove_promo_image:
-        remove: "Resmi Kaldır"
-        removed_successfully: "Kapak resmi başarıyla kaldırıldı"
-        immediate_removal_warning: "Kapak resmi, onayladıktan hemen sonra kaldırılacaktır."
       welcome:
         welcome_title: Açık Gıda Ağı'na Hoşgeldiniz!
         welcome_text: 'BAŞARILI ŞEKİLDE OLUŞTURULDU:'
@@ -1143,12 +1148,17 @@ tr:
       destroy_attachment_does_not_exist: "Logo mevcut değil"
     enterprise_promo_image:
       destroy_attachment_does_not_exist: "Kapak resmi mevcut değil"
+    enterprise_terms_and_conditions:
+      destroy_attachment_does_not_exist: "Şartlar ve Koşullar dosyası mevcut değil"
     orders:
       failed_to_update: "Sipariş güncellenemedi"
   checkout:
     already_ordered:
       cart: "Sepet"
       message_html: "Bu sipariş dönemi için zaten bir siparişiniz var. Daha önce sipariş ettiğiniz ürünleri görmek için %{cart} adresini kontrol edin. Sipariş dönemi açık olduğu sürece siparişlerinizde değişiklik yapabilirsiniz."
+    terms_and_conditions:
+      message_html: "Bu siparişi vererek %{terms_and_conditions_link} 'ı onaylamış oluyorsunuz."
+      link_text: "Üyelik Sözleşmesi"
     failed: "Ödeme başarısız oldu. Siparişinizi işleme koyabilmemiz için lütfen bizimle iletişime geçin."
   shops:
     hubs:
@@ -2052,7 +2062,6 @@ tr:
   spree_user_enterprise_limit_error: "^ %{email}'ın daha fazla işletmeye sahip olmasına izin verilmiyor (limit %{enterprise_limit})."
   spree_variant_product_error: en az bir varyant olmalı
   your_profil_live: "Profiliniz Canlı"
-  on_ofn_map: "Açık Gıda Ağı haritasında görünürsünüz"
   see: "Haritada"
   live: "gör"
   manage: "yönet"
@@ -2295,6 +2304,7 @@ tr:
   enterprise_name_error: "çoktan alındı. İşletme size aitse ve sahiplik talebinde bulunmak istiyorsanız veya bu işletmeyle ticaret yapmak istiyorsanız lütfen %{email} üzerinden bu profilin şu anki yöneticisiyle iletişime geçin."
   enterprise_owner_error: "^ %{email}‘ın daha fazla işletmeye sahip olmasına izin verilmiyor (limit %{enterprise_limit})."
   enterprise_role_uniqueness_error: "^ Bu rol zaten var."
+  enterprise_terms_and_conditions_type_error: "Sadece PDF dosyalarına izin verilir"
   inventory_item_visibility_error: doğru veya yanlış olmalı
   product_importer_file_error: "hata: hiçbir dosya yüklenmedi"
   product_importer_spreadsheet_error: "dosya işlenemedi: geçersiz dosya tipi"
@@ -2568,6 +2578,15 @@ tr:
         error_saving: "Üyelik kaydedilirken hata oluştu"
         new:
           please_select_a_shop: "Lütfen bir dükkan seçin"
+      enterprises:
+        form:
+          images:
+            removed_logo_successfully: "Logo başarıyla kaldırıldı"
+            immediate_logo_removal_warning: "Onayladıktan hemen sonra logo kaldırılacaktır."
+            removed_promo_image_successfully: "Kapak resmi başarıyla kaldırıldı"
+            immediate_promo_image_removal_warning: "Kapak resmi, onayladıktan hemen sonra kaldırılacaktır."
+            immediate_terms_and_conditions_removal_warning: "Şartlar ve Koşullar dosyası, onayladıktan hemen sonra kaldırılacaktır."
+            removed_terms_and_conditions_successfully: "Şartlar ve Koşullar dosyası başarıyla kaldırıldı. "
     insufficient_stock: "Yetersiz stok, sadece %{on_hand} kaldı"
     out_of_stock:
       reduced_stock_available: Azaltılmış stok mevcut
@@ -2641,6 +2660,10 @@ tr:
       signup_or_login: "Kaydolarak Başlayın (veya giriş yapın)"
       have_an_account: "Zaten hesabınız var mı?"
       action_login: "Şimdi giriş yapın."
+    stripe_elements:
+      unknown_error_from_stripe: |
+          Ödeme sağlayıcımızda kart ayarlarınız ile ilgili bir sorun oluştu.
+          Lütfen sayfayı yenileyip tekrar deneyin, eğer sorun devam ediyorsa lütfen destek için bize ulaşın.
   inflections:
     each:
       one: "her biri"
@@ -2771,6 +2794,8 @@ tr:
   adjustments: "Düzeltmeler"
   payments: "Ödemeler"
   return_authorizations: "İade Yetkileri"
+  credit_owed: "Artı Bakiye"
+  new_adjustment: "Yeni Düzenleme"
   payment: "Ödeme"
   payment_method: "ÖDEME YÖNTEMİ"
   shipment: "Teslimat"
@@ -2971,6 +2996,11 @@ tr:
           one: "1 hata kaydedilmesini engelledi:"
           other: "%{count}hata kaydedilmeyi engelledi:"
         there_were_problems_with_the_following_fields: "Belirtilen alanlar ile ilgili sorun oluştu:"
+      payments_list:
+        date_time: "Gün/Saat"
+        amount: "Tutar"
+        payment_method: "ÖDEME YÖNTEMİ"
+        payment_state: "Ödeme Durumu"
     errors:
       messages:
         blank: "boş olamaz"
@@ -3118,11 +3148,11 @@ tr:
           no_shipping_methods_found: "Hiçbir teslimat yöntemi bulunamadı"
         new:
           new_shipping_method: "YENİ TESLİMAT YÖNTEMİ"
-          back_to_shipping_methods_list: "Teslİmat Yöntemlerİne Gerİ Dön"
+          back_to_shipping_methods_list: "Teslimat Yöntemlerine Geri Dön"
         edit:
           editing_shipping_method: "Teslimat Yöntemini Düzenle"
           new: "YENİ"
-          back_to_shipping_methods_list: "Teslİmat Yöntemlerİne Gerİ Dön"
+          back_to_shipping_methods_list: "Teslimat Yöntemlerine Gerİ Dön"
         form:
           categories: "Kategoriler"
           zones: "bölgeler"
@@ -3240,6 +3270,8 @@ tr:
           bulk_coop_allocation: 'Müşteri Bazında Toplu Alım Rakamları'
           bulk_coop_packing_sheets: 'Toplu Alım - Paketleme Sayfaları'
           bulk_coop_customer_payments: 'Toplu Alım - Müşteri Ödemeleri'
+        customer_names_message:
+          customer_names_tip: "Tedarik ettiğiniz siparişlerde müşteri isimleri gizli ise dağıtımcıya ulaşıp alışveriş tercihlerini tedarikçilerinin müşteri isimlerini görebilmelerini sağlayacak şekilde güncellemelerini isteyebilirsiniz. "
       users:
         index:
           listing_users: "Kullanıcılar Listeleniyor"
@@ -3472,3 +3504,8 @@ tr:
       shipment:
         cannot_ready: "Gönderim hazırlanamıyor."
       invalid_taxonomy_id: "Geçersiz kategori kimliği."
+    activerecord:
+      models:
+        spree/payment:
+          one: Ödemeler
+          other: 'Ödemeler '

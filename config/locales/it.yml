@@ -120,6 +120,9 @@ it:
     integer_array_validator:
       not_array_error: "deve essere un array"
       invalid_element_error: "deve contenere solo numeri interi"
+  datetime_picker_ui:
+    close_text: Fatto
+    time_text: Ora
   enterprise_mailer:
     confirmation_instructions:
       subject: "Per favore conferma l'indirizzo email di %{enterprise}"
@@ -593,7 +596,6 @@ it:
         order_date: "Completato al"
         max: "Max"
         product_unit: "Prodotto: Unità"
-        weight_volume: "Peso/Volume"
         ask: "Chiedi?"
         page_title: "Gestione di ordine all'ingrosso"
         actions_delete: "Cancella i selezionati"
@@ -652,6 +654,8 @@ it:
           promo_image_note1: 'Per favore nota:'
           promo_image_note2: Ogni immagine caricata sarà ritagliata a 1200 x 260
           promo_image_note3: L'immagine promo sarà visualizzata in cima alla pagina del profilo azienda e nei pop-up.
+          remove_logo: "Rimuovi immagine"
+          remove_promo_image: "Rimuovi immagine"
         inventory_settings:
           text1: Puoi optare per la gestione dei livelli di scorta e dei prezzi attraverso il tuo
           inventory: inventario
@@ -719,6 +723,8 @@ it:
           enable_subscriptions_tip: "Abilita la funzionalità \"sottoscrizioni\"?"
           enable_subscriptions_false: "Disabilitata"
           enable_subscriptions_true: "Abilitata"
+          customer_names_false: "Disabilitata"
+          customer_names_true: "Abilitata"
           shopfront_message: "Messaggio vetrina"
           shopfront_message_placeholder: >
               Un messaggio opzionale per dare il benvenuto ai clienti e spiegare come
@@ -836,14 +842,6 @@ it:
       new:
         title: Nuova Azienda
         back_link: Indietro alla lista delle aziende
-      remove_logo:
-        remove: "Rimuovi immagine"
-        removed_successfully: "Logo rimosso con successo"
-        immediate_removal_warning: "Il logo verrà rimosso immediatamente dopo la conferma."
-      remove_promo_image:
-        remove: "Rimuovi immagine"
-        removed_successfully: "Immagine promozionale rimossa con successo"
-        immediate_removal_warning: "L'immagine promozionale verrà rimossa immediatamente dopo la conferma da parte tua.."
       welcome:
         welcome_title: Benvenuto su Open Food Network!
         welcome_text: Hai creato con successo una
@@ -2048,7 +2046,6 @@ it:
   spree_user_enterprise_limit_error: "^%{email}non può gestire altre aziende (il limite è %{enterprise_limit})."
   spree_variant_product_error: deve avere almeno una variante
   your_profil_live: "Il tuo profilo è attivo"
-  on_ofn_map: "sulla mappa di Open Food Network"
   see: "Vedi"
   live: "attivo"
   manage: "Gestisci"
@@ -2564,6 +2561,13 @@ it:
         error_saving: "Errore nel salvataggio dell'abbonamento"
         new:
           please_select_a_shop: "Seleziona un negozio"
+      enterprises:
+        form:
+          images:
+            removed_logo_successfully: "Logo rimosso con successo"
+            immediate_logo_removal_warning: "Il logo verrà rimosso immediatamente dopo la conferma."
+            removed_promo_image_successfully: "Immagine promozionale rimossa con successo"
+            immediate_promo_image_removal_warning: "L'immagine promozionale verrà rimossa immediatamente dopo la conferma da parte tua.."
     insufficient_stock: "Scorte disponibili insufficienti, solo %{on_hand} rimanenti"
     out_of_stock:
       reduced_stock_available: Quantità disponibile ridotta
@@ -2967,6 +2971,10 @@ it:
           one: "1 errore ha proibito il salvataggio di questo record:"
           other: "%{count} errori hanno proibito il salvataggio di questo record:"
         there_were_problems_with_the_following_fields: "Si sono verificati problemi con i seguenti campi"
+      payments_list:
+        amount: "Quantità"
+        payment_method: "Metodo di pagamento"
+        payment_state: "Stato Pagamento"
     errors:
       messages:
         blank: "non può essere lasciato vuoto"
