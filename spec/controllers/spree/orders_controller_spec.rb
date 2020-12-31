@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Spree::OrdersController, type: :controller do
@@ -58,7 +60,7 @@ describe Spree::OrdersController, type: :controller do
 
       it "redirects to unauthorized" do
         spree_get :show, id: order.number
-        expect(response.status).to eq(401)
+        expect(response).to redirect_to unauthorized_path
       end
     end
 
@@ -116,7 +118,7 @@ describe Spree::OrdersController, type: :controller do
       spree_get :edit
 
       expect(response).to redirect_to root_url
-      expect(flash[:info]).to eq("The hub you have selected is temporarily closed for orders. Please try again later.")
+      expect(flash[:info]).to eq(I18n.t('order_cycles_closed_for_hub'))
     end
 
     describe "when an item is in the cart" do
@@ -134,12 +136,7 @@ describe Spree::OrdersController, type: :controller do
       describe "the page" do
         render_views
 
-        pending "provides the right registration path" do
-          # We have an issue with the registration link within Spree controllers.
-          # The `registration_path` helper resolves to `/signup` due to
-          # spree_auth_device > config > routes.rb, but it should be `/register`.
-          #
-          # When this is true, we can use registration_path in views again.
+        it "provides the right registration path" do
           expect(subject.registration_path).to eq registration_path
         end
 
@@ -155,13 +152,13 @@ describe Spree::OrdersController, type: :controller do
 
       describe "when an item has insufficient stock" do
         before do
-          variant.update_attributes! on_hand: 3
+          variant.update! on_hand: 3
         end
 
         it "displays a flash message when we view the cart" do
           spree_get :edit
           expect(response.status).to eq 200
-          expect(flash[:error]).to eq("An item in your cart has become unavailable.")
+          expect(flash[:error]).to eq I18n.t('spree.orders.error_flash_for_unavailable_items')
         end
       end
 
@@ -173,7 +170,7 @@ describe Spree::OrdersController, type: :controller do
         it "displays a flash message when we view the cart" do
           spree_get :edit
           expect(response.status).to eq 200
-          expect(flash[:error]).to eq("An item in your cart has become unavailable.")
+          expect(flash[:error]).to eq I18n.t('spree.orders.error_flash_for_unavailable_items')
         end
       end
     end
@@ -279,7 +276,7 @@ describe Spree::OrdersController, type: :controller do
       let!(:exchange) { create(:exchange, incoming: true, sender: variant.product.supplier, receiver: order_cycle.coordinator, variants: [variant], enterprise_fees: [enterprise_fee]) }
       let!(:order) do
         order = create(:completed_order_with_totals, line_items_count: 1, user: user, distributor: distributor, order_cycle: order_cycle)
-        order.reload.line_items.first.update_attributes(variant_id: variant.id)
+        order.reload.line_items.first.update(variant_id: variant.id)
         while !order.completed? do break unless order.next! end
         order.update_distribution_charge!
         order
@@ -415,9 +412,11 @@ describe Spree::OrdersController, type: :controller do
     let(:params) { { id: order.number } }
 
     context "when the user does not have permission to cancel the order" do
+      before { allow(controller).to receive(:spree_current_user) { create(:user) } }
+
       it "responds with unauthorized" do
         spree_put :cancel, params
-        expect(response).to render_template 'shared/unauthorized'
+        expect(response).to redirect_to unauthorized_path
       end
     end
 

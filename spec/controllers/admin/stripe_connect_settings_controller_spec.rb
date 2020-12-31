@@ -1,11 +1,15 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Admin::StripeConnectSettingsController, type: :controller do
   let(:user) { create(:user) }
   let(:admin) { create(:admin_user) }
 
-  before do
-    Spree::Config.set(stripe_connect_enabled: true)
+  around do |example|
+    original_stripe_connect_enabled = Spree::Config[:stripe_connect_enabled]
+    example.run
+    Spree::Config[:stripe_connect_enabled] = original_stripe_connect_enabled
   end
 
   describe "edit" do
@@ -14,12 +18,15 @@ describe Admin::StripeConnectSettingsController, type: :controller do
 
       it "does not allow access" do
         spree_get :edit
-        expect(response).to redirect_to spree.unauthorized_path
+        expect(response).to redirect_to unauthorized_path
       end
     end
 
     context "as super admin" do
-      before { allow(controller).to receive(:spree_current_user) { admin } }
+      before do
+        Spree::Config.set(stripe_connect_enabled: true)
+        allow(controller).to receive(:spree_current_user) { admin }
+      end
 
       context "when a Stripe API key is not set" do
         before do
@@ -76,12 +83,15 @@ describe Admin::StripeConnectSettingsController, type: :controller do
 
       it "does not allow access" do
         spree_get :update, params
-        expect(response).to redirect_to spree.unauthorized_path
+        expect(response).to redirect_to unauthorized_path
       end
     end
 
     context "as super admin" do
-      before { allow(controller).to receive(:spree_current_user) { admin } }
+      before do
+        allow(controller).to receive(:spree_current_user) { admin }
+        Spree::Config.set(stripe_connect_enabled: true)
+      end
 
       it "sets global config to the specified values" do
         expect(Spree::Config.stripe_connect_enabled).to be true

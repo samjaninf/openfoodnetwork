@@ -10,10 +10,10 @@ class EnterpriseFee < ActiveRecord::Base
   has_many :exchange_fees, dependent: :destroy
   has_many :exchanges, through: :exchange_fees
 
-  attr_accessible :enterprise_id, :fee_type, :name, :tax_category_id, :calculator_type, :inherits_tax_category
-
   FEE_TYPES = %w(packing transport admin sales fundraising).freeze
-  PER_ORDER_CALCULATORS = ['Spree::Calculator::FlatRate', 'Spree::Calculator::FlexiRate', 'Spree::Calculator::PriceSack'].freeze
+  PER_ORDER_CALCULATORS = ['Calculator::FlatRate',
+                           'Calculator::FlexiRate',
+                           'Calculator::PriceSack'].freeze
 
   validates :fee_type, inclusion: { in: FEE_TYPES }
   validates :name, presence: true
@@ -25,7 +25,7 @@ class EnterpriseFee < ActiveRecord::Base
 
   scope :managed_by, lambda { |user|
     if user.has_spree_role?('admin')
-      scoped
+      where(nil)
     else
       where('enterprise_id IN (?)', user.enterprises.select(&:id))
     end

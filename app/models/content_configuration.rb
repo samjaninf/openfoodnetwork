@@ -7,15 +7,22 @@ class ContentConfiguration < Spree::Preferences::FileConfiguration
   preference :logo, :file
   preference :logo_mobile, :file
   preference :logo_mobile_svg, :file
-  has_attached_file :logo, default_url: "/assets/ofn-logo.png"
+  has_attached_file :logo, default_url: "/default_images/ofn-logo.png"
   has_attached_file :logo_mobile
-  has_attached_file :logo_mobile_svg, default_url: "/assets/ofn-logo-mobile.svg"
+  has_attached_file :logo_mobile_svg, default_url: "/default_images/ofn-logo-mobile.svg"
 
   # Home page
   preference :home_page_alert_html, :text
   preference :home_hero, :file
   preference :home_show_stats, :boolean, default: true
-  has_attached_file :home_hero, default_url: "/assets/home/home.jpg"
+  has_attached_file :home_hero, default_url: "/default_images/home.jpg"
+
+  # Map
+  preference :open_street_map_enabled, :boolean, default: false
+  preference :open_street_map_provider_name, :string, default: "OpenStreetMap.Mapnik"
+  preference :open_street_map_provider_options, :text, default: "{}"
+  preference :open_street_map_default_latitude, :string, default: "-37.4713077"
+  preference :open_street_map_default_longitude, :string, default: "144.7851531"
 
   # Producer sign-up page
   # All the following defaults using I18n don't work.
@@ -52,13 +59,13 @@ class ContentConfiguration < Spree::Preferences::FileConfiguration
 
   # Footer
   preference :footer_logo, :file
-  has_attached_file :footer_logo, default_url: "/assets/ofn-logo-footer.png"
+  has_attached_file :footer_logo, default_url: "/default_images/ofn-logo-footer.png"
 
   # Other
   preference :footer_facebook_url, :string, default: "https://www.facebook.com/OpenFoodNet"
   preference :footer_twitter_url, :string, default: "https://twitter.com/OpenFoodNet"
-  preference :footer_instagram_url, :string, default: ""
-  preference :footer_linkedin_url, :string, default: "http://www.linkedin.com/groups/Open-Food-Foundation-4743336"
+  preference :footer_instagram_url, :string, default: "https://www.instagram.com/openfoodnetworkuk/"
+  preference :footer_linkedin_url, :string, default: "https://www.linkedin.com/company/openfoodnetwork/"
   preference :footer_googleplus_url, :string, default: ""
   preference :footer_pinterest_url, :string, default: ""
   preference :footer_email, :string, default: "hello@openfoodnetwork.org"

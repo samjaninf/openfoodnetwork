@@ -1,8 +1,6 @@
 module ApplicationHelper
-  include FoundationRailsHelper::FlashHelper
-
-  def feature?(feature)
-    OpenFoodNetwork::FeatureToggle.enabled? feature
+  def feature?(feature, user = nil)
+    OpenFoodNetwork::FeatureToggle.enabled?(feature, user)
   end
 
   def ng_form_for(name, *args, &block)

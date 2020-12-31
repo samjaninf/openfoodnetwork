@@ -1,6 +1,7 @@
 describe 'Cart service', ->
   Cart = null
   Variants = null
+  RailsFlashLoader = null
   variant = null
   order = null
   $httpBackend = null
@@ -18,9 +19,15 @@ describe 'Cart service', ->
       ]
     }
     angular.module('Darkswarm').value('currentOrder', order)
-    inject ($injector, _$httpBackend_, _$timeout_)->
+
+    module ($provide)->
+      $provide.value "railsFlash", null
+      null
+
+    inject ($injector, _$httpBackend_, _$timeout_, _RailsFlashLoader_)->
       Variants =  $injector.get("Variants")
       Cart =  $injector.get("Cart")
+      RailsFlashLoader = _RailsFlashLoader_
       $httpBackend = _$httpBackend_
       $timeout = _$timeout_
 
@@ -44,6 +51,13 @@ describe 'Cart service', ->
     expect(Cart.line_items.length).toEqual 1
     Cart.adjust(order.line_items[0])
     expect(Cart.line_items.length).toEqual 0
+
+  it "does not add an item in the cart without quantity", ->
+    Cart.line_items = []
+
+    spyOn(Cart, 'orderChanged')
+    order.line_items[0].max_quantity = 0
+    expect(Cart.orderChanged).not.toHaveBeenCalled()
 
   it "sums the quantity of each line item for cart total", ->
     order.line_items[0].quantity = 2
@@ -78,6 +92,9 @@ describe 'Cart service', ->
 
   describe "updating the cart", ->
     data = {variants: {}}
+
+    beforeEach ->
+      spyOn(RailsFlashLoader, "loadFlash")
 
     it "sets update_running during the update, and clears it on success", ->
       $httpBackend.expectPOST("/cart/populate", data).respond 200, {}
@@ -120,12 +137,11 @@ describe 'Cart service', ->
       $httpBackend.flush()
       expect(Cart.popQueue).not.toHaveBeenCalled()
 
-    it "retries the update on failure", ->
-      spyOn(Cart, 'scheduleRetry')
-      $httpBackend.expectPOST("/cart/populate", data).respond 404, {}
+    it "shows an error on cart update failure", ->
+      $httpBackend.expectPOST("/cart/populate", data).respond 412, {}
       Cart.update()
       $httpBackend.flush()
-      expect(Cart.scheduleRetry).toHaveBeenCalled()
+      expect(RailsFlashLoader.loadFlash).toHaveBeenCalled()
 
   describe "verifying stock levels after update", ->
     describe "when an item is out of stock", ->
@@ -212,12 +228,6 @@ describe 'Cart service', ->
     Cart.popQueue()
     expect(Cart.update_enqueued).toBe(false)
     expect(Cart.scheduleUpdate).toHaveBeenCalled()
-
-  it "schedules retries of updates", ->
-    spyOn(Cart, 'orderChanged')
-    Cart.scheduleRetry()
-    $timeout.flush()
-    expect(Cart.orderChanged).toHaveBeenCalled()
 
   it "clears the cart", ->
     expect(Cart.line_items).not.toEqual []

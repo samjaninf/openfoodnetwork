@@ -19,7 +19,7 @@
     .three.columns.alpha
       = f.label "enterprise_preferred_shopfront_taxon_order", t('.shopfront_category_ordering')
       %br
-      (top to bottom)
+      = t('.shopfront_category_ordering_note')
     .eight.columns.omega
       %textarea.fullwidth{ id: 'enterprise_preferred_shopfront_taxon_order', name: 'enterprise[preferred_shopfront_taxon_order]', rows: 6, 'ng-model' => 'Enterprise.preferred_shopfront_taxon_order', 'ofn-taxon-autocomplete' => '', 'multiple-selection' => 'true', placeholder: 'Category' }
 
@@ -89,3 +89,16 @@
     .five.columns.omega
       = f.radio_button :enable_subscriptions, false
       = f.label :enable_subscriptions, t('.enable_subscriptions_false'), value: :false
+
+.row
+  .alpha.eleven.columns
+    .three.columns.alpha
+      %label= t '.customer_names_in_reports'
+      %div{'ofn-with-tip' => t('.customer_names_tip')}
+        %a= t 'admin.whats_this'
+    .three.columns
+      = radio_button :enterprise, :preferred_show_customer_names_to_suppliers, true
+      = label :enterprise_preferred_show_customer_names_to_suppliers, t('.customer_names_true'), value: :true
+    .five.columns.omega
+      = radio_button :enterprise, :preferred_show_customer_names_to_suppliers, false
+      = label :enterprise_preferred_show_customer_names_to_suppliers, t('.customer_names_false'), value: :false

@@ -1,16 +1,9 @@
 class ShopsController < BaseController
   layout 'darkswarm'
 
-  before_filter :enable_embedded_shopfront
+  before_action :enable_embedded_shopfront
 
   def index
-    @enterprises = Enterprise
-      .activated
-      .visible
-      .is_distributor
-      .includes(address: [:state, :country])
-      .includes(:properties)
-      .includes(supplied_products: :properties)
-      .all
+    @enterprises = ShopsListService.new.open_shops
   end
 end

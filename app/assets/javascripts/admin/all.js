@@ -27,15 +27,14 @@
 //= require lodash.underscore.js
 
 // spree
-//= require spree
+//= require admin/spree/spree
 //= require admin/spree/spree-select2
 //= require modernizr
-//= require spin
 //= require equalize
 //= require css_browser_selector_dev
 //= require responsive-tables
 //= require admin/spree_paypal_express
-//= require admin/handlebar_extensions
+//= require admin/spree/handlebar_extensions
 
 // OFN specific
 //= require_tree ../templates/admin
@@ -72,16 +71,23 @@
 //= require textAngular.min.js
 //= require i18n/translations
 //= require darkswarm/i18n.translate.js
-//= require moment
-//= require moment/de.js
-//= require moment/en-gb.js
-//= require moment/es.js
-//= require moment/fr.js
-//= require moment/it.js
-//= require moment/nb.js
-//= require moment/pt-br.js
-//= require moment/pt.js
-//= require moment/sv.js
+//= require moment/min/moment.min.js
+//= require moment/locale/ar.js
+//= require moment/locale/ca.js
+//= require moment/locale/de.js
+//= require moment/locale/en-gb.js
+//= require moment/locale/es.js
+//= require moment/locale/fil.js
+//= require moment/locale/fr.js
+//= require moment/locale/it.js
+//= require moment/locale/nb.js
+//= require moment/locale/nl-be.js
+//= require moment/locale/pt-br.js
+//= require moment/locale/pt.js
+//= require moment/locale/ru.js
+//= require moment/locale/sv.js
+//= require moment/locale/tr.js
+//= require moment/locale/pl.js
 
 // foundation
 //= require ../shared/mm-foundation-tpls-0.9.0-20180826174721.min.js

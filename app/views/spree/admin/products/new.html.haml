@@ -1,5 +1,7 @@
 = render :partial => 'spree/admin/shared/product_sub_menu'
 = render :partial => 'spree/shared/error_messages', :locals => { :target => @product }
+= admin_inject_available_units
+
 = form_for [:admin, @product], :html => { :multipart => true } do |f|
   .twelve.columns.alpha
     %fieldset.no-border-bottom{ id: "new_product" }
@@ -38,6 +40,7 @@
         .three.columns.omega{ 'ng-show' => "product.variant_unit_with_scale == 'items'" }
           = f.field_container :unit_name do
             = f.label :product_variant_unit_name, t(".unit_name")
+            %span.required *
             %input.fullwidth{ id: 'product_variant_unit_name','ng-model' => 'product.variant_unit_name', :name => 'product[variant_unit_name]', :placeholder => t('admin.products.unit_name_placeholder'), :type => 'text' }
       .twelve.columns.alpha
         .six.columns.alpha
@@ -77,12 +80,13 @@
           = f.label :product_description, t(".product_description")
           %br/
           %text-angular{'id' => 'product_description', 'name' => 'product[description]', 'class' => 'text-angular', "textangular-links-target-blank" => true, 'ta-toolbar' => "[['bold','italics','underline','clear'],['insertLink']]"}
+            = sanitize(@product.description)
           = f.error_message_on :description
   .four.columns.omega{ style: "text-align: center" }
     %fieldset.no-border-bottom{ id: "image" }
       %legend{align: "center"}= t(".image")
       .row
-        = image_tag "noimage/product.png", class: "four columns alpha"
+        = image_tag "/noimage/product.png", class: "four columns alpha"
       .row
         = f.fields_for 'images_attributes[]', f.object.images.build do |image_fields|
           = image_fields.file_field :attachment

@@ -1,3 +1,5 @@
+require 'stripe/credit_card_clone_destroyer'
+
 module Spree
   class CreditCardsController < BaseController
     def new_from_token
@@ -21,12 +23,13 @@ module Spree
     end
 
     def update
-      @credit_card = Spree::CreditCard.find_by_id(params[:id])
+      @credit_card = Spree::CreditCard.find_by(id: params[:id])
       return update_failed unless @credit_card
 
       authorize! :update, @credit_card
 
-      if @credit_card.update_attributes(params[:credit_card])
+      if @credit_card.update(credit_card_params)
+        remove_shop_authorizations if credit_card_params["is_default"]
         render json: @credit_card, serializer: ::Api::CreditCardSerializer, status: :ok
       else
         update_failed
@@ -36,7 +39,7 @@ module Spree
     end
 
     def destroy
-      @credit_card = Spree::CreditCard.find_by_id(params[:id])
+      @credit_card = Spree::CreditCard.find_by(id: params[:id])
       if @credit_card
         authorize! :destroy, @credit_card
         destroy_at_stripe
@@ -44,30 +47,29 @@ module Spree
 
       # Using try because we may not have a card here
       if @credit_card.try(:destroy)
+        remove_shop_authorizations if @credit_card.is_default
         flash[:success] = I18n.t(:card_has_been_removed, number: "x-#{@credit_card.last_digits}")
       else
         flash[:error] = I18n.t(:card_could_not_be_removed)
       end
-      redirect_to account_path(anchor: 'cards')
+      redirect_to spree.account_path(anchor: 'cards')
     rescue Stripe::CardError
       flash[:error] = I18n.t(:card_could_not_be_removed)
-      redirect_to account_path(anchor: 'cards')
+      redirect_to spree.account_path(anchor: 'cards')
     end
 
     private
 
-    # It destroys the whole customer object
-    def destroy_at_stripe
-      stripe_customer = Stripe::Customer.retrieve(@credit_card.gateway_customer_profile_id, {})
-
-      stripe_customer.delete if stripe_customer
+    def remove_shop_authorizations
+      @credit_card.user.customers.update_all(allow_charges: false)
     end
 
-    def stripe_account_id
-      StripeAccount.
-        find_by_enterprise_id(@credit_card.payment_method.preferred_enterprise_id).
-        andand.
-        stripe_user_id
+    # It destroys the whole customer object
+    def destroy_at_stripe
+      Stripe::CreditCardCloneDestroyer.new.destroy_clones(@credit_card)
+
+      stripe_customer = Stripe::Customer.retrieve(@credit_card.gateway_customer_profile_id, {})
+      stripe_customer&.delete unless stripe_customer.deleted?
     end
 
     def create_customer(token)
@@ -96,6 +98,10 @@ module Spree
 
     def update_failed
       render json: { flash: { error: t(:card_could_not_be_updated) } }, status: :bad_request
+    end
+
+    def credit_card_params
+      params.require(:credit_card).permit(:is_default, :year, :month)
     end
   end
 end

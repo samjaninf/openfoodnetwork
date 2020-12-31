@@ -3,16 +3,16 @@
 module Spree
   module Admin
     class PaymentsController < Spree::Admin::BaseController
-      before_filter :load_order, except: [:show]
-      before_filter :load_payment, only: [:fire, :show]
-      before_filter :load_data
-      before_filter :can_transition_to_payment
+      before_action :load_order, except: [:show]
+      before_action :load_payment, only: [:fire, :show]
+      before_action :load_data
+      before_action :can_transition_to_payment
 
       respond_to :html
 
       def index
         @payments = @order.payments
-        redirect_to new_admin_order_payment_url(@order) if @payments.empty?
+        redirect_to spree.new_admin_order_payment_url(@order) if @payments.empty?
       end
 
       def new
@@ -25,24 +25,26 @@ module Spree
 
         begin
           unless @payment.save
-            redirect_to admin_order_payments_path(@order)
+            redirect_to spree.admin_order_payments_path(@order)
             return
           end
+
+          authorize_stripe_sca_payment
 
           if @order.completed?
             @payment.process!
             flash[:success] = flash_message_for(@payment, :successfully_created)
 
-            redirect_to admin_order_payments_path(@order)
+            redirect_to spree.admin_order_payments_path(@order)
           else
-            AdvanceOrderService.new(@order).call!
+            OrderWorkflow.new(@order).complete!
 
             flash[:success] = Spree.t(:new_order_completed)
-            redirect_to edit_admin_order_url(@order)
+            redirect_to spree.edit_admin_order_url(@order)
           end
         rescue Spree::Core::GatewayError => e
           flash[:error] = e.message.to_s
-          redirect_to new_admin_order_payment_path(@order)
+          redirect_to spree.new_admin_order_payment_path(@order)
         end
       end
 
@@ -59,7 +61,7 @@ module Spree
         else
           flash[:error] = t(:cannot_perform_operation)
         end
-      rescue Spree::Core::GatewayError => e
+      rescue StandardError => e
         flash[:error] = e.message
       ensure
         redirect_to request.referer
@@ -72,7 +74,7 @@ module Spree
            @payment.payment_method.payment_profiles_supported? &&
            params[:card].present? &&
            (params[:card] != 'new')
-          @payment.source = CreditCard.find_by_id(params[:card])
+          @payment.source = CreditCard.find_by(id: params[:card])
         end
       end
 
@@ -82,7 +84,11 @@ module Spree
            source_params = params.delete(:payment_source)[params[:payment][:payment_method_id]]
           params[:payment][:source_attributes] = source_params
         end
-        params[:payment]
+
+        params.require(:payment).permit(
+          :amount, :payment_method_id,
+          source_attributes: ::PermittedAttributes::PaymentSource.attributes
+        )
       end
 
       def load_data
@@ -93,7 +99,7 @@ module Spree
           available(:back_end).
           select{ |pm| pm.has_distributor? @order.distributor }
 
-        @payment_method = if @payment && @payment.payment_method
+        @payment_method = if @payment&.payment_method
                             @payment.payment_method
                           else
                             @payment_methods.first
@@ -112,17 +118,26 @@ module Spree
         return if @order.payment? || @order.complete?
 
         flash[:notice] = Spree.t(:fill_in_customer_info)
-        redirect_to edit_admin_order_customer_url(@order)
+        redirect_to spree.edit_admin_order_customer_url(@order)
       end
 
       def load_order
-        @order = Order.find_by_number!(params[:order_id])
+        @order = Order.find_by!(number: params[:order_id])
         authorize! action, @order
         @order
       end
 
       def load_payment
         @payment = Payment.find(params[:id])
+      end
+
+      def authorize_stripe_sca_payment
+        return unless @payment.payment_method.class == Spree::Gateway::StripeSCA
+
+        @payment.authorize!
+        return if @payment.pending? && @payment.cvv_response_message.nil?
+
+        raise Spree::Core::GatewayError, I18n.t('authorization_failure')
       end
     end
   end

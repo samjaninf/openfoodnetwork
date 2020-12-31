@@ -19,11 +19,14 @@ class ModelSet
   def collection_attributes=(collection_attributes)
     collection_attributes.each do |_k, attributes|
       # attributes == {:id => 123, :next_collection_at => '...'}
-      e = @collection.detect { |e| e.id.to_s == attributes[:id].to_s && !e.id.nil? }
-      if e.nil?
+      found_element = @collection.detect do |element|
+        element.id.to_s == attributes[:id].to_s && !element.id.nil?
+      end
+
+      if found_element.nil?
         @collection << @klass.new(attributes) unless @reject_if.andand.call(attributes)
       else
-        e.assign_attributes(attributes.except(:id))
+        found_element.assign_attributes(attributes.except(:id))
       end
     end
   end
@@ -47,6 +50,7 @@ class ModelSet
     # Remove all elements to be deleted from collection and return them
     # Allows us to render @model_set.collection without deleted elements
     deleted = []
+    @collection = collection.to_a
     collection.delete_if { |e| deleted << e if @delete_if.andand.call(e.attributes) }
     deleted
   end

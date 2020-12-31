@@ -1,4 +1,5 @@
 require 'open_food_network/permissions'
+require 'spree/core/product_duplicator'
 
 module Api
   class ProductsController < Api::BaseController
@@ -16,7 +17,7 @@ module Api
     def create
       authorize! :create, Spree::Product
       params[:product][:available_on] ||= Time.zone.now
-      @product = Spree::Product.new(params[:product])
+      @product = Spree::Product.new(product_params)
       begin
         if @product.save
           render json: @product, serializer: Api::Admin::ProductSerializer, status: :created
@@ -32,7 +33,7 @@ module Api
     def update
       authorize! :update, Spree::Product
       @product = find_product(params[:id])
-      if @product.update_attributes(params[:product])
+      if @product.update(product_params)
         render json: @product, serializer: Api::Admin::ProductSerializer, status: :ok
       else
         invalid_resource!(@product)
@@ -69,12 +70,12 @@ module Api
     end
 
     def overridable
-      producers = OpenFoodNetwork::Permissions.new(current_api_user).
-        variant_override_producers.by_name
+      producer_ids = OpenFoodNetwork::Permissions.new(current_api_user).
+        variant_override_producers.by_name.select('enterprises.id')
 
-      @products = paged_products_for_producers producers
+      @products = paged_products_for_producers producer_ids
 
-      render_paged_products @products
+      render_paged_products @products, ::Api::Admin::ProductSimpleSerializer
     end
 
     # POST /api/products/:product_id/clone
@@ -92,7 +93,7 @@ module Api
     private
 
     def find_product(id)
-      product_scope.find_by_permalink!(id.to_s)
+      product_scope.find_by!(permalink: id.to_s)
     rescue ActiveRecord::RecordNotFound
       product_scope.find(id)
     end
@@ -118,19 +119,20 @@ module Api
       ]
     end
 
-    def paged_products_for_producers(producers)
-      Spree::Product.scoped.
+    def paged_products_for_producers(producer_ids)
+      Spree::Product.where(nil).
         merge(product_scope).
-        where(supplier_id: producers).
+        includes(variants: [:product, :default_price, :stock_items]).
+        where(supplier_id: producer_ids).
         by_producer.by_name.
         ransack(params[:q]).result.
         page(params[:page]).per(params[:per_page])
     end
 
-    def render_paged_products(products)
+    def render_paged_products(products, product_serializer = ::Api::Admin::ProductSerializer)
       serializer = ActiveModel::ArraySerializer.new(
         products,
-        each_serializer: ::Api::Admin::ProductSerializer
+        each_serializer: product_serializer
       )
 
       render text: {
@@ -143,7 +145,7 @@ module Api
     end
 
     def query_params_with_defaults
-      params[:q].to_h.reverse_merge(s: 'created_at desc')
+      (params[:q] || {}).reverse_merge(s: 'created_at desc')
     end
 
     def pagination_data(results)
@@ -153,6 +155,10 @@ module Api
         page: (params[:page] || DEFAULT_PAGE).to_i,
         per_page: (params[:per_page] || DEFAULT_PER_PAGE).to_i
       }
+    end
+
+    def product_params
+      params.require(:product).permit PermittedAttributes::Product.attributes
     end
   end
 end

@@ -1,14 +1,12 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe ShopsController, type: :controller do
   include WebHelper
   render_views
 
-  let!(:distributor) { create(:distributor_enterprise) }
-
-  before do
-    allow(OpenFoodNetwork::EnterpriseInjectionData).to receive(:active_distributor_ids) { [distributor.id] }
-  end
+  let!(:distributor) { create(:distributor_enterprise, with_payment_and_shipping: true) }
 
   it 'renders distributed product properties' do
     product_property = create(:property, presentation: 'eggs')

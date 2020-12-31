@@ -1,10 +1,10 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Admin
   describe OrderCyclesController, type: :controller do
-    include AuthenticationWorkflow
-
-    let!(:distributor_owner) { create_enterprise_user enterprise_limit: 2 }
+    let!(:distributor_owner) { create(:user) }
 
     before do
       allow(controller).to receive_messages spree_current_user: distributor_owner
@@ -104,7 +104,7 @@ module Admin
         let(:params) { { format: :json, order_cycle: {} } }
 
         before do
-          login_as_enterprise_user([shop])
+          controller_login_as_enterprise_user([shop])
           allow(OrderCycleForm).to receive(:new) { form_mock }
         end
 
@@ -150,7 +150,7 @@ module Admin
       end
 
       context "as a manager of the coordinator" do
-        before { login_as_enterprise_user([coordinator]) }
+        before { controller_login_as_enterprise_user([coordinator]) }
         let(:params) { { format: :json, id: order_cycle.id, order_cycle: {} } }
 
         context "when updating succeeds" do
@@ -178,9 +178,21 @@ module Admin
 
           it "returns an error message" do
             spree_put :update, params
+
             json_response = JSON.parse(response.body)
             expect(json_response['errors']).to be
           end
+        end
+
+        it "can update preference product_selection_from_coordinator_inventory_only" do
+          expect(OrderCycleForm).to receive(:new).
+            with(order_cycle,
+                 { "preferred_product_selection_from_coordinator_inventory_only" => true },
+                 anything) { form_mock }
+          allow(form_mock).to receive(:save) { true }
+
+          spree_put :update, params.
+            merge(order_cycle: { preferred_product_selection_from_coordinator_inventory_only: true })
         end
       end
     end
@@ -203,7 +215,7 @@ module Admin
 
       context "as a manager of the coordinator" do
         let(:user) { coordinator.owner }
-        let(:expected) { [order_cycle, hash_including(order_cycle: allowed.merge(restricted)), user] }
+        let(:expected) { [order_cycle, allowed.merge(restricted), user] }
 
         it "allows me to update exchange information for exchanges, name and dates" do
           expect(OrderCycleForm).to receive(:new).with(*expected) { form_mock }
@@ -213,7 +225,7 @@ module Admin
 
       context "as a producer supplying to an order cycle" do
         let(:user) { producer.owner }
-        let(:expected) { [order_cycle, hash_including(order_cycle: allowed), user] }
+        let(:expected) { [order_cycle, allowed, user] }
 
         it "allows me to update exchange information for exchanges, but not name or dates" do
           expect(OrderCycleForm).to receive(:new).with(*expected) { form_mock }
@@ -288,10 +300,10 @@ module Admin
     end
 
     describe "notifying producers" do
-      let(:user) { create_enterprise_user }
+      let(:user) { create(:user) }
       let(:admin_user) do
         user = create(:user)
-        user.spree_roles << Spree::Role.find_or_create_by_name!('admin')
+        user.spree_roles << Spree::Role.find_or_create_by!(name: 'admin')
         user
       end
       let(:order_cycle) { create(:simple_order_cycle) }
@@ -320,7 +332,7 @@ module Admin
       describe "when an order cycle is deleteable" do
         it "allows the order_cycle to be destroyed" do
           spree_get :destroy, id: oc.id
-          expect(OrderCycle.find_by_id(oc.id)).to be nil
+          expect(OrderCycle.find_by(id: oc.id)).to be nil
         end
       end
 

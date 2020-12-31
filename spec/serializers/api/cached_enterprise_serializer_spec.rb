@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Api::CachedEnterpriseSerializer do
@@ -9,18 +11,35 @@ describe Api::CachedEnterpriseSerializer do
     let(:duplicate_property) { create(:property, presentation: 'One') }
     let(:different_property) { create(:property, presentation: 'Two') }
 
-    let(:enterprise) do
-      create(:enterprise, properties: [duplicate_property, different_property])
-    end
-
     before do
       product = create(:product, properties: [property])
       enterprise.supplied_products << product
     end
 
-    it "removes duplicate product and producer properties" do
-      properties = cached_enterprise_serializer.supplied_properties
-      expect(properties).to eq([property, different_property])
+    context "when the enterprise is a producer" do
+      let(:enterprise) do
+        create(:enterprise,
+               is_primary_producer: true,
+               properties: [duplicate_property, different_property])
+      end
+
+      it "serializes combined product and producer properties without duplicates" do
+        properties = cached_enterprise_serializer.supplied_properties
+        expect(properties).to eq([property, different_property])
+      end
+    end
+
+    context "when the enterprise is not a producer" do
+      let(:enterprise) do
+        create(:enterprise,
+               is_primary_producer: false,
+               properties: [duplicate_property, different_property])
+      end
+
+      it "does not serialize supplied properties" do
+        properties = cached_enterprise_serializer.supplied_properties
+        expect(properties).to eq([])
+      end
     end
   end
 
@@ -53,17 +72,9 @@ describe Api::CachedEnterpriseSerializer do
         instance_double(OpenFoodNetwork::EnterpriseInjectionData, active_distributor_ids: [])
       end
 
-      it 'does not duplicate properties' do
+      it 'does not serialize distributed properties' do
         properties = cached_enterprise_serializer.distributed_properties
-        expect(properties.map(&:presentation)).to eq([property.presentation])
-      end
-
-      it 'fetches producer properties' do
-        distributed_producer_properties = cached_enterprise_serializer
-          .distributed_producer_properties
-
-        expect(distributed_producer_properties.map(&:presentation))
-          .to eq(producer.producer_properties.map(&:property).map(&:presentation))
+        expect(properties).to eq []
       end
     end
 

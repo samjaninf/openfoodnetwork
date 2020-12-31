@@ -8,9 +8,13 @@ sv:
         payment_state: Betalningstatus
         shipment_state: Leveransstatus
         state: Region
+      spree/payment:
+        state: Region
       spree/product:
         supplier: "Leverantör"
         variant_unit: "Enhet för variant"
+      variant_override:
+        count_on_hand: "På lager"
     errors:
       models:
         spree/user:
@@ -45,8 +49,7 @@ sv:
     order_cycle:
       subject: "Sammanställning över beställningsperiod för %{producer}"
   home: "OFN"
-  title: Open Food Network
-  welcome_to: 'Välkommen till'
+  title: "Open Food Network"
   site_meta_description: "Vi börjar från grunden. Med bönder och odlare redo att berätta sina berättelser stolt och verkligt. Med distributörer redo att ansluta människor med produkter rättvist och ärligt. Med köpare som tror att bättre veckovisa köpbeslut kan ..."
   search_by_name: Sök på ortnamn eller förort...
   producers_join: Svenska producenter kan nu gå med i Open Food Network. Välkomna!
@@ -114,6 +117,7 @@ sv:
     cancel: "Avbryt"
     edit: "Redigera"
     update: "Uppdatera"
+    add: "Tillägga"
   admin:
     date: Datum
     email: epost
@@ -170,19 +174,20 @@ sv:
         duplicate_code: "Denna kod används redan"
         bill_address: "Fakturaadress"
         ship_address: "Leveransadress"
-        update_address_success: 'Adressen uppdaterades'
-        update_address_error: 'Oj! Du måste fylla i alla obligatoriska fält'
-        edit_bill_address: 'Ändra fakturaadress'
-        edit_ship_address: 'Ändra leveransadress'
-        required_fileds: 'Obligatoriska fält är markerade med en asterisk'
-        select_country: 'Välj land'
-        select_state: 'Välj län'
-        edit: 'Ändra'
-        update_address: 'Uppdatera adress'
-        confirm_delete: 'Vill du verkligen radera?'
+        balance: "Saldo"
+        update_address_success: "Adressen uppdaterades"
+        update_address_error: "Oj! Du måste fylla i alla obligatoriska fält"
+        edit_bill_address: "Ändra fakturaadress"
+        edit_ship_address: "Ändra leveransadress"
+        required_fileds: "Obligatoriska fält är markerade med en asterisk"
+        select_country: "Välj land"
+        select_state: "Välj län"
+        edit: "Ändra"
+        update_address: "Uppdatera adress"
+        confirm_delete: "Vill du verkligen radera?"
         search_by_email: "Sök via e-post/kod..."
       destroy:
-        has_associated_orders: 'Radering misslyckades: kunden har associerade order med sin butik'
+        has_associated_orders: "Radering misslyckades: kunden har associerade order med sin butik"
     contents:
       edit:
         title: Innehåll
@@ -194,6 +199,7 @@ sv:
         footer_and_external_links: Sidfot och externa länkar
         your_content: Ditt innehåll
         user_guide: Användarinstruktion
+        map: Karta
     enterprise_fees:
       index:
         title: "Företagsavgifter"
@@ -270,7 +276,6 @@ sv:
         order_no: "Ordernummer"
         max: "Max"
         product_unit: "Produkt: Enhet"
-        weight_volume: "Vikten/Volymen"
         ask: "Fråga efter?"
         page_title: "Hantering av storköp"
         actions_delete: "Ta bort valda produkten"
@@ -366,12 +371,11 @@ sv:
           link_to_front: Länk till sitt skyltfönster
           link_to_front_tip: En direkt länk till ditt skyltfönster på OFN
         shipping_methods:
-          name: Namn
-          applies: Gäller?
-          manage: Bestäm leversmetoder
-          create_button: Skapa ny leveransmetod
-          create_one_button: Skapa en nu
-          no_method_yet: Du har inte bestämt leveransmetod ännu.
+          name: "Namn"
+          manage: "Bestäm leversmetoder"
+          create_button: "Skapa ny leveransmetod"
+          create_one_button: "Skapa en nu"
+          no_method_yet: "Du har inte bestämt leveransmetod ännu."
         shop_preferences:
           shopfront_requires_login: "Offentligt visat skyltfönster?"
           shopfront_requires_login_tip: "Välj om kunderna måste logga in för att se skyltfönstret eller om det skall visas för alla."
@@ -492,9 +496,18 @@ sv:
         cancel: "Avbryt"
         choose_products_from: "Välj produkter från:"
       incoming:
+        incoming: "Inkommande"
+        supplier: "Leverantör"
+        products: "Produkter"
+        fees: "Avgifter"
         next: "Näst"
         cancel: "Avbryt"
       outgoing:
+        outgoing: "Utgående"
+        distributor: "Distributör"
+        products: "Produkter"
+        tags: "Taggar"
+        fees: "Avgifter"
         cancel: "Avbryt"
       exchange_form:
         pickup_instructions_placeholder: "Instruktioner för upphämtning"
@@ -622,11 +635,11 @@ sv:
       show_on_map: "Visa allt på kartan"
   shared:
     menu:
+      cart_sidebar:
+        checkout: "Utcheckning"
+        close: "Stängd"
       signed_in:
         profile: "Profil"
-      joyride:
-        checkout: "Slutför beställning"
-        already_ordered_products: "Redan beställd i denna beställningsomgång"
     register_call:
       selling_on_ofn: "Intresserad av att gå med i Open Food Network?"
       register: "Registrera dig här"
@@ -645,8 +658,12 @@ sv:
       footer_legal_text_html: "Open Food Network är en avgiftsfri plattform för öppen källkod. Vårt innehåll har licens med  %{content_license} och vår kod med %{code_license}."
   shop:
     messages:
-      login: "Logga in"
-      contact: "kontakta"
+      customer_required:
+        login: "Logga in"
+        contact: "kontakta"
+    products:
+      summary:
+        bulk: "Grupp"
   invoice_billing_address: "Faktureringsadress"
   invoice_column_tax: "VAT"
   invoice_column_price: "Pris"
@@ -740,6 +757,8 @@ sv:
   cart_updating: "Uppdatera din varukorg"
   cart_empty: "Tom varukorg"
   cart_edit: "Redigera din varukorg "
+  item: "Vara"
+  qty: "Kvantitet"
   card_number: Kortnummer
   card_securitycode: "Säkerhetskod"
   card_expiry_date: Förfallodatum
@@ -903,14 +922,16 @@ sv:
   hubs_distance: Närmast till
   hubs_distance_filter: "Visa mig butiker nära %{location}"
   shop_changeable_orders_alert_html:
-    one: Din beställning med <a href='%{path}' target='_blank'> %{shop} / %{order} </a> är öppen för recension. Du kan göra ändringar till %{oc_close}.
+    few: Du har <a href='%{path}' target='_blank'> %{count} beställningar hos %{shop} </a> som granskas för tillfället. Du kan göra ändringar till och med%{oc_close}.
+    many: Du har <a href='%{path}' target='_blank'> %{count} beställningar hos %{shop} </a> som granskas för tillfället. Du kan göra ändringar till och med%{oc_close}.
     other: Du har <a href='%{path}' target='_blank'> %{count} beställningar hos %{shop} </a> som granskas för tillfället. Du kan göra ändringar till och med%{oc_close}.
   orders_changeable_orders_alert_html: Denna beställning har bekräftats, men du kan göra ändringar till och med <strong>%{oc_close}</strong>.
-  products_clear_all: Rensa allt
+  products_clear: Rensa
   products_showing: "Visande:"
-  products_or: "Eller"
+  products_or: "eller"
   products_with: med
-  products_search: "Sök per produkt eller producent"
+  products_filter_by: "Filtrera med"
+  products_filter_clear: "Rensa"
   products_loading: "Laddar produkter"
   products_updating_cart: "Uppdatera din varukorg"
   products_cart_empty: "Tom varukorg"
@@ -959,22 +980,6 @@ sv:
   groups_signup_contact_text: "Ta kontakt för att upptäcka vad OFN kan göra för dig:"
   groups_signup_detail: "Här är haken."
   login_invalid: "Ogiltig e-postadress eller lösenord"
-  modal_hubs: "Mathubbar"
-  modal_hubs_abstract: Våra mathubbar är kontaktpunkten mellan dig och de människor som gör din mat!
-  modal_hubs_content1: Du kan söka efter en lämplig hub enligt plats eller namn. Vissa hubbar har flera samlingspunkter där du kan plocka upp dina köp, och några kommer även tillhandahålla leveransalternativ. Varje mathub är en försäljningspunkt med oberoende affärsverksamhet och logistik - så variation mellan hubbar är att förväntas.
-  modal_hubs_content2: Du kan endast handla vid en hubb i taget.
-  modal_groups: "Grupper / Regioner"
-  modal_groups_content1: Detta är organisationerna och förhållandena mellan hubbar som skapar Open Food Network.
-  modal_groups_content2: Vissa grupper är klustrade enligt plats eller råd, andra efter icke-geografiska likheter.
-  modal_how: "Så här fungerar det"
-  modal_how_shop: Handla på Open Food Network
-  modal_how_shop_explained: Sök efter en mathubb nära dig för att börja handla! Du kan expandera varje mathubb för att se vilka typer av godsaker som finns tillgängliga och klicka genom för att börja handla. (Du kan bara handla vid en mathubb i taget.)
-  modal_how_pickup: Upphämtning, leverans och fraktavgifter
-  modal_how_pickup_explained: Vissa mathubbar levererar till din dörr, medan andra kräver att du hämtar upp dina köp. Du kan se vilka alternativ som finns tillgängliga på hemsidan, och välja vilka du vill ha vid handels- och utcheckningssidorna. Frakt kostar mer, och prissättning varierar mellan hubbar. Varje mathubb är en försäljningspunkt med oberoende affärsverksamheter och logistik - så variationer mellan hubbar är att förväntas.
-  modal_how_more: Lär dig mer
-  modal_how_more_explained: "Om du vill lära dig mer om Open Food Network, hur det fungerar, och hur du kan involvera dig, kolla in:"
-  modal_producers: "Producenter "
-  modal_producers_explained: "Våra tillverkare producerar all den delikata mat du kan handla efter på Open Food Network."
   producers_about: Om oss
   producers_buy: Handla
   producers_contact: Kontakt
@@ -1052,7 +1057,8 @@ sv:
   orders_could_not_cancel: "Tyvärr kan denna beställning inte avbrytas"
   orders_cannot_remove_the_final_item: "Det går inte att ta bort det sista varan från en beställning, var god och avbryt beställningen istället."
   orders_bought_items_notice:
-    one: "Ett ytterligare objekt är redan bekräftat för denna ordercykel"
+    few: "%{count} ytterligare artiklar är redan bekräftade för denna beställningsomgång"
+    many: "%{count} ytterligare artiklar är redan bekräftade för denna beställningsomgång"
     other: "%{count} ytterligare artiklar är redan bekräftade för denna beställningsomgång"
   orders_bought_edit_button: Redigera bekräftade varor
   orders_bought_already_confirmed: "* redan bekräftad"
@@ -1072,8 +1078,7 @@ sv:
   password: Lösenord
   remember_me: Kom ihåg mig
   are_you_sure: "Är du säker?"
-  orders_open: Beställningar kan göras
-  closing: "Stänger"
+  orders_open: "Beställningar kan göras"
   going_back_to_home_page: "Tillbaka till startsidan"
   creating: Skapar
   updating: Uppdaterar
@@ -1245,7 +1250,6 @@ sv:
   shop_for_products_html: "Köp för <span class=\"turquoise\">%{enterprise}</span> produkter vid:"
   change_shop: "Ändra butik till:"
   shop_at: "Köp nu vid:"
-  price_breakdown: "Prisfördelning"
   admin_fee: "Administrationsavgift"
   sales_fee: "Försäljningsavgift"
   packing_fee: "Förpackningsvgift"
@@ -1365,7 +1369,6 @@ sv:
   spree_user_enterprise_limit_error: "^ %{email} har inte rätt att äga några fler företag (gränsen är %{enterprise_limit})."
   spree_variant_product_error: måste ha minst en variant
   your_profil_live: "Din profil direkt"
-  on_ofn_map: "Öppna kartan över Open Food Network"
   see: "Se"
   live: "direkt"
   manage: "Hantera"
@@ -1644,7 +1647,8 @@ sv:
     more_items: "+ %{count} Mer"
     admin:
       modals:
-        got_it: Förstått
+        got_it: "Förstått"
+        continue: "Fortsätt"
         tag_rule_help:
           title: Regler för etiketter
           overview: Översikt
@@ -1802,6 +1806,11 @@ sv:
           kundvagn minskat. Detta har ändrats:
       now_out_of_stock: Är nu slut
       only_n_remainging: "nu  återstår endast %{num}"
+    shopfront:
+      variant:
+        add_to_cart: "Tillägga"
+      bulk_buy_modal:
+        max_quantity: "Maxkvantitet"
     variants:
       on_demand:
         'yes': "På begäran "
@@ -1864,6 +1873,9 @@ sv:
       start_free_profile: "Börja med en gratis profil och uppgradera när du är redo!"
   order_management:
     reports:
+      enterprise_fee_summaries:
+        report:
+          none: "Ingen"
       enterprise_fee_summary:
         fee_calculated_on_transfer_through_all: "Alla"
         fee_placements:
@@ -1893,6 +1905,8 @@ sv:
   spree:
     resend: Återsänd
     quantity: "Antal"
+    on_demand: "På begäran"
+    on_hand: "På lager"
     price: "Pris"
     total: "Summa"
     edit: "Redigera"
@@ -1906,11 +1920,14 @@ sv:
     update: "Uppdatera"
     continue: "Fortsätt"
     capture: "Fånga"
+    login: "Logga in"
+    password: "Lösenord"
     tax rate: "Skattesatser"
     tax_category: "Skattekategori"
     tax_settings: "Skatteskalor"
     payment_methods: "Betalningssätt"
     shipping_methods: "Transportsätt"
+    shipping_method: "Fraktmetod"
     name: "Namn"
     description: "Beskrivning"
     type: "Typ"
@@ -1919,9 +1936,14 @@ sv:
     amount: "Belopp"
     inventory: Lager
     zipcode: Postkod
-    weight: Vikt (kg)
+    payment_method: "Betalningsmetod"
     actions:
       update: "Uppdatera"
+    shared:
+      payments_list:
+        amount: "Belopp"
+        payment_method: "Betalningsmetod"
+        payment_state: "Betalningsstatus"
     errors:
       messages:
         blank: "kan inte vara blank"
@@ -1989,6 +2011,8 @@ sv:
           you_have_active:
             zero: "Du har inga aktiva beställningsomgångar."
             one: "Du har en aktiv beställningsomgång."
+            few: "Du har %{count} aktiva beställningsomgångar."
+            many: "Du har %{count} aktiva beställningsomgångar."
             other: "Du har %{count} aktiva beställningsomgångar."
           manage_order_cycles: "HANTERA BESTÄLLNINGSOMGÅNGAR"
       shipping_methods:
@@ -1997,6 +2021,19 @@ sv:
           name: "Namn"
           products_distributor: "Distributör"
           calculator: "Beräkning"
+      payment_methods:
+        index:
+          payment_methods: "Betalningssätt"
+          name: "Namn"
+          products_distributor: "Distributör"
+          active_yes: "Ja"
+          active_no: "Nej"
+        form:
+          name: "Namn"
+          description: "Beskrivning"
+          active_yes: "Ja"
+          active_no: "Nej"
+          tags: "Taggar"
       products:
         new:
           supplier: "Leverantör"
@@ -2028,9 +2065,6 @@ sv:
           bulk_coop_allocation: 'Bulk Co-op - Allokering'
           bulk_coop_packing_sheets: 'Bulk Co-op - Förpackningssedlar'
           bulk_coop_customer_payments: 'Bulk Co-op - kundbetalningar'
-        enterprise_fee_summaries:
-          report:
-            none: "Ingen"
       users:
         index:
           user: "Användare"
@@ -2053,13 +2087,21 @@ sv:
         autocomplete:
           producer_name: "Producent"
           unit: "Enhet"
+      shared:
+        sortable_header:
+          name: "Namn"
+          state: "Region"
+          payment_state: "Betalningsstatus"
+          shipment_state: "Leveransstatus"
+          email: "E-post"
+          total: "Summa"
       general_settings:
         edit:
           enterprises_require_tos: "Företag måste acceptera servicevillkoren"
           footer_tos_url: "Användarvillkor URL"
     date_picker:
       format: '%Y-%m-%d'
-      js_format: 'åå-mm-dd'
+      js_format: 'yy-mm-dd'
     orders:
       bought:
         item: "Redan beställd i denna beställningsomgång"
@@ -2086,6 +2128,16 @@ sv:
       invoice_email:
         hi: "Hi %{name}"
         invoice_attached_text: Här är en faktura för din senaste order från
+    user_mailer:
+      reset_password_instructions:
+        request_sent_text: |
+            En begäran om att återställa ditt lösenord har gjorts.
+            Om du inte gjorde denna förfrågan ignorerar du bara det här e-postmeddelandet.
+        link_text: >
+            Om du gjorde denna förfrågan klickar du bara på länken nedan:
+        issue_text: |
+            Om den ovan nämnda webbadressen inte fungerar kan du försöka kopiera och klistra in den i webbläsaren.
+            Om du får problem, var god kontakta oss.
     order_state:
       address: adress
       adjustments: justeringar
@@ -2098,16 +2150,6 @@ sv:
       resumed: återupptagen
       returned: returnerad
       skrill: skrill
-    user_mailer:
-      reset_password_instructions:
-        request_sent_text: |
-            En begäran om att återställa ditt lösenord har gjorts.
-            Om du inte gjorde denna förfrågan ignorerar du bara det här e-postmeddelandet.
-        link_text: >
-            Om du gjorde denna förfrågan klickar du bara på länken nedan:
-        issue_text: |
-            Om den ovan nämnda webbadressen inte fungerar kan du försöka kopiera och klistra in den i webbläsaren.
-            Om du får problem, var god kontakta oss.
     users:
       open_orders:
         order: Beställningar

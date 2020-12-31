@@ -1,2 +1,4 @@
-Catalog::Engine.routes.draw do
+# frozen_string_literal: true
+
+Openfoodnetwork::Application.routes.append do
 end

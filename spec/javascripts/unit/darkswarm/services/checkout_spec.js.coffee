@@ -1,12 +1,17 @@
 describe 'Checkout service', ->
+  BugsnagMock =
+    notify: (arg) ->
   Checkout = null
   orderData = null
   $httpBackend = null
   Navigation = null
+  navigationSpy = null
   flash = null
   scope = null
   FlashLoaderMock =
-    loadFlash: (arg)->
+    loadFlash: (arg) ->
+  Loading =
+    clear: (arg)->
   paymentMethods = [{
       id: 99
       test: "foo"
@@ -45,9 +50,12 @@ describe 'Checkout service', ->
       ship_address: {test: "bar"}
       user_id: 901
 
+    window.Bugsnag = BugsnagMock
+
     module 'Darkswarm'
     module ($provide)->
       $provide.value "RailsFlashLoader", FlashLoaderMock
+      $provide.value "Loading", Loading
       $provide.value "currentOrder", orderData
       $provide.value "shippingMethods", shippingMethods
       $provide.value "paymentMethods", paymentMethods
@@ -57,11 +65,12 @@ describe 'Checkout service', ->
     inject ($injector, _$httpBackend_, $rootScope)->
       $httpBackend = _$httpBackend_
       Checkout = $injector.get("Checkout")
+      spyOn(Checkout, "terms_and_conditions_accepted")
       scope = $rootScope.$new()
       scope.Checkout = Checkout
       Navigation = $injector.get("Navigation")
       flash = $injector.get("flash")
-      spyOn(Navigation, "go") # Stubbing out writes to window.location
+      navigationSpy = spyOn(Navigation, "go") # Stubbing out writes to window.location
 
   it "defaults to no shipping method", ->
     expect(Checkout.order.shipping_method_id).toEqual null
@@ -116,11 +125,51 @@ describe 'Checkout service', ->
         $httpBackend.flush()
         expect(FlashLoaderMock.loadFlash).toHaveBeenCalledWith {error: "frogs"}
 
-      it "puts errors into the scope", ->
-        $httpBackend.expectPUT("/checkout.json").respond 400, {errors: {error: "frogs"}}
+      it "puts errors into the scope when there is a flash messages", ->
+        $httpBackend.expectPUT("/checkout.json").respond 400, {errors: {error: "frogs"}, flash: {error: "flash frogs"}}
         Checkout.submit()
+
         $httpBackend.flush()
         expect(Checkout.errors).toEqual {error: "frogs"}
+
+      it "throws exception and sends generic flash message when there are errors but no flash message", ->
+        spyOn(BugsnagMock, "notify")
+        $httpBackend.expectPUT("/checkout.json").respond 400, {errors: {error: "broken response"}}
+        try
+          Checkout.submit()
+          $httpBackend.flush()
+        catch error
+          expect(error.data.errors.error).toBe("broken response")
+
+        expect(Checkout.errors).toEqual {}
+        expect(BugsnagMock.notify).toHaveBeenCalled()
+
+      it "throws an exception and sends a flash message to the flash service when reponse doesnt contain errors nor a flash message", ->
+        spyOn(FlashLoaderMock, "loadFlash") # Stubbing out writes to window.location
+        spyOn(BugsnagMock, "notify")
+        $httpBackend.expectPUT("/checkout.json").respond 400, "broken response"
+        try
+          Checkout.submit()
+          $httpBackend.flush()
+        catch error
+          expect(error.data).toBe("broken response")
+
+        expect(FlashLoaderMock.loadFlash).toHaveBeenCalledWith({ error: t("checkout.failed") })
+        expect(BugsnagMock.notify).toHaveBeenCalled()
+
+      it "throws an exception and sends a flash message to the flash service when an exception is thrown while handling the error", ->
+        spyOn(FlashLoaderMock, "loadFlash") # Stubbing out writes to window.location
+        spyOn(BugsnagMock, "notify")
+        navigationSpy.and.callFake(-> throw "unexpected error")
+        $httpBackend.expectPUT("/checkout.json").respond 400, {path: 'path'}
+        try
+          Checkout.submit()
+          $httpBackend.flush()
+        catch error
+          expect(error).toBe("unexpected error")
+
+        expect(FlashLoaderMock.loadFlash).toHaveBeenCalledWith({ error: t("checkout.failed") })
+        expect(BugsnagMock.notify).toHaveBeenCalled()
 
     describe "when using the Stripe Connect gateway", ->
       beforeEach inject ($injector, StripeElements) ->

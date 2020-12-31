@@ -1,13 +1,9 @@
 module Spree
   module Admin
     class MailMethodsController < Spree::Admin::BaseController
-      after_filter :initialize_mail_settings
+      after_action :initialize_mail_settings
 
       def update
-        if params[:smtp_password].blank?
-          params.delete(:smtp_password)
-        end
-
         params.each do |name, value|
           next unless Spree::Config.has_preference? name
 
@@ -19,7 +15,7 @@ module Spree
       end
 
       def testmail
-        if TestMailer.test_email(try_spree_current_user).deliver
+        if TestMailer.test_email(spree_current_user).deliver
           flash[:success] = Spree.t('admin.mail_methods.testmail.delivery_success')
         else
           flash[:error] = Spree.t('admin.mail_methods.testmail.delivery_error')
@@ -27,7 +23,7 @@ module Spree
       rescue StandardError => e
         flash[:error] = Spree.t('admin.mail_methods.testmail.error') % { e: e }
       ensure
-        redirect_to edit_admin_mail_method_url
+        redirect_to spree.edit_admin_mail_methods_url
       end
 
       private

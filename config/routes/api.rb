@@ -33,9 +33,12 @@ Openfoodnetwork::Application.routes.draw do
 
       resource :logo, only: [:destroy]
       resource :promo_image, only: [:destroy]
+      resource :terms_and_conditions, only: [:destroy]
+    end
 
-      member do
-        get :shopfront
+    resources :shops, only: [:show] do
+      collection do
+        get :closed_shops
       end
     end
 
@@ -58,6 +61,8 @@ Openfoodnetwork::Application.routes.draw do
     resources :enterprise_fees, only: [:destroy]
 
     post '/product_images/:product_id', to: 'product_images#update_product_image'
+
+    resources :states, :only => [:index, :show]
 
     resources :taxons, :only => [:index]
 

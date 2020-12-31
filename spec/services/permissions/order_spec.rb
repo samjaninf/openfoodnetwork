@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Permissions
@@ -13,7 +15,7 @@ module Permissions
     let(:order_cart) { create(:order, order_cycle: order_cycle, distributor: distributor, state: 'cart' ) }
     let(:order_from_last_year) {
       create(:completed_order_with_totals, order_cycle: order_cycle, distributor: distributor,
-             completed_at: Time.zone.now - 1.year)
+                                           completed_at: Time.zone.now - 1.year)
     }
 
     before { allow(OpenFoodNetwork::Permissions).to receive(:new) { basic_permissions } }
@@ -47,6 +49,18 @@ module Permissions
         it "should let me see the order" do
           expect(permissions.visible_orders).to include order
         end
+
+        context "with search params" do
+          let(:search_params) { { completed_at_gt: Time.zone.now.yesterday.strftime('%Y-%m-%d') } }
+          let(:permissions) { Permissions::Order.new(user, search_params) }
+
+          it "only returns completed, non-cancelled orders within search filter range" do
+            expect(permissions.visible_orders).to include order_completed
+            expect(permissions.visible_orders).to_not include order_cancelled
+            expect(permissions.visible_orders).to_not include order_cart
+            expect(permissions.visible_orders).to_not include order_from_last_year
+          end
+        end
       end
 
       context "as a producer which has granted P-OC to the distributor of an order" do
@@ -69,18 +83,6 @@ module Permissions
         context "which does not contain my products" do
           it "should not let me see the order" do
             expect(permissions.visible_orders).to_not include order
-          end
-        end
-
-        context "with search params" do
-          let(:search_params) { { completed_at_gt: Time.zone.now.yesterday.strftime('%Y-%m-%d') } }
-          let(:permissions) { Permissions::Order.new(user, search_params) }
-
-          it "only returns completed, non-cancelled orders within search filter range" do
-            expect(permissions.visible_orders).to include order_completed
-            expect(permissions.visible_orders).to_not include order_cancelled
-            expect(permissions.visible_orders).to_not include order_cart
-            expect(permissions.visible_orders).to_not include order_from_last_year
           end
         end
       end

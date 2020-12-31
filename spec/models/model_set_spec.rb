@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe ModelSet do
@@ -31,10 +33,10 @@ describe ModelSet do
       e1 = create(:enterprise)
       e2 = create(:enterprise)
 
-      attrs = { collection_attributes: { '1' => { id: e1.id, name: 'deleteme' },
-                                         '2' => { id: e2.id, name: 'e2' } } }
+      attributes = { collection_attributes: { '1' => { id: e1.id, name: 'deleteme' },
+                                              '2' => { id: e2.id, name: 'e2' } } }
 
-      ms = ModelSet.new(Enterprise, Enterprise.all, attrs, nil,
+      ms = ModelSet.new(Enterprise, Enterprise.all, attributes, nil,
                         proc { |attrs| attrs['name'] == 'deleteme' })
 
       expect { ms.save }.to change(Enterprise, :count).by(-1)
@@ -44,9 +46,9 @@ describe ModelSet do
     end
 
     it "ignores deletable new records" do
-      attrs = { collection_attributes: { '1' => { name: 'deleteme' } } }
+      attributes = { collection_attributes: { '1' => { name: 'deleteme' } } }
 
-      ms = ModelSet.new(Enterprise, Enterprise.all, attrs, nil,
+      ms = ModelSet.new(Enterprise, Enterprise.all, attributes, nil,
                         proc { |attrs| attrs['name'] == 'deleteme' })
 
       expect { ms.save }.to change(Enterprise, :count).by(0)

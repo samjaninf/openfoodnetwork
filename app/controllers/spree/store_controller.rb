@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+require 'spree/core/controller_helpers/order'
+
 module Spree
   class StoreController < Spree::BaseController
     layout 'darkswarm'
@@ -5,10 +9,6 @@ module Spree
     include Spree::Core::ControllerHelpers::Order
 
     include I18nHelper
-    before_filter :set_locale
-
-    def unauthorized
-      render 'shared/unauthorized', status: :unauthorized
-    end
+    before_action :set_locale
   end
 end

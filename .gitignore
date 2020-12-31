@@ -1,5 +1,6 @@
 .bundle
 .rbenv-version
+.python-version
 .byebug_history
 .swp
 *.swo
@@ -31,6 +32,7 @@ public/system
 public/stylesheets
 public/images
 public/spree
+public/assets
 config/abr.yml
 config/initializers/feature_toggle.rb
 NERD_tree*

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 feature '
   As an Administrator
   I want to manage relationships between users and enterprises
 ', js: true do
-  include AuthenticationWorkflow
+  include AuthenticationHelper
   include WebHelper
   include OpenFoodNetwork::EmailHelper
 
@@ -117,7 +119,7 @@ feature '
 
       it "allows adding new managers" do
         within 'table.managers' do
-          targetted_select2_search user3.email, from: '#s2id_ignored'
+          select2_select user3.email, from: 'ignored', search: true
 
           # user3 has been added and has an unconfirmed email address
           expect(page).to have_css "tr#manager-#{user3.id}"
@@ -159,7 +161,7 @@ feature '
         expect(page).not_to have_selector "#invite-manager-modal"
         expect(page).to have_selector "table.managers"
 
-        new_user = Spree::User.find_by_email_and_confirmed_at(new_email, nil)
+        new_user = Spree::User.find_by(email: new_email, confirmed_at: nil)
         expect(Enterprise.managed_by(new_user)).to include enterprise
 
         within 'table.managers' do

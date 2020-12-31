@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe OrderManagement::Reports::EnterpriseFeeSummary::Renderers::HtmlRenderer do
@@ -5,7 +7,7 @@ describe OrderManagement::Reports::EnterpriseFeeSummary::Renderers::HtmlRenderer
 
   let!(:permissions) { report_klass::Permissions.new(current_user) }
   let!(:parameters) { report_klass::Parameters.new }
-  let!(:controller) { Spree::Admin::Reports::EnterpriseFeeSummariesController.new }
+  let!(:controller) { OrderManagement::Reports::EnterpriseFeeSummariesController.new }
   let!(:service) { report_klass::ReportService.new(permissions, parameters) }
   let!(:renderer) { described_class.new(service) }
 

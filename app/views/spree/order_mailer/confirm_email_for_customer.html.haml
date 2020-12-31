@@ -21,7 +21,8 @@
   = t :email_confirm_customer_details_html, distributor: @order.distributor.name
 
 = render 'order_summary'
-= render 'payment'
+= render 'spree/shared/payment'
 = render 'shipping'
 = render 'special_instructions'
 = render 'signoff'
+= render 'shared/mailers/social_and_contact'

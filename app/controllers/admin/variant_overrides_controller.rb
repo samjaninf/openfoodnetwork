@@ -1,13 +1,13 @@
 require 'open_food_network/spree_api_key_loader'
 
 module Admin
-  class VariantOverridesController < ResourceController
+  class VariantOverridesController < Admin::ResourceController
     include OpenFoodNetwork::SpreeApiKeyLoader
     include EnterprisesHelper
 
-    prepend_before_filter :load_data
-    before_filter :load_collection, only: [:bulk_update]
-    before_filter :load_spree_api_key, only: :index
+    prepend_before_action :load_data
+    before_action :load_collection, only: [:bulk_update]
+    before_action :load_spree_api_key, only: :index
 
     def index; end
 
@@ -18,12 +18,10 @@ module Admin
       if @vo_set.save
         # Return saved VOs with IDs
         render json: @vo_set.collection, each_serializer: Api::Admin::VariantOverrideSerializer
+      elsif @vo_set.errors.present?
+        render json: { errors: @vo_set.errors }, status: :bad_request
       else
-        if @vo_set.errors.present?
-          render json: { errors: @vo_set.errors }, status: :bad_request
-        else
-          render nothing: true, status: :internal_server_error
-        end
+        render nothing: true, status: :internal_server_error
       end
     end
 
@@ -68,13 +66,16 @@ module Admin
     end
 
     def load_collection
-      collection_hash = Hash[params[:variant_overrides].each_with_index.map { |vo, i| [i, vo] }]
+      collection_hash = Hash[variant_overrides_params.each_with_index.map { |vo, i| [i, vo] }]
       @vo_set = VariantOverrideSet.new @variant_overrides, collection_attributes: collection_hash
     end
 
     def collection
-      @variant_overrides = VariantOverride.includes(:variant).for_hubs(params[:hub_id] || @hubs)
-      @variant_overrides.select { |vo| vo.variant.present? }
+      @variant_overrides = VariantOverride.
+        includes(variant: :product).
+        for_hubs(params[:hub_id] || @hubs).
+        references(:variant).
+        select { |vo| vo.variant.present? }
     end
 
     def collection_actions
@@ -88,6 +89,16 @@ module Admin
       full_messages = @collection.map { |element| element.errors.full_messages }.flatten
       full_messages.each { |fm| errors.add(:base, fm) }
       errors
+    end
+
+    def variant_overrides_params
+      params.require(:variant_overrides).map do |variant_override|
+        variant_override.permit(
+          :id, :variant_id, :hub_id,
+          :price, :count_on_hand, :sku, :on_demand,
+          :default_stock, :resettable, :tag_list
+        )
+      end
     end
   end
 end

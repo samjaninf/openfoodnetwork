@@ -1,4 +1,4 @@
-require 'open_food_network/scope_variant_to_hub'
+require "open_food_network/scope_variant_to_hub"
 
 class Api::ProductSerializer < ActiveModel::Serializer
   include ActionView::Helpers::SanitizeHelper
@@ -18,12 +18,13 @@ class Api::ProductSerializer < ActiveModel::Serializer
 
   # return an unformatted descripton
   def description
-    strip_tags object.description
+    strip_tags object.description&.strip
   end
 
   # return a sanitized html description
   def description_html
-    d = sanitize(object.description, tags: "p, b, strong, em, i, a, u", attributes: "href, target")
+    d = sanitize(object.description, tags: ["p", "b", "strong", "em", "i", "a", "u"],
+                                     attributes: ["href", "target"])
     d.to_s.html_safe
   end
 

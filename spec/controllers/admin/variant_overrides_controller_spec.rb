@@ -1,8 +1,8 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Admin::VariantOverridesController, type: :controller do
-  # include AuthenticationWorkflow
-
   describe "bulk_update" do
     context "json" do
       let(:format) { :json }
@@ -22,7 +22,7 @@ describe Admin::VariantOverridesController, type: :controller do
 
         it "redirects to unauthorized" do
           spree_put :bulk_update, format: format, variant_overrides: variant_override_params
-          expect(response).to redirect_to spree.unauthorized_path
+          expect(response).to redirect_to unauthorized_path
         end
       end
 
@@ -34,7 +34,7 @@ describe Admin::VariantOverridesController, type: :controller do
         context "but the producer has not granted VO permission" do
           it "redirects to unauthorized" do
             spree_put :bulk_update, format: format, variant_overrides: variant_override_params
-            expect(response).to redirect_to spree.unauthorized_path
+            expect(response).to redirect_to unauthorized_path
           end
         end
 
@@ -65,7 +65,7 @@ describe Admin::VariantOverridesController, type: :controller do
 
             it "destroys the variant override" do
               spree_put :bulk_update, format: format, variant_overrides: variant_override_params
-              expect(VariantOverride.find_by_id(variant_override.id)).to be_nil
+              expect(VariantOverride.find_by(id: variant_override.id)).to be_nil
             end
           end
 
@@ -78,7 +78,7 @@ describe Admin::VariantOverridesController, type: :controller do
             it "allows to update other variant overrides" do
               spree_put :bulk_update, format: format, variant_overrides: variant_override_params
 
-              expect(response).to_not redirect_to spree.unauthorized_path
+              expect(response).to_not redirect_to unauthorized_path
               variant_override.reload
               expect(variant_override.price).to eq 123.45
             end
@@ -111,7 +111,7 @@ describe Admin::VariantOverridesController, type: :controller do
 
         it "redirects to unauthorized" do
           spree_put :bulk_reset, params
-          expect(response).to redirect_to spree.unauthorized_path
+          expect(response).to redirect_to unauthorized_path
         end
       end
 
@@ -123,7 +123,7 @@ describe Admin::VariantOverridesController, type: :controller do
         context "where the producer has not granted create_variant_overrides permission to the hub" do
           it "restricts access" do
             spree_put :bulk_reset, params
-            expect(response).to redirect_to spree.unauthorized_path
+            expect(response).to redirect_to unauthorized_path
           end
         end
 

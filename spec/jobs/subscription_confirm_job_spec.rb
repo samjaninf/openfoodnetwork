@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe SubscriptionConfirmJob do
@@ -16,10 +18,10 @@ describe SubscriptionConfirmJob do
                            placed_at: 5.minutes.ago)
     end
     let!(:order) { proxy_order.initialise_order! }
-    let(:proxy_orders) { job.send(:proxy_orders) }
+    let(:proxy_orders) { job.send(:unconfirmed_proxy_orders) }
 
     before do
-      AdvanceOrderService.new(order).call!
+      OrderWorkflow.new(order).complete!
     end
 
     it "returns proxy orders that meet all of the criteria" do
@@ -27,22 +29,22 @@ describe SubscriptionConfirmJob do
     end
 
     it "returns proxy orders for paused subscriptions" do
-      subscription.update_attributes!(paused_at: 1.minute.ago)
+      subscription.update!(paused_at: 1.minute.ago)
       expect(proxy_orders).to include proxy_order
     end
 
     it "returns proxy orders for cancelled subscriptions" do
-      subscription.update_attributes!(canceled_at: 1.minute.ago)
+      subscription.update!(canceled_at: 1.minute.ago)
       expect(proxy_orders).to include proxy_order
     end
 
     it "ignores proxy orders where the OC closed more than 1 hour ago" do
-      proxy_order.update_attributes!(order_cycle_id: order_cycle2.id)
+      proxy_order.update!(order_cycle_id: order_cycle2.id)
       expect(proxy_orders).to_not include proxy_order
     end
 
     it "ignores cancelled proxy orders" do
-      proxy_order.update_attributes!(canceled_at: 5.minutes.ago)
+      proxy_order.update!(canceled_at: 5.minutes.ago)
       expect(proxy_orders).to_not include proxy_order
     end
 
@@ -53,17 +55,17 @@ describe SubscriptionConfirmJob do
     end
 
     it "ignores proxy orders without an associated order" do
-      proxy_order.update_attributes!(order_id: nil)
+      proxy_order.update!(order_id: nil)
       expect(proxy_orders).to_not include proxy_order
     end
 
     it "ignores proxy orders that haven't been placed yet" do
-      proxy_order.update_attributes!(placed_at: nil)
+      proxy_order.update!(placed_at: nil)
       expect(proxy_orders).to_not include proxy_order
     end
 
     it "ignores proxy orders that have already been confirmed" do
-      proxy_order.update_attributes!(confirmed_at: 1.second.ago)
+      proxy_order.update!(confirmed_at: 1.second.ago)
       expect(proxy_orders).to_not include proxy_order
     end
 
@@ -80,8 +82,8 @@ describe SubscriptionConfirmJob do
 
       before do
         proxy_order.initialise_order!
-        allow(job).to receive(:proxy_orders) { ProxyOrder.where(id: proxy_order.id) }
-        allow(job).to receive(:process!)
+        allow(job).to receive(:unconfirmed_proxy_orders) { ProxyOrder.where(id: proxy_order.id) }
+        allow(job).to receive(:confirm_order!)
         allow(job).to receive(:send_confirmation_summary_emails)
       end
 
@@ -92,8 +94,7 @@ describe SubscriptionConfirmJob do
 
       it "processes confirmable proxy_orders" do
         job.perform
-        expect(job).to have_received(:process!)
-        expect(job.instance_variable_get(:@order)).to eq proxy_order.reload.order
+        expect(job).to have_received(:confirm_order!).with(proxy_order.reload.order)
       end
 
       it "sends a summary email" do
@@ -117,7 +118,7 @@ describe SubscriptionConfirmJob do
     end
   end
 
-  describe "processing an order" do
+  describe "confirming an order" do
     let(:shop) { create(:distributor_enterprise) }
     let(:order_cycle1) { create(:simple_order_cycle, coordinator: shop) }
     let(:order_cycle2) { create(:simple_order_cycle, coordinator: shop) }
@@ -127,46 +128,92 @@ describe SubscriptionConfirmJob do
     let(:order) { proxy_order.initialise_order! }
 
     before do
-      AdvanceOrderService.new(order).call!
-      allow(job).to receive(:send_confirm_email).and_call_original
-      job.instance_variable_set(:@order, order)
+      OrderWorkflow.new(order).complete!
+      allow(job).to receive(:send_confirmation_email).and_call_original
       setup_email
-      expect(job).to receive(:record_order).with(order)
+      expect(job).to receive(:record_order)
+    end
+
+    context "when Stripe payments need to be processed" do
+      let(:charge_response_mock) do
+        { status: 200, body: JSON.generate(id: "ch_1234", object: "charge", amount: 2000) }
+      end
+
+      before do
+        allow(order).to receive(:payment_required?) { true }
+        expect(job).to receive(:setup_payment!) { true }
+        stub_request(:post, "https://api.stripe.com/v1/charges")
+          .with(body: /amount/)
+          .to_return(charge_response_mock)
+      end
+
+      context "Stripe SCA" do
+        let(:stripe_sca_payment_method) { create(:stripe_sca_payment_method) }
+        let(:stripe_sca_payment) { create(:payment, amount: 10, payment_method: stripe_sca_payment_method) }
+        let(:provider) { double }
+
+        before do
+          allow_any_instance_of(Stripe::CreditCardCloner).to receive(:find_or_clone) { ["cus_123", "pm_1234"] }
+          allow(order).to receive(:pending_payments) { [stripe_sca_payment] }
+          allow(stripe_sca_payment_method).to receive(:provider) { provider }
+          allow(stripe_sca_payment_method.provider).to receive(:purchase) { true }
+        end
+
+        it "runs the charges in offline mode" do
+          job.send(:confirm_order!, order)
+          expect(stripe_sca_payment_method.provider).to have_received(:purchase)
+        end
+      end
+
+      context "Stripe Connect" do
+        let(:stripe_connect_payment_method) { create(:stripe_connect_payment_method) }
+        let(:stripe_connect_payment) { create(:payment, amount: 10, payment_method: stripe_connect_payment_method) }
+
+        before do
+          allow(order).to receive(:pending_payments) { [stripe_connect_payment] }
+          allow(stripe_connect_payment_method).to receive(:purchase) { true }
+        end
+
+        it "runs the charges in offline mode" do
+          job.send(:confirm_order!, order)
+          expect(stripe_connect_payment_method).to have_received(:purchase)
+        end
+      end
     end
 
     context "when payments need to be processed" do
       let(:payment_method) { create(:payment_method) }
-      let(:payment) { double(:payment, amount: 10) }
+      let(:payment) { create(:payment, amount: 10) }
 
       before do
-        allow(order).to receive(:payment_total) { 0 }
-        allow(order).to receive(:total) { 10 }
         allow(order).to receive(:payment_required?) { true }
         allow(order).to receive(:pending_payments) { [payment] }
       end
 
       context "and an error is added to the order when updating payments" do
-        before { expect(job).to receive(:update_payment!) { order.errors.add(:base, "a payment error") } }
+        before do
+          expect(job).to receive(:setup_payment!) { |order| order.errors.add(:base, "a payment error") }
+        end
 
         it "sends a failed payment email" do
           expect(job).to receive(:send_failed_payment_email)
-          expect(job).to_not receive(:send_confirm_email)
-          job.send(:process!)
+          expect(job).to_not receive(:send_confirmation_email)
+          job.send(:confirm_order!, order)
         end
       end
 
       context "and no errors are added when updating payments" do
-        before { expect(job).to receive(:update_payment!) { true } }
+        before { expect(job).to receive(:setup_payment!) { true } }
 
         context "when an error occurs while processing the payment" do
           before do
-            expect(payment).to receive(:process!).and_raise Spree::Core::GatewayError, "payment failure error"
+            expect(payment).to receive(:process_offline!).and_raise Spree::Core::GatewayError, "payment failure error"
           end
 
           it "sends a failed payment email" do
             expect(job).to receive(:send_failed_payment_email)
-            expect(job).to_not receive(:send_confirm_email)
-            job.send(:process!)
+            expect(job).to_not receive(:send_confirmation_email)
+            job.send(:confirm_order!, order)
           end
         end
 
@@ -176,14 +223,14 @@ describe SubscriptionConfirmJob do
           end
 
           before do
-            expect(payment).to receive(:process!) { true }
+            expect(payment).to receive(:process_offline!) { true }
             expect(payment).to receive(:completed?) { true }
           end
 
           it "sends only a subscription confirm email, no regular confirmation emails" do
             ActionMailer::Base.deliveries.clear
-            expect{ job.send(:process!) }.to_not enqueue_job ConfirmOrderJob
-            expect(job).to have_received(:send_confirm_email).once
+            expect{ job.send(:confirm_order!, order) }.to_not enqueue_job ConfirmOrderJob
+            expect(job).to have_received(:send_confirmation_email).once
             expect(ActionMailer::Base.deliveries.count).to be 1
           end
         end
@@ -191,19 +238,18 @@ describe SubscriptionConfirmJob do
     end
   end
 
-  describe "#send_confirm_email" do
+  describe "#send_confirmation_email" do
     let(:order) { instance_double(Spree::Order) }
     let(:mail_mock) { double(:mailer_mock, deliver: true) }
 
     before do
-      job.instance_variable_set(:@order, order)
       allow(SubscriptionMailer).to receive(:confirmation_email) { mail_mock }
     end
 
     it "records a success and sends the email" do
       expect(order).to receive(:update!)
       expect(job).to receive(:record_success).with(order).once
-      job.send(:send_confirm_email)
+      job.send(:send_confirmation_email, order)
       expect(SubscriptionMailer).to have_received(:confirmation_email).with(order)
       expect(mail_mock).to have_received(:deliver)
     end
@@ -214,14 +260,13 @@ describe SubscriptionConfirmJob do
     let(:mail_mock) { double(:mailer_mock, deliver: true) }
 
     before do
-      job.instance_variable_set(:@order, order)
       allow(SubscriptionMailer).to receive(:failed_payment_email) { mail_mock }
     end
 
     it "records and logs an error and sends the email" do
       expect(order).to receive(:update!)
-      expect(job).to receive(:record_and_log_error).with(:failed_payment, order).once
-      job.send(:send_failed_payment_email)
+      expect(job).to receive(:record_and_log_error).with(:failed_payment, order, nil).once
+      job.send(:send_failed_payment_email, order)
       expect(SubscriptionMailer).to have_received(:failed_payment_email).with(order)
       expect(mail_mock).to have_received(:deliver)
     end

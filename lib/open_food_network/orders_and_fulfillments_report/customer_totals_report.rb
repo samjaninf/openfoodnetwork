@@ -7,9 +7,11 @@ module OpenFoodNetwork
       attr_reader :context
 
       delegate :line_item_name, to: :context
+      delegate :variant_scoper_for, to: :context
 
       def initialize(context)
         @context = context
+        @scopers_by_distributor_id = {}
       end
 
       # rubocop:disable Metrics/AbcSize
@@ -18,7 +20,7 @@ module OpenFoodNetwork
         [I18n.t(:report_header_hub), I18n.t(:report_header_customer), I18n.t(:report_header_email),
          I18n.t(:report_header_phone), I18n.t(:report_header_producer),
          I18n.t(:report_header_product), I18n.t(:report_header_variant),
-         I18n.t(:report_header_amount),
+         I18n.t(:report_header_quantity),
          I18n.t(:report_header_item_price, currency: currency_symbol),
          I18n.t(:report_header_item_fees_price, currency: currency_symbol),
          I18n.t(:report_header_admin_handling_fees, currency: currency_symbol),
@@ -34,7 +36,9 @@ module OpenFoodNetwork
          I18n.t(:report_header_customer_code), I18n.t(:report_header_tags),
          I18n.t(:report_header_billing_street), I18n.t(:report_header_billing_street_2),
          I18n.t(:report_header_billing_city), I18n.t(:report_header_billing_postcode),
-         I18n.t(:report_header_billing_state)]
+         I18n.t(:report_header_billing_state),
+         I18n.t(:report_header_order_number),
+         I18n.t(:report_header_date)]
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
@@ -90,7 +94,9 @@ module OpenFoodNetwork
               proc { |_line_items| "" },
               proc { |_line_items| "" },
               proc { |_line_items| "" },
-              proc { |_line_items| "" }
+              proc { |_line_items| "" },
+              proc { |line_items| line_items.first.order.number },
+              proc { |line_items| line_items.first.order.completed_at.strftime("%F %T") },
             ]
           },
           {
@@ -128,7 +134,7 @@ module OpenFoodNetwork
           proc { |line_items| line_items.first.variant.product.name },
           proc { |line_items| line_items.first.variant.full_name },
 
-          proc { |line_items| line_items.sum(&:quantity) },
+          proc { |line_items| line_items.to_a.sum(&:quantity) },
           proc { |line_items| line_items.sum(&:amount) },
           proc { |line_items| line_items.sum(&:amount_with_adjustments) },
           proc { |_line_items| "" },
@@ -159,7 +165,11 @@ module OpenFoodNetwork
           },
 
           proc { |_line_items| "" },
-          proc { |line_items| line_items.first.variant.sku },
+          proc do |line_items|
+            line_item = line_items.first
+            variant_scoper_for(line_item.order.distributor_id).scope(line_item.variant)
+            line_item.variant.sku
+          end,
 
           proc { |line_items| line_items.first.order.order_cycle.andand.name },
           proc { |line_items|
@@ -181,7 +191,9 @@ module OpenFoodNetwork
           proc { |line_items| line_items.first.order.bill_address.andand.address2 },
           proc { |line_items| line_items.first.order.bill_address.andand.city },
           proc { |line_items| line_items.first.order.bill_address.andand.zipcode },
-          proc { |line_items| line_items.first.order.bill_address.andand.state }
+          proc { |line_items| line_items.first.order.bill_address.andand.state },
+          proc { |line_items| line_items.first.order.number },
+          proc { |line_items| line_items.first.order.completed_at.strftime("%F %T") },
         ]
       end
       # rubocop:enable Metrics/AbcSize

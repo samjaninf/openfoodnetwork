@@ -1,8 +1,8 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Admin::BulkLineItemsController, type: :controller do
-  include AuthenticationWorkflow
-
   describe '#index' do
     render_views
 
@@ -17,11 +17,11 @@ describe Admin::BulkLineItemsController, type: :controller do
     let!(:line_item4) { FactoryBot.create(:line_item_with_shipment, order: order3) }
 
     context "as a normal user" do
-      before { allow(controller).to receive_messages spree_current_user: create_enterprise_user }
+      before { allow(controller).to receive_messages spree_current_user: create(:user) }
 
       it "should deny me access to the index action" do
         spree_get :index, format: :json
-        expect(response).to redirect_to spree.unauthorized_path
+        expect(response).to redirect_to unauthorized_path
       end
     end
 
@@ -36,22 +36,21 @@ describe Admin::BulkLineItemsController, type: :controller do
         end
 
         it "retrieves a list of line_items with appropriate attributes, including line items with appropriate attributes" do
-          keys = json_response.first.keys.map(&:to_sym)
+          keys = json_response['line_items'].first.keys.map(&:to_sym)
           expect(line_item_attributes.all?{ |attr| keys.include? attr }).to eq(true)
         end
 
         it "sorts line_items in ascending id line_item" do
-          ids = json_response.map{ |line_item| line_item['id'] }
-          expect(ids[0]).to be < ids[1]
-          expect(ids[1]).to be < ids[2]
+          expect(line_item_ids[0]).to be < line_item_ids[1]
+          expect(line_item_ids[1]).to be < line_item_ids[2]
         end
 
         it "formats final_weight_volume as a float" do
-          expect(json_response.map{ |line_item| line_item['final_weight_volume'] }.all?{ |fwv| fwv.is_a?(Float) }).to eq(true)
+          expect(json_response['line_items'].map{ |line_item| line_item['final_weight_volume'] }.all?{ |fwv| fwv.is_a?(Float) }).to eq(true)
         end
 
         it "returns distributor object with id key" do
-          expect(json_response.map{ |line_item| line_item['supplier'] }.all?{ |d| d.key?('id') }).to eq(true)
+          expect(json_response['line_items'].map{ |line_item| line_item['supplier'] }.all?{ |d| d.key?('id') }).to eq(true)
         end
       end
 
@@ -61,7 +60,7 @@ describe Admin::BulkLineItemsController, type: :controller do
         end
 
         it "retrives a list of line items which match the criteria" do
-          expect(json_response.map{ |line_item| line_item['id'] }).to eq [line_item2.id, line_item3.id]
+          expect(line_item_ids).to eq [line_item2.id, line_item3.id]
         end
       end
 
@@ -71,7 +70,7 @@ describe Admin::BulkLineItemsController, type: :controller do
         end
 
         it "retrives a list of line items whose orders match the criteria" do
-          expect(json_response.map{ |line_item| line_item['id'] }).to eq [line_item2.id, line_item3.id, line_item4.id]
+          expect(line_item_ids).to eq [line_item2.id, line_item3.id, line_item4.id]
         end
       end
     end
@@ -95,7 +94,7 @@ describe Admin::BulkLineItemsController, type: :controller do
         end
 
         it "does not display line items for which my enterprise is a supplier" do
-          expect(response).to redirect_to spree.unauthorized_path
+          expect(response).to redirect_to unauthorized_path
         end
       end
 
@@ -106,7 +105,7 @@ describe Admin::BulkLineItemsController, type: :controller do
         end
 
         it "retrieves a list of line_items" do
-          keys = json_response.first.keys.map(&:to_sym)
+          keys = json_response['line_items'].first.keys.map(&:to_sym)
           expect(line_item_attributes.all?{ |attr| keys.include? attr }).to eq(true)
         end
       end
@@ -118,8 +117,34 @@ describe Admin::BulkLineItemsController, type: :controller do
         end
 
         it "retrieves a list of line_items" do
-          keys = json_response.first.keys.map(&:to_sym)
+          keys = json_response['line_items'].first.keys.map(&:to_sym)
           expect(line_item_attributes.all?{ |attr| keys.include? attr }).to eq(true)
+        end
+      end
+    end
+
+    context "paginating" do
+      before do
+        allow(controller).to receive_messages spree_current_user: create(:admin_user)
+      end
+
+      context "with pagination args" do
+        it "returns paginated results" do
+          spree_get :index, { page: 1, per_page: 2 }, format: :json
+
+          expect(line_item_ids).to eq [line_item1.id, line_item2.id]
+          expect(json_response['pagination']).to eq(
+            { 'page' => 1, 'per_page' => 2, 'pages' => 2, 'results' => 4 }
+          )
+        end
+
+        it "returns paginated results for a second page" do
+          spree_get :index, { page: 2, per_page: 2 }, format: :json
+
+          expect(line_item_ids).to eq [line_item3.id, line_item4.id]
+          expect(json_response['pagination']).to eq(
+            { 'page' => 2, 'per_page' => 2, 'pages' => 2, 'results' => 4 }
+          )
         end
       end
     end
@@ -147,7 +172,7 @@ describe Admin::BulkLineItemsController, type: :controller do
         end
 
         it "does not allow access" do
-          expect(response).to redirect_to spree.unauthorized_path
+          expect(response).to redirect_to unauthorized_path
         end
       end
 
@@ -172,7 +197,7 @@ describe Admin::BulkLineItemsController, type: :controller do
 
           it "returns an empty JSON response" do
             spree_put :update, params
-            expect(response.body).to eq ' '
+            expect(response.body).to eq ""
           end
 
           it 'returns a 204 response' do
@@ -250,7 +275,7 @@ describe Admin::BulkLineItemsController, type: :controller do
 
       it 'returns an empty JSON response' do
         spree_delete :destroy, params
-        expect(response.body).to eq ' '
+        expect(response.body).to eq ""
       end
 
       it 'returns a 204 response' do
@@ -258,5 +283,11 @@ describe Admin::BulkLineItemsController, type: :controller do
         expect(response.status).to eq 204
       end
     end
+  end
+
+  private
+
+  def line_item_ids
+    json_response['line_items'].map{ |line_item| line_item['id'] }
   end
 end
