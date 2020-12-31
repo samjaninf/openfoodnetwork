@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec::Matchers.define :have_select2 do |id, options = {}|
   # TODO: Implement other have_select options
   #       http://www.rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers#has_select%3F-instance_method
@@ -94,7 +96,7 @@ RSpec::Matchers.define :have_select2 do |id, options = {}|
   def with_select2_open(from)
     open_select2 from
     r = yield
-    close_select2 from
+    close_select2
     r
   end
 end

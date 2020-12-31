@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 feature 'Subscriptions' do
@@ -431,7 +433,7 @@ feature 'Subscriptions' do
     end
 
     describe "allowed variants" do
-      let!(:customer) { create(:customer, enterprise: shop, allow_charges: true) }
+      let!(:customer) { create(:customer, enterprise: shop) }
       let!(:credit_card) { create(:stored_credit_card, user: customer.user) }
       let!(:shop_product) { create(:product, supplier: shop) }
       let!(:shop_variant) { create(:variant, product: shop_product, unit_value: "2000") }
@@ -468,6 +470,7 @@ feature 'Subscriptions' do
       end
 
       it "permit creating and editing of the subscription" do
+        customer.update_attributes(allow_charges: true)
         # Fill in other details
         fill_in_subscription_basic_details
         click_button "Next"
@@ -534,7 +537,7 @@ feature 'Subscriptions' do
   def add_variant_to_subscription(variant, quantity)
     row_count = all("#subscription-line-items .item").length
     variant_name = variant.full_name.present? ? "#{variant.name} - #{variant.full_name}" : variant.name
-    targetted_select2_search variant.name, from: "#s2id_add_variant_id", dropdown_css: ".select2-drop", select_text: variant_name
+    select2_select variant.name, from: "add_variant_id", search: true, select_text: variant_name
     fill_in "add_quantity", with: quantity
     click_link "Add"
     expect(page).to have_selector("#subscription-line-items .item", count: row_count + 1)

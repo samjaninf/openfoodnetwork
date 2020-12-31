@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 feature '
@@ -125,7 +127,7 @@ feature '
     expect(page).to have_selector "#payment_methods"
     expect(page).to have_selector "#shipping_methods"
 
-    multi_select2_select eg1.name, from: 'enterprise_group_ids'
+    select2_select eg1.name, from: 'enterprise_group_ids'
 
     accept_alert do
       click_link "Payment Methods"

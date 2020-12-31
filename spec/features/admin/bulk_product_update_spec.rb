@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 feature '
@@ -133,7 +135,7 @@ feature '
       expect(page).to have_selector "a.view-variants", count: 1
       all("a.view-variants").each(&:click)
 
-      expect(page).to have_selector "span[name='on_hand']", text: p1.variants.sum(&:on_hand).to_s
+      expect(page).to have_selector "span[name='on_hand']", text: p1.variants.to_a.sum(&:on_hand).to_s
       expect(page).to have_field "variant_on_hand", with: "15"
       expect(page).to have_field "variant_on_hand", with: "6"
     end
@@ -327,7 +329,7 @@ feature '
     expect(page).to have_field "variant_price", with: "3.0"
     expect(page).to have_field "variant_unit_value_with_description", with: "250 (bottle)"
     expect(page).to have_field "variant_on_hand", with: "9"
-    expect(page).to have_selector "span[name='on_hand']", "9"
+    expect(page).to have_selector "span[name='on_hand']", text: "9"
 
     select "Volume (L)", from: "variant_unit_with_scale"
     fill_in "variant_sku", with: "NEWSKU"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 feature "
@@ -302,7 +304,6 @@ feature "
 
             # Clearing values manually
             fill_in "variant-overrides-#{variant.id}-price", with: ''
-            fill_in "variant-overrides-#{variant.id}-count_on_hand", with: ''
             select_on_demand variant, :use_producer_settings
             fill_in "variant-overrides-#{variant.id}-default_stock", with: ''
             within "tr#v_#{variant.id}" do
@@ -409,7 +410,7 @@ feature "
 
       # Reproducing a bug, issue #1446
       it "shows the overridden price" do
-        targetted_select2_search product.name, from: '#add_variant_id', dropdown_css: '.select2-drop'
+        select2_select product.name, from: 'add_variant_id', search: true
         find('button.add_variant').click
         expect(page).to have_selector("table.index tbody tr") # Wait for JS
         expect(page).to have_content(product.variants.first.variant_overrides.first.price)

@@ -1,4 +1,5 @@
 // Note this mixin file is used in ADMIN and FRONTEND
+@import "shared/variables/layout";
 
 @import "branding";
 
@@ -212,12 +213,6 @@
   background-size: cover;
 }
 
-@mixin fullwidthbg {
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-size: 100% auto;
-}
-
 @mixin gradient($gradient-clr1, $gradient-clr2) {
   background: $gradient-clr1;
 
@@ -283,19 +278,19 @@
 
 @mixin breakpoint($point) {
   @if $point == desktop {
-    @media all and (max-width: 1024px) {
+    @media all and (max-width: $desktop_breakpoint) {
       @content;
     }
   } @else if $point == tablet {
-    @media all and (max-width: 768px) {
+    @media all and (max-width: $tablet_breakpoint) {
       @content;
     }
   } @else if $point == phablet {
-    @media all and (max-width: 640px) {
+    @media all and (max-width: $phablet_breakpoint) {
       @content;
     }
   } @else if $point == mobile {
-    @media all and (max-width: 480px) {
+    @media all and (max-width: $mobile_breakpoint) {
       @content;
     }
   }
