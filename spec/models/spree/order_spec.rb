@@ -179,7 +179,7 @@ describe Spree::Order do
       # Stub this method as it's called due to a callback
       # and it's irrelevant to this test
       allow(order).to receive :has_available_shipment
-      allow(Spree::OrderMailer).to receive_message_chain :confirm_email, :deliver
+      allow(Spree::OrderMailer).to receive_message_chain :confirm_email, :deliver_later
       adjustments = double
       allow(order).to receive_messages adjustments: adjustments
       expect(adjustments).to receive(:update_all).with(state: 'closed')
@@ -201,14 +201,25 @@ describe Spree::Order do
     let(:payment) { build(:payment) }
     before { allow(order).to receive_messages pending_payments: [payment], total: 10 }
 
-    it "should process the payments" do
-      expect(payment).to receive(:process!)
-      expect(order.process_payments!).to be_truthy
-    end
-
     it "should return false if no pending_payments available" do
       allow(order).to receive_messages pending_payments: []
       expect(order.process_payments!).to be_falsy
+    end
+
+    context "when the processing is sucessful" do
+      it "should process the payments" do
+        expect(payment).to receive(:process!)
+        expect(order.process_payments!).to be_truthy
+      end
+
+      it "stores the payment total on the order" do
+        allow(payment).to receive(:process!)
+        allow(payment).to receive(:completed?).and_return(true)
+
+        order.process_payments!
+
+        expect(order.payment_total).to eq(payment.amount)
+      end
     end
 
     context "when a payment raises a GatewayError" do
@@ -399,8 +410,6 @@ describe Spree::Order do
     end
 
     before do
-      # Don't care about available payment methods in this test
-      allow(persisted_order).to receive_messages(has_available_payment: false)
       persisted_order.line_items << line_item
       persisted_order.adjustments.create(amount: -line_item.amount, label: "Promotion")
       persisted_order.state = 'delivery'
@@ -424,30 +433,6 @@ describe Spree::Order do
     context "total > zero" do
       before { allow(order).to receive_messages(total: 1) }
       it { expect(order.payment_required?).to be_truthy }
-    end
-  end
-
-  context "add_update_hook" do
-    before do
-      Spree::Order.class_eval do
-        register_update_hook :add_awesome_sauce
-      end
-    end
-
-    after do
-      Spree::Order.update_hooks = Set.new
-    end
-
-    it "calls hook during update" do
-      order = create(:order)
-      expect(order).to receive(:add_awesome_sauce)
-      order.update!
-    end
-
-    it "calls hook during finalize" do
-      order = create(:order)
-      expect(order).to receive(:add_awesome_sauce)
-      order.finalize!
     end
   end
 

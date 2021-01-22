@@ -2016,6 +2016,9 @@ ar:
   delivery_method: طريقة التوصيل
   fee_type: "نوع الرسوم"
   tax_category: "الفئة الضريبية"
+  description: "وصف"
+  display: "عرض"
+  tags: "الاوسمة"
   calculator: "آلة حاسبة"
   calculator_values: "القيم المحوسبة"
   calculator_settings_warning: "إذا كنت تقوم بتغيير نوع الحاسبة ، فيجب عليك الحفظ أولاً قبل أن تتمكن من تحرير إعدادات الحاسبة"
@@ -2373,6 +2376,7 @@ ar:
   js:
     saving: 'حفظ...'
     changes_saved: 'تم حفظ التغييرات.'
+    authorising: "تفويض ..."
     save_changes_first: حفظ التغييرات أولا.
     all_changes_saved: تم حفظ جميع التغييرات
     unsaved_changes: لم تحفظ التغييرات
@@ -3128,6 +3132,7 @@ ar:
       out_of_stock: '%{item} غير متوفر.'
     actions:
       update: "تحديث"
+      cancel: "إلغاء"
     shared:
       error_messages:
         errors_prohibited_this_record_from_being_saved:
@@ -3143,6 +3148,7 @@ ar:
         payment_state: "حالة الدفعة"
     errors:
       messages:
+        included_price_validation: "لا يمكن تحديده إلا إذا قمت بتعيين منطقة ضريبية افتراضية"
         blank: "لا يمكن أن تكون فارغة"
     layouts:
       admin:
@@ -3353,6 +3359,13 @@ ar:
           deactivation_warning: "يمكن أن يؤدي إلغاء تنشيط طريقة الدفع إلى اختفاء طريقة الدفع من قائمتك. بدلاً من ذلك ، يمكنك إخفاء طريقة الدفع من صفحة الخروج عن طريق تعيين الخيار \"عرض\" إلى\"المكتب الخلفي فقط\"."
         providers:
           provider: "مزود"
+          check: "النقد / التحويل الإلكتروني / إلخ. (المدفوعات التي لا تتطلب المصادقة التلقائية)"
+          migs: "خدمة بوابة الإنترنت من ( MasterCard Internet Gateway Service MIGS)"
+          paypalexpress: "باي بال اكسبريس"
+          stripeconnect: "Stripe SCA"
+          stripesca: "Stripe SCA"
+          bogus: "Bogus"
+          bogussimple: "BogusSimple"
       payments:
         source_forms:
           stripe:
@@ -3587,6 +3600,24 @@ ar:
       ended: انتهى
       paused: التعليق
       canceled: الالغاء
+    paypal:
+      already_refunded: "تم رد هذه الدفعة ولا يمكن اتخاذ أي إجراء آخر بشأنها."
+      no_payment_via_admin_backend: "لا يمكنك شحن حسابات PayPal من خلال المسؤول  للواجهة الخلفية في الوقت الحالي."
+      transaction: "معاملة PayPal"
+      payer_id: "معرف الدافع"
+      transaction_id: "رقم المعاملة"
+      token: "رمز"
+      refund: "إعادة المال"
+      refund_amount: "القيمة"
+      original_amount: "المبلغ الأصلي: %{amount}"
+      refund_successful: "تم استرداد المال عبر  PayPal بنجاح"
+      refund_unsuccessful: "استرداد المال عبر  PayPal غير ناجح"
+      actions:
+        refund: "إعادة المال"
+      flash:
+        cancel: "لا تريد استخدام PayPal؟ لا يوجد مشكلة."
+        connection_failed: "تعذر الاتصال بـ PayPal."
+        generic_error: "فشل PayPal. %{reasons}"
     users:
       form:
         account_settings: إعدادت الحساب

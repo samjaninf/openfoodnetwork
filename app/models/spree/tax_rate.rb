@@ -7,7 +7,7 @@ module Spree
 
       return if Zone.default_tax
 
-      record.errors.add(:included_in_price, Spree.t(:included_price_validation))
+      record.errors.add(:included_in_price, Spree.t("errors.messages.included_price_validation"))
     end
   end
 end
@@ -16,8 +16,8 @@ module Spree
   class TaxRate < ActiveRecord::Base
     acts_as_paranoid
     include Spree::Core::CalculatedAdjustments
-    belongs_to :zone, class_name: "Spree::Zone"
-    belongs_to :tax_category, class_name: "Spree::TaxCategory"
+    belongs_to :zone, class_name: "Spree::Zone", inverse_of: :tax_rates
+    belongs_to :tax_category, class_name: "Spree::TaxCategory", inverse_of: :tax_rates
 
     validates :amount, presence: true, numericality: true
     validates :tax_category_id, presence: true
@@ -71,6 +71,7 @@ module Spree
             amount: amount,
             source: order,
             originator: self,
+            order: order,
             state: "closed",
             label: label
           )

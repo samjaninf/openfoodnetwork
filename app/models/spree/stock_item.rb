@@ -4,9 +4,9 @@ module Spree
   class StockItem < ActiveRecord::Base
     acts_as_paranoid
 
-    belongs_to :stock_location, class_name: 'Spree::StockLocation'
+    belongs_to :stock_location, class_name: 'Spree::StockLocation', inverse_of: :stock_items
     belongs_to :variant, class_name: 'Spree::Variant'
-    has_many :stock_movements, dependent: :destroy
+    has_many :stock_movements
 
     validates :stock_location, :variant, presence: true
     validates :variant_id, uniqueness: { scope: [:stock_location_id, :deleted_at] }

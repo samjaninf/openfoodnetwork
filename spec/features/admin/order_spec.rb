@@ -119,6 +119,33 @@ feature '
     expect(page).not_to have_select2 "add_variant_id", with_options: [product.name]
   end
 
+  scenario "can't add more items than are available" do
+    # Move the order back to the cart state
+    order.state = 'cart'
+    order.completed_at = nil
+
+    login_as_admin_and_visit spree.edit_admin_order_path(order)
+
+    quantity = order.line_items.first.quantity
+    max_quantity = 0
+    total = order.display_total
+
+    within("tr.stock-item", text: order.products.first.name) do
+      find("a.edit-item").click
+      expect(page).to have_input(:quantity)
+      max_quantity = find("input[name='quantity']")["max"].to_i
+      fill_in(:quantity, with: max_quantity + 1)
+      find("a.save-item").click
+    end
+    accept_js_alert
+
+    expect(page).to_not have_content "Loading..."
+    within("tr.stock-item", text: order.products.first.name) do
+      expect(page).to have_text("#{max_quantity} x")
+    end
+    expect(order.reload.line_items.first.quantity).to eq(max_quantity)
+  end
+
   scenario "can't change distributor or order cycle once order has been finalized" do
     login_as_admin_and_visit spree.edit_admin_order_path(order)
 

@@ -18,10 +18,10 @@ module Spree
                         :tax_category_id, :shipping_category_id, :meta_description,
                         :meta_keywords, :tax_category, :shipping_category
 
-    has_many :inventory_units
-    has_many :line_items
+    has_many :inventory_units, inverse_of: :variant
+    has_many :line_items, inverse_of: :variant
 
-    has_many :stock_items, dependent: :destroy
+    has_many :stock_items, dependent: :destroy, inverse_of: :variant
     has_many :stock_locations, through: :stock_items
     has_many :stock_movements
 
@@ -65,6 +65,7 @@ module Spree
 
     before_validation :set_cost_currency
     before_validation :update_weight_from_unit_value, if: ->(v) { v.product.present? }
+    before_validation :ensure_unit_value
 
     after_save :save_default_price
     after_save :update_units
@@ -296,6 +297,12 @@ module Spree
     def destruction
       exchange_variants(:reload).destroy_all
       yield
+    end
+
+    def ensure_unit_value
+      return unless product&.variant_unit == "items" && unit_value.nil?
+
+      self.unit_value = 1.0
     end
   end
 end

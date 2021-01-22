@@ -85,21 +85,6 @@ module Spree
         end
       end
 
-      context "#available?" do
-        it "should be available if date is in the past" do
-          product.available_on = 1.day.ago
-          expect(product).to be_available
-        end
-
-        it "should not be available if date is nil or in the future" do
-          product.available_on = nil
-          expect(product).to_not be_available
-
-          product.available_on = 1.day.from_now
-          expect(product).to_not be_available
-        end
-      end
-
       describe 'Variants sorting' do
         context 'without master variant' do
           it 'sorts variants by position' do
@@ -232,6 +217,17 @@ module Spree
         product = build(:product)
         allow(product).to receive_messages stock_items: [double(Spree::StockItem, count_on_hand: 5)]
         expect(product.total_on_hand).to eql(5)
+      end
+    end
+
+    context "has stock movements" do
+      let(:product) { create(:product) }
+      let(:variant) { product.master }
+      let(:stock_item) { variant.stock_items.first }
+
+      it "doesnt raise ReadOnlyRecord error" do
+        Spree::StockMovement.create!(stock_item: stock_item, quantity: 1)
+        expect { product.destroy }.not_to raise_error
       end
     end
 

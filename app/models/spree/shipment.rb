@@ -249,8 +249,11 @@ module Spree
 
     def to_package
       package = OrderManagement::Stock::Package.new(stock_location, order)
-      inventory_units.includes(:variant).each do |inventory_unit|
-        package.add inventory_unit.variant, 1, inventory_unit.state_name
+      grouped_inventory_units = inventory_units.includes(:variant).group_by do |iu|
+        [iu.variant, iu.state_name]
+      end
+      grouped_inventory_units.each do |(variant, state_name), inventory_units|
+        package.add variant, inventory_units.count, state_name
       end
       package
     end
@@ -319,7 +322,7 @@ module Spree
     end
 
     def send_shipped_email
-      ShipmentMailer.shipped_email(id).deliver
+      ShipmentMailer.shipped_email(id).deliver_later
     end
 
     def update_adjustment_included_tax

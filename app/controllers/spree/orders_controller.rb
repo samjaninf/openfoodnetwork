@@ -1,6 +1,8 @@
 module Spree
-  class OrdersController < Spree::StoreController
+  class OrdersController < ::BaseController
     include OrderCyclesHelper
+    include Rails.application.routes.url_helpers
+
     layout 'darkswarm'
 
     ssl_required :show

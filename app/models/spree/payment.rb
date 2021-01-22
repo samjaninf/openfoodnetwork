@@ -23,7 +23,7 @@ module Spree
     has_one :adjustment, as: :source, dependent: :destroy
 
     validate :validate_source
-    before_save :set_unique_identifier
+    before_create :set_unique_identifier
 
     after_save :create_payment_profile, if: :profiles_supported?
 
@@ -119,6 +119,12 @@ module Spree
       end
 
       actions
+    end
+
+    def resend_authorization_email!
+      return unless cvv_response_message.present?
+
+      PaymentMailer.authorize_payment(self).deliver_later
     end
 
     def payment_source

@@ -648,9 +648,9 @@ it:
           desc_long: Chi siamo
           desc_long_placeholder: Racconta di te ai tuoi clienti. Questa informazione comparirà nel tuo profilo pubblico.
         business_details:
-          abn: ABN
+          abn: P. IVA
           abn_placeholder: es. 99 123 456 789
-          acn: ACN
+          acn: C.F.
           acn_placeholder: es. 123 456 789
           display_invoice_logo: Mostra logo nelle fatture
           invoice_text: Aggiungere testo personalizzato alla fine delle fatture
@@ -660,7 +660,7 @@ it:
         contact:
           name: Nome
           name_placeholder: es. Gustav Plum
-          email_address: 'Pubblica Indirizzo mail '
+          email_address: Email (pubblica)
           email_address_placeholder: es. inquiries@fresh-food.com
           email_address_tip: "Questo indirizzo mail sarà visualizzato nel tuo profilo pubblico"
           phone: Telefono
@@ -721,7 +721,7 @@ it:
           permalink_tip: "Questo permalink serve a creare l'url al tuo negozio: %{link}nome-del-tuo-negozio/negozio"
           link_to_front: Link alla tua vetrina
           link_to_front_tip: Un link diretto alla tua vetrina su Open Food Network
-          ofn_uid: OFN UID
+          ofn_uid: OFN ID
           ofn_uid_tip: Il codice univoco utilizzato per identificare l'azienda su OFN
         shipping_methods:
           name: "Nome"
@@ -765,7 +765,7 @@ it:
               il tuo negozio è chiuso e/o quando i clienti potranno aspettarsi una
               nuova apertura. Questo viene visualizzato sul tuo negozio solo quando
               non hai cicli d'ordine attivi (es. il negozio è chiuso).
-          shopfront_category_ordering: "Categorie disponibili in Vetrina"
+          shopfront_category_ordering: "Ordine Categorie in Vetrina"
           shopfront_category_ordering_note: "(dall'alto in basso)"
           open_date: "Data apertura"
           close_date: "Data chiusura"
@@ -1225,7 +1225,7 @@ it:
       customer_required:
         login: "accedi"
         signup: "Registrati"
-        contact: "contatta"
+        contact: "contatti"
         require_customer_login: "Solo clienti approvati hanno accesso a questo negozio"
         require_login_html: "Se sei già un cliente approvato, %{login} o %{signup} per procedere."
         require_login_2_html: "Vuoi iniziare a acquistare qui? Per favore %{contact} %{enterprise} e chiedi di essere aggiunto."
@@ -1254,7 +1254,7 @@ it:
   total_excl_tax: "Totale (Tasse escl.):"
   total_incl_tax: "Totale (Tasse incl.):"
   abn: "CF:"
-  acn: "ACN:"
+  acn: "C.F.:"
   invoice_issued_on: "Fattura emessa il"
   order_number: "Numero fattura:"
   date_of_transaction: "Data della transazione:"
@@ -1270,7 +1270,7 @@ it:
   menu_3_url: "/producers"
   menu_4_title: "Gruppi"
   menu_4_url: "/groups"
-  menu_5_title: "About"
+  menu_5_title: "Chi siamo"
   menu_5_url: "https://about.openfoodnetwork.org.au/"
   menu_6_title: "Blog"
   menu_6_url: "https://apropos.openfoodfrance.org/blog/"
@@ -1290,7 +1290,7 @@ it:
   footer_pinterest_url: "URL Pinterest"
   footer_email: "Email"
   footer_links_md: "Collegamenti"
-  footer_about_url: "URL About"
+  footer_about_url: "URL Chi siamo"
   user_guide_link: "Link alla guida utente"
   name: Nome
   first_name: Nome
@@ -1325,7 +1325,7 @@ it:
   label_producer: "Produttore"
   label_producers: "Produttori"
   label_groups: "Gruppi"
-  label_about: "About"
+  label_about: "Chi siamo"
   label_connect: "Connetti"
   label_learn: "Impara"
   label_blog: "Blog"
@@ -1563,13 +1563,14 @@ it:
   shopping_tabs_home: "Home"
   shopping_tabs_shop: "Negozio"
   shopping_tabs_about: "Descrizione"
-  shopping_tabs_contact: "Contatta"
+  shopping_tabs_contact: "Contatti"
   shopping_contact_address: "Indirizzo"
-  shopping_contact_web: "Contatta"
+  shopping_contact_web: "Contatti"
   shopping_contact_social: "Segui"
   shopping_groups_part_of: "è parte di:"
   shopping_producers_of_hub: "Produttori di %{hub}:"
   enterprises_next_closing: "Prossimo ordine in chiusura"
+  enterprises_currently_open: "Le gentili richieste sono attualmente aperte"
   enterprises_ready_for: "Pronto per"
   enterprises_choose: "Scegli quando vuoi il tuo ordine:"
   maps_open: "Aperto"
@@ -1634,7 +1635,7 @@ it:
   groups_about: "Su di noi"
   groups_producers: "I nostri produttori"
   groups_hubs: "I nostri hub"
-  groups_contact_web: Contatta
+  groups_contact_web: Contatti
   groups_contact_social: Segui
   groups_contact_address: Indirizzo
   groups_contact_email: Scrivici
@@ -1661,7 +1662,7 @@ it:
   login_invalid: "Email o password invalida"
   producers_about: Su di noi
   producers_buy: Acquista per
-  producers_contact: Contatta
+  producers_contact: Contatti
   producers_contact_phone: Chiama
   producers_contact_social: Segui
   producers_buy_at_html: "Compra prodotti di %{enterprise} presso:"
@@ -1880,9 +1881,9 @@ it:
         enterprise_long_desc: "Descrizione lunga"
         enterprise_long_desc_placeholder: "Questa è la tua opportunità per raccontare la storia della tua azienda - cosa ti rende differente e fantastico? Ti suggeriamo di mantenere la descrizione sotto i 600 caratteri o le 150 parole."
         enterprise_long_desc_length: "%{num} caratteri / fino a 600 raccomandati"
-        enterprise_abn: "ABN"
+        enterprise_abn: "P. IVA"
         enterprise_abn_placeholder: "es. 99 123 456 789"
-        enterprise_acn: "ACN"
+        enterprise_acn: "C.F."
         enterprise_acn_placeholder: "es. 123 456 789"
         enterprise_tax_required: "Devi fare una selezione."
       images:
@@ -2017,6 +2018,9 @@ it:
   delivery_method: Metodo di consegna
   fee_type: "Tipo di contributo"
   tax_category: "Categoria di imposta"
+  description: "Descrizione"
+  display: "Visualizza"
+  tags: "Tag"
   calculator: "Calcolatore"
   calculator_values: "Valori del calcolatore"
   calculator_settings_warning: "Se stai modificando il tipo di calcolatore, devi prima salvare prima di editare i setting del calcolatore"
@@ -2083,6 +2087,7 @@ it:
   spree_classification_primary_taxon_error: "La classificazione %{taxon} è la classificazione primaria di %{product} e non può essere cancellata"
   spree_order_availability_error: "Il distributore o il ciclo di richiesta non possono rifornire i prodotti nel tuo carrello"
   spree_order_populator_error: "Il distributore o il ciclo di richieste non hanno disponibilità di alcuni prodotti nel tuo carrello. Per favore scegline un altro."
+  spree_order_cycle_error: "Per favore seleziona un ciclo di richieste per questa gentile richiesta."
   spree_order_populator_availability_error: "Questo prodotto non è disponibile dal distributore o nel ciclo di richieste selezionati."
   spree_distributors_error: "Seleziona almeno un hub"
   spree_user_enterprise_limit_error: "^%{email}non può gestire altre aziende (il limite è %{enterprise_limit})."
@@ -2299,7 +2304,7 @@ it:
   user_invited: "%{email} è stata/o invitata/o a gestire questa azienda"
   add_manager: "Aggiungi un utente esistente"
   users: "Utenti"
-  about: "About"
+  about: "Chi siamo"
   images: "Immagini"
   web: "Web"
   primary_details: "Dettagli principali"
@@ -2375,6 +2380,7 @@ it:
   js:
     saving: 'Salvataggio...'
     changes_saved: 'Modifiche salvate.'
+    authorising: "Autorizzazione..."
     save_changes_first: Salva prima le modifiche.
     all_changes_saved: Tutte le modifiche sono state salvate
     unsaved_changes: Hai modifiche non salvate
@@ -2390,6 +2396,7 @@ it:
     resolve_errors: 'Per favore risolvi i seguenti errori:'
     more_items: "+ %{count} ancora"
     default_card_updated: Carta predefinita aggiornata
+    default_card_voids_auth: La modifica della carta predefinita rimuoverà le autorizzazioni esistenti dei negozi per l'addebito. Puoi autorizzare nuovamente i negozi dopo aver aggiornato la carta predefinita. Vuoi cambiare la carta predefinita? "
     cart:
       add_to_cart_failed: >
           C'è stato un problema nell'aggiungere questo prodotto al carrello. Forse
@@ -3041,6 +3048,7 @@ it:
       out_of_stock: '%{item} non è al momento disponibile.'
     actions:
       update: "Aggiorna"
+      cancel: "Annulla"
     shared:
       error_messages:
         errors_prohibited_this_record_from_being_saved:
@@ -3056,6 +3064,7 @@ it:
         payment_state: "Stato Pagamento"
     errors:
       messages:
+        included_price_validation: "Non può essere selezionato se non hai impostato una Zona Fiscale Predefinita "
         blank: "non può essere lasciato vuoto"
     layouts:
       admin:
@@ -3266,6 +3275,14 @@ it:
           deactivation_warning: "Disattivare un metodo di pagamento può far sparire il metodo di pagamento dalla tua lista. Alternativamente, puoi nascondere il metodo di pagamento dalla pagina di checkout impostando l'opzione 'Visualizza' su 'Solo Back office'."
         providers:
           provider: "Provider"
+          check: "Contanti o altri metodi di pagamento per cui non è richiesta una validazione automatica"
+          migs: "MasterCard Internet Gateway Service (MIGS)"
+          pin: "Pin Payments"
+          paypalexpress: "PayPal Express"
+          stripeconnect: "Stripe"
+          stripesca: "Stripe SCA"
+          bogus: "Bogus"
+          bogussimple: "BogusSimple"
       payments:
         source_forms:
           stripe:
@@ -3500,6 +3517,24 @@ it:
       ended: finito
       paused: in pausa
       canceled: annullato
+    paypal:
+      already_refunded: "Questo pagamento è stato rimborsato e non è possibile intraprendere ulteriori azioni."
+      no_payment_via_admin_backend: "Al momento non è possibile addebitare gli account PayPal tramite il back-end dell'amministratore."
+      transaction: "Transazione PayPal"
+      payer_id: "ID pagatore"
+      transaction_id: "ID Transazione"
+      token: "Token"
+      refund: "Rimborsa"
+      refund_amount: "Quantità"
+      original_amount: "Importo originale: %{amount}"
+      refund_successful: "Rimborso PayPal riuscito"
+      refund_unsuccessful: "Rimborso PayPal non riuscito"
+      actions:
+        refund: "Rimborsa"
+      flash:
+        cancel: "Non vuoi usare PayPal? Nessun problema."
+        connection_failed: "Non riesco a collegarmi a PayPal"
+        generic_error: "PayPal fallito. %{reasons}"
     users:
       form:
         account_settings: Impostazioni account
@@ -3538,9 +3573,11 @@ it:
         delete?: Elimina?
       cards:
         authorised_shops: Negozi autorizzati
+        authorised_shops_agreement: Questo è l'elenco dei negozi a cui è consentito addebitare sulla tua carta di credito predefinita eventuali abbonamenti (ad esempio ordini ripetuti) che potresti avere. I dettagli della tua carta saranno tenuti al sicuro e non saranno condivisi con i proprietari dei negozi. Riceverai una notifica per ciascun addebito. Selezionando la casella di un negozio, accetti di autorizzare tale negozio a inviare istruzioni all'istituto finanziario che ha emesso la tua carta per accettare pagamenti in conformità con i termini degli abbonamenti che crei con quel negozio.
         saved_cards_popover: Questa è la lista di carte che hai scelto di salvare per un uso successivo. Il tuo 'predefinito' sarà selezionato automaticamente quando esegui il checkout di un ordine, e può essere addebitato da qualsiasi negozio che hai autorizzato a farlo (vedi a destra).
       authorised_shops:
         shop_name: "Nome del negozio"
+        allow_charges?: "Consenti addebiti sulla carta predefinita?"
     localized_number:
       invalid_format: 'Formato non valido: inserire un numero.'
     api:
