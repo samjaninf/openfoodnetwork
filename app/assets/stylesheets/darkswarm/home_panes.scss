@@ -48,7 +48,7 @@
 }
 
 #stats.pane {
-  background-image: url("/assets/home/background-apple-crates.jpg");
+  background-image: image-path("home/background-apple-crates.jpg");
   background-position: center center;
   background-color: $ofn-grey;
 
@@ -124,31 +124,32 @@
       background-size: auto 100%;
 
       &.search {
-        background-image: url("/assets/icons/farm.svg");
+        background-image: image-path("assets/icons/farm.svg");
       }
 
       &.shop {
-        background-image: url("/assets/icons/farm-products.svg");
+        background-image: image-path("assets/icons/farm-products.svg");
       }
 
       &.pay {
-        background-image: url("/assets/icons/laptop.svg");
+        background-image: image-path("assets/icons/laptop.svg");
       }
 
       &.pick-up-delivery {
-        background-image: url("/icons/map.svg");
+        // background-image: image-path("icons/map.svg");
+        background-image: image-path("icons/map.svg");
       }
       &.community-1 {
-        background-image: url("/assets/icons/049-plant.svg");
+        background-image: image-path("assets/icons/049-plant.svg");
       }
       &.community-2 {
-        background-image: url("/icons/045-wheat.svg");
+        background-image: image-path("icons/045-wheat.svg");
       }
       &.community-3 {
-        background-image: url("/icons/050-barn.svg");
+        background-image: image-path("icons/050-barn.svg");
       }
       &.community-4 {
-        background-image: url("/icons/049-bread.svg");
+        background-image: image-path("icons/049-bread.svg");
       }
     }
   }
