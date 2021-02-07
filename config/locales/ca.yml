@@ -2955,6 +2955,7 @@ ca:
     display_currency: "Moneda de visualització"
     choose_currency: "Escull la moneda"
     mail_method_settings: "Configuració del mètode de correu"
+    mail_settings_notice_html: "Algunes de les opcions de configuració següents no es poden editar i es mostren aquí només amb finalitats de depuració. Es poden fer canvis actualitzant els secrets de la instància i provisionant-los mitjançant <a href='https://github.com/openfoodfoundation/ofn-install'>ofn-install</a> . Contacteu amb l'equip global d'OFN per obtenir més informació."
     general: "General"
     enable_mail_delivery: "Habilita el lliurament de correu"
     send_mails_as: "Enviar missatges com"
@@ -2969,6 +2970,7 @@ ca:
     tax rate: "Tarifes fiscals"
     new_tax_rate: "Nou impost"
     tax_category: "Categoria d'impostos"
+    tax_rates: "Tarifes fiscals"
     rate: "Taxa"
     tax_rate_amount_explanation: "Les taxes impositives són un import decimal per ajudar en els càlculs (és a dir, si el tipus impositiu és del 5%, introduïu 0,05)"
     included_in_price: "Inclòs al preu"
@@ -3280,7 +3282,6 @@ ca:
         providers:
           provider: "Proveïdor"
           check: "Efectiu / transferència / etc. (pagaments per als quals no és necessària la validació automàtica)"
-          migs: "MasterCard Internet Gateway Service (MIGS)"
           pin: "Pin Payments"
           paypalexpress: "PayPal Express"
           stripeconnect: "Stripe"
@@ -3468,6 +3469,11 @@ ca:
         paid_order: "La vostra comanda s'havia pagat per la qual cosa %{distributor} ha reemborsat l'import complet"
         credit_order: "La vostra comanda s'havia pagat i per tant, s'ha abonat l'import al vostre compte"
         subject: "Cancel·lació de la comanda"
+      cancel_email_for_shop:
+        greeting: "Benvolgut/da,%{name}"
+        subject: "Cancel·lació de la comanda"
+        intro: "Una consumidora ha cancel·lat la seva comanda # %{number}."
+        view_cancelled_order: "Mostra la comanda cancel·lada"
       confirm_email:
         subject: "Confirmació de la comanda"
       invoice_email:

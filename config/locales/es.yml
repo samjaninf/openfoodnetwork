@@ -2955,6 +2955,7 @@ es:
     display_currency: "Mostrar moneda"
     choose_currency: "Elegir moneda"
     mail_method_settings: "Configuración del método de correo"
+    mail_settings_notice_html: "Algunas de las siguientes configuraciones no se pueden editar y se enumeran aquí solo con fines de depuración. Se pueden realizar cambios actualizando los secretos de la instancia y aprovisionándolos con <a href='https://github.com/openfoodfoundation/ofn-install'>ofn-install</a> . Comuníquese con el equipo global de OFN para obtener más detalles."
     general: "General"
     enable_mail_delivery: "Habilitar entrega de correo"
     send_mails_as: "Enviar correos como"
@@ -2969,6 +2970,7 @@ es:
     tax rate: "% Impuestos"
     new_tax_rate: "Nuevo impuesto"
     tax_category: "Categoría de impuestos"
+    tax_rates: "% Impuestos"
     rate: "Impuesto"
     tax_rate_amount_explanation: "Las tasas de impuestos son una cantidad decimal para ayudar en los cálculos (es decir, si la tasa de impuestos es del 5%, introduzca 0.05)"
     included_in_price: "Incluido en el precio"
@@ -3280,7 +3282,6 @@ es:
         providers:
           provider: "Proveedor"
           check: "Efectivo / transferencia / etc. (pagos para los que no se requiere validación automática)"
-          migs: "MasterCard Internet Gateway Service (MIGS)"
           pin: "Pin Payments"
           paypalexpress: "PayPal Express"
           stripeconnect: "Stripe"
@@ -3468,6 +3469,11 @@ es:
         paid_order: "Su pedido estaba pagado por lo que %{distributor}ha devuelto el importe completo."
         credit_order: "Su pedido estaba pagado por lo que se ha abonado en su cuenta."
         subject: "Cancelación del pedido"
+      cancel_email_for_shop:
+        greeting: "Hola %{name}"
+        subject: "Cancelación del pedido"
+        intro: "Una consumidora ha cancelado su pedido # %{number}."
+        view_cancelled_order: "Ver pedido cancelado"
       confirm_email:
         subject: "Confirmación del pedido"
       invoice_email:
