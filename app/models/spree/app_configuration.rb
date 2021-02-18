@@ -27,7 +27,7 @@ module Spree
   class AppConfiguration < Preferences::Configuration
     # Should state/state_name be required
     preference :address_requires_state, :boolean, default: true
-    preference :admin_interface_logo, :string, default: 'ofn-logo.png'
+    preference :admin_interface_logo, :string, default: 'hto-logo-black.png'
     preference :admin_products_per_page, :integer, default: 10
     # Should only be true if you don't need to track inventory
     preference :allow_backorder_shipping, :boolean, default: false
