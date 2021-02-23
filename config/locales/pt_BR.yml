@@ -1546,7 +1546,6 @@ pt_BR:
     set_a_password: "Você será solicitado a definir uma senha antes de poder administrar a empresa."
     mistakenly_sent: "Não sabe ao certo por que você recebeu este e-mail? Entre em contato com %{owner_email} para obter mais informações."
   producer_mail_greeting: "Querido"
-  producer_mail_text_before: "Agora temos todos os pedidos do cliente para a próxima entrega."
   producer_mail_order_text: "Aqui está um resumo de pedidos para seus produtos:"
   producer_mail_delivery_instructions: "Instruções para retirada/entrega do estoque:"
   producer_mail_signoff: "Obrigado e até breve"
@@ -2647,6 +2646,7 @@ pt_BR:
         min_quantity: "quantidade min. "
         max_quantity: "Quantidade máxima"
       price_breakdown: "Detalhamento do preço"
+      unit_price_tooltip: "Este é o preço unitário para este produto. Ele te permite comparar o preço dos produtos independentemente do tamanho da embalagem e seu peso. "
     variants:
       on_demand:
         'yes': "Sob encomenda"
@@ -3279,6 +3279,7 @@ pt_BR:
           provider: "Provedor"
           check: "Dinheiro / Transferência Bancária / Maquininha / etc. (pagamentos para os quais é necessária a validação manual)."
           pin: "Pagamentos via Pin"
+          paypalexpress: "PayPal Express"
           stripeconnect: "Stripe"
           stripesca: "Stripe SCA"
           bogus: "Para Teste"
@@ -3455,6 +3456,7 @@ pt_BR:
       processing: processando
       void: vazio
       invalid: inváliod
+      authorise: autorizar
     order_mailer:
       cancel_email:
         customer_greeting: "Querid@ %{name},"
@@ -3493,6 +3495,9 @@ pt_BR:
       authorize_payment:
         subject: "Favor autorizar seu pagamento para %{distributor}na OFB"
         instructions: "Seu pagamento de %{amount}para %{distributor}necessita uma autenticação adicional. Favor visitar o seguinte endereço URL para autorizar o seu pagamento:"
+      authorization_required:
+        subject: "Um pagamento requer autorização do comprador"
+        message: "Um pagamento para o pedido %{order_number}requer uma autorização adicional por parte do comprador. O comprador foi notificado via email e o pagamento irá aparecer como pendente até que seja autorizado. "
     shipment_mailer:
       shipped_email:
         dear_customer: "Estimado cliente,"
@@ -3530,6 +3535,7 @@ pt_BR:
       canceled: cancelado
     paypal:
       already_refunded: "Este pagamento foi estornado e não pode ser mais editado."
+      no_payment_via_admin_backend: "No momento não é possível cobrar de contas PayPal pelo painel do administrador."
       transaction: "Transação via PayPal"
       payer_id: "ID do comprador"
       transaction_id: "ID da transação"

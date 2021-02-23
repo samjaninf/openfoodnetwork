@@ -117,6 +117,8 @@ en_IE:
   models:
     order_cycle:
       cloned_order_cycle_name: "COPY OF %{order_cycle}"
+    tax_rate:
+      included_in_price: "Included in price"
   validators:
     date_time_string_validator:
       not_string_error: "must be a string"
@@ -1546,7 +1548,6 @@ en_IE:
     set_a_password: "You will then be prompted to set a password before you are able to administer the enterprise."
     mistakenly_sent: "Not sure why you have received this email? Please contact %{owner_email} for more information."
   producer_mail_greeting: "Dear"
-  producer_mail_text_before: "We now have all the consumer orders for the next food delivery."
   producer_mail_order_text: "Here is a summary of the orders for your products:"
   producer_mail_delivery_instructions: "Stock pickup/delivery instructions:"
   producer_mail_signoff: "Thanks and best wishes"
@@ -2649,6 +2650,7 @@ en_IE:
         min_quantity: "Min quantity"
         max_quantity: "Max quantity"
       price_breakdown: "Price breakdown"
+      unit_price_tooltip: "This is the unit price of this product. It allows you to compare the price of products independent of packaging sizes & weights."
     variants:
       on_demand:
         'yes': "Unlimited"
@@ -3282,8 +3284,8 @@ en_IE:
           check: "Cash/EFT/etc. (payments for which automatic validation is not required)"
           pin: "Pin Payments"
           paypalexpress: "PayPal Express"
-          stripeconnect: "Stripe"
-          stripesca: "Stripe SCA"
+          stripeconnect: "Stripe (Obsolete version)"
+          stripesca: "Stripe"
           bogus: "Bogus"
           bogussimple: "BogusSimple"
       payments:
@@ -3427,6 +3429,9 @@ en_IE:
           or_enter_new_card: "Or, enter details for a new card:"
           remember_this_card: Remember this card?
     date_picker:
+      flatpickr_date_format: "Y-m-d"
+      flatpickr_datetime_format: "Y-m-d H:i"
+      today: "Today"
       now: "Now"
     orders:
       error_flash_for_unavailable_items: "An item in your cart has become unavailable. Please update the selected quantities."
@@ -3455,6 +3460,7 @@ en_IE:
       processing: processing
       void: void
       invalid: invalid
+      authorise: authorise
     order_mailer:
       cancel_email:
         customer_greeting: "Dear %{name},"
@@ -3493,6 +3499,9 @@ en_IE:
       authorize_payment:
         subject: "Please authorize your payment to %{distributor} on OFN"
         instructions: "Your payment of %{amount} to %{distributor} requires additional authentication. Please visit the following URL to authorize your payment:"
+      authorization_required:
+        subject: "A payment requires authorization from the customer"
+        message: "A payment for order %{order_number} requires additional authorization from the customer. The customer has been notified via email and the payment will appear as pending until it is authorized."
     shipment_mailer:
       shipped_email:
         dear_customer: "Dear Customer,"
