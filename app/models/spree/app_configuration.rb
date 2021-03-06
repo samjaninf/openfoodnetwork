@@ -46,12 +46,12 @@ module Spree
     preference :currency_thousands_separator, :string, default: ","
     preference :display_currency, :boolean, default: false
     preference :default_country_id, :integer
-    preference :default_meta_description, :string, default: 'OFN demo site'
-    preference :default_meta_keywords, :string, default: 'ofn, demo'
+    preference :default_meta_description, :string, default: 'Harvest To Order'
+    preference :default_meta_keywords, :string, default: 'harvest-to-order, hto, h2o, harvesttoorder, harvest, order'
     preference :default_seo_title, :string, default: ''
     preference :hide_cents, :boolean, default: false
     preference :layout, :string, default: 'darkswarm'
-    preference :logo, :string, default: 'ofn-logo.png'
+    preference :logo, :string, default: 'hto-logo-black.png'
 
     # Maximum nesting level in taxons menu
     preference :max_level_in_taxons_menu, :integer, default: 1
@@ -67,8 +67,8 @@ module Spree
     preference :show_variant_full_price, :boolean, default: false
     preference :show_products_without_price, :boolean, default: false
     preference :show_raw_product_description, :boolean, default: false
-    preference :site_name, :string, default: 'OFN Demo Site'
-    preference :site_url, :string, default: 'demo.openfoodnetwork.org'
+    preference :site_name, :string, default: 'Harvest To Order'
+    preference :site_url, :string, default: 'harvesttoorder.com'
     preference :tax_using_ship_address, :boolean, default: true
     # Determines whether to track on_hand values for variants / products.
     preference :track_inventory_levels, :boolean, default: true
