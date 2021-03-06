@@ -38,7 +38,7 @@ else
 end
 
 gem 'i18n'
-gem 'i18n-js', '~> 3.8.0'
+gem 'i18n-js', '~> 3.8.1'
 gem 'rails-i18n'
 gem 'rails_safe_tasks', '~> 1.0'
 
@@ -134,6 +134,8 @@ gem 'jquery-ui-rails', '~> 4.2'
 gem 'select2-rails', '~> 3.4.7'
 
 gem 'ofn-qz', github: 'openfoodfoundation/ofn-qz', branch: 'ofn-rails-4'
+
+gem 'good_migrations'
 
 group :production, :staging do
   gem 'ddtrace'

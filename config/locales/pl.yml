@@ -612,6 +612,7 @@ pl:
         max_fulfilled_units: "Maksymalna liczba dostarczonych jednostek"
         order_error: "Przed aktualizacją zamówień należy naprawić niektóre błędy. Wszystkie pola z czerwonymi ramkami zawierają błędy."
         variants_without_unit_value: "OSTRZEŻENIE: Niektóre warianty nie mają określonej jednostki"
+        all: "Wszystko"
       select_variant: "Wybierz wariant"
     enterprise:
       select_outgoing_oc_products_from: Wybierz wychodzące produkty OC z
@@ -1160,6 +1161,9 @@ pl:
       hide_closed_shops: "Ukryj zamknięte sklepy"
       show_on_map: "Pokaż wszystko na mapie"
   shared:
+    mailers:
+      powered_by:
+        open_food_network: "Open Food Network"
     menu:
       cart:
         cart: "Koszyk"
@@ -1545,6 +1549,7 @@ pl:
   enterprises_choose: "Wybierz, kiedy chcesz zamówić:"
   maps_open: "otwarty"
   maps_closed: "Zamknięte"
+  map_title: "Mapa"
   hubs_buy: "Kupuj:"
   hubs_shopping_here: "Tutaj robisz zakupy"
   hubs_orders_closed: "Zamówienia zamknięte"
@@ -2865,10 +2870,10 @@ pl:
     your_order_is_empty_add_product: "Twoje zamówienie jest puste, wyszukaj i dodaj produkt powyżej"
     add_product: "Dodaj produkt"
     name_or_sku: "Nazwa lub SKU (wprowadź co najmniej 4 pierwsze znaki nazwy produktu)"
-    resend: Wysłać ponownie
-    back_to_orders_list: Powrót do listy zamówień
-    return_authorizations: Autoryzacje zwrotu
-    cannot_create_returns: Nie można utworzyć zwrotów, ponieważ to zamówienie nie zawiera wysłanych jednostek.
+    resend: "Wysłać ponownie"
+    back_to_orders_list: "Powrót do listy zamówień"
+    return_authorizations: "Autoryzacje zwrotu"
+    cannot_create_returns: "Nie można utworzyć zwrotów, ponieważ to zamówienie nie zawiera wysłanych jednostek."
     select_stock: "Wybierz akcje"
     location: "Lokalizacja"
     count_on_hand: "Licz na rękę"
@@ -2978,6 +2983,8 @@ pl:
     back_to_taxonomies_list: "Powrót do listy taksonomii"
     shipping_methods: "Metody dostaw"
     shipping_method: "Metoda dostawy"
+    payment: "Płatność"
+    status: "Status"
     shipping_categories: "Kategorie dostaw"
     new_shipping_category: "Nowa kategoria dostaw"
     back_to_shipping_categories: "Powrót do kategorii dostaw"
@@ -3341,7 +3348,6 @@ pl:
         new:
           new_variant: "New Variant"
         form:
-          cost_price: "Cena kosztów własnych"
           sku: "SKU"
           price: "Cena"
           display_as: "Wyświetl jako"

@@ -626,6 +626,7 @@ cy:
         max_fulfilled_units: "Unedau Cyflawn Uchaf"
         order_error: "Rhaid datrys rhai gwallau cyn y gallwch chi ddiweddaru archebion. Mae unrhyw gaeau â ffiniau coch yn cynnwys gwallau."
         variants_without_unit_value: "RHYBUDD: Nid oes gwerth uned i rai amrywiadau"
+        all: "I gyd"
       select_variant: "Dewiswch amrywiad"
     enterprise:
       select_outgoing_oc_products_from: Dewiswch gynhyrchion OC sy&#39;n mynd allan o
@@ -1180,6 +1181,9 @@ cy:
       hide_closed_shops: "Cuddio siopau caeedig"
       show_on_map: "Dangos popeth ar y map"
   shared:
+    mailers:
+      powered_by:
+        open_food_network: "Rhwydwaith Bwyd Agored"
     menu:
       cart:
         cart: "Cart"
@@ -1568,6 +1572,7 @@ cy:
   enterprises_choose: "Dewiswch pryd rydych chi am gael eich archeb:"
   maps_open: "Ar agor"
   maps_closed: "Ar gau"
+  map_title: "Map"
   hubs_buy: "Siopa am:"
   hubs_shopping_here: "Siopa yma"
   hubs_orders_closed: "Gorchmynion ar gau"
@@ -2363,6 +2368,7 @@ cy:
   back_to_orders_list: "Yn ôl i&#39;r rhestr archebu"
   no_orders_found: "Ni ddaethpwyd o hyd i Orchmynion"
   order_information: "Gwybodaeth Archebu"
+  new_payment: "Taliad Newydd"
   date_completed: "Dyddiad Cwblhau"
   amount: "Swm"
   state_names:
@@ -2911,10 +2917,10 @@ cy:
     your_order_is_empty_add_product: "Mae eich archeb yn wag, chwiliwch am ac ychwanegwch gynnyrch uchod"
     add_product: "Ychwanegu Cynnyrch"
     name_or_sku: "Enw neu SKU (nodwch o leiaf 4 nod cyntaf enw&#39;r cynnyrch)"
-    resend: Resend
-    back_to_orders_list: Yn ôl i&#39;r Rhestr Archebion
-    return_authorizations: Awdurdodiadau Dychwelyd
-    cannot_create_returns: Ni all greu ffurflenni gan nad oes gan y gorchymyn hwn unrhyw unedau wedi&#39;u cludo.
+    resend: "Resend"
+    back_to_orders_list: "Yn ôl i&#39;r Rhestr Archebion"
+    return_authorizations: "Awdurdodiadau Dychwelyd"
+    cannot_create_returns: "Ni all greu ffurflenni gan nad oes gan y gorchymyn hwn unrhyw unedau wedi&#39;u cludo."
     select_stock: "Dewiswch stoc"
     location: "Lleoliad"
     count_on_hand: "Cyfrif Wrth Law"
@@ -3028,6 +3034,9 @@ cy:
     back_to_taxonomies_list: "Yn ôl i&#39;r Rhestr Tacsonomeg"
     shipping_methods: "Dulliau Llongau"
     shipping_method: "Dull Llongau"
+    shipment: "Cludo"
+    payment: "Taliad"
+    status: "Statws"
     shipping_categories: "Categorïau Llongau"
     new_shipping_category: "Categori Llongau Newydd"
     back_to_shipping_categories: "Yn ôl i Gategorïau Llongau"
@@ -3408,7 +3417,6 @@ cy:
         new:
           new_variant: "Amrywiad Newydd"
         form:
-          cost_price: "Pris Cost"
           sku: "SKU"
           price: "Pris"
           display_as: "Arddangos Fel"

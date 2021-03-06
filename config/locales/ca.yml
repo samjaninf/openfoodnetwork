@@ -1186,6 +1186,10 @@ ca:
       hide_closed_shops: "Amaga les botigues tancades"
       show_on_map: "Mostra-ho tot al mapa"
   shared:
+    mailers:
+      powered_by:
+        open_food_network: "Open Food Network"
+        powered_html: "La vostra experiència de compra està impulsada per %{open_food_network}."
     menu:
       cart:
         cart: "Cistella"
@@ -2375,6 +2379,7 @@ ca:
   back_to_orders_list: "Torna a la llista de comandes"
   no_orders_found: "No s'han trobat comandes"
   order_information: "Informació de la comanda"
+  new_payment: "Nou pagament"
   date_completed: "Data finalitzada"
   amount: "Import"
   state_names:
@@ -2881,10 +2886,11 @@ ca:
     your_order_is_empty_add_product: "La comanda està buida, si us plau cerca i afegeix un producte a dalt"
     add_product: "Afegeix un producte"
     name_or_sku: "Nom o codi (introduïu com a mínim els primers 4 caràcters del nom del producte)"
-    resend: Reenviar
-    back_to_orders_list: Tornar a la llista de comandes
-    return_authorizations: Autoritzacions de devolució
-    cannot_create_returns: No es poden crear devolucions ja que aquesta comanda no té cap unitat enviada.
+    resend: "Reenviar"
+    back_to_orders_list: "Tornar a la llista de comandes"
+    back_to_payments_list: "Torna a la llista de pagaments"
+    return_authorizations: "Autoritzacions de devolució"
+    cannot_create_returns: "No es poden crear devolucions ja que aquesta comanda no té cap unitat enviada."
     select_stock: "Seleccioneu existències"
     location: "Ubicació"
     count_on_hand: "Compte disponible"
@@ -2999,6 +3005,9 @@ ca:
     back_to_taxonomies_list: "Torna a la llista de taxonomies"
     shipping_methods: "Mètodes d'enviament"
     shipping_method: "Mètode d'enviament"
+    shipment: "Enviament"
+    payment: "Pagament"
+    status: "Estat"
     shipping_categories: "Tipus d'enviament"
     new_shipping_category: "Nova categoria d’enviament"
     back_to_shipping_categories: "Tornar a les categories d'enviament"
@@ -3449,6 +3458,7 @@ ca:
       pending: pendents
       ready: llest
       shipped: enviat
+      canceled: cancel·lat
     payment_states:
       balance_due: a pagar
       completed: completat
@@ -3570,6 +3580,8 @@ ca:
         past_orders: Comandes anteriors
       transactions:
         transaction_history: Historial de transaccions
+        authorisation_required: Cal autorització
+        authorise: Autoritzar
       open_orders:
         order: Comanda
         shop: Botiga

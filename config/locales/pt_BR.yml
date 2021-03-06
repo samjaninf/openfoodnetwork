@@ -628,6 +628,7 @@ pt_BR:
         max_fulfilled_units: "Pedidos / Limite Mínimo (Max)"
         order_error: "Alguns erros devem ser corrigidos antes de atualizar os pedidos.\nOs campos com bordas vermelhas contém erros."
         variants_without_unit_value: "AVISO: Algumas variantes não possuem unidade de medida"
+        all: "Todos"
       select_variant: "Selecione uma variante"
     enterprise:
       select_outgoing_oc_products_from: 'Selecione a saída do ciclo de pedidos  '
@@ -1180,6 +1181,9 @@ pt_BR:
       hide_closed_shops: "Esconder lojas fechadas"
       show_on_map: "Mostrar tudo no mapa"
   shared:
+    mailers:
+      powered_by:
+        open_food_network: "Open Food Brasil"
     menu:
       cart:
         cart: "Carrinho"
@@ -1569,6 +1573,7 @@ pt_BR:
   enterprises_choose: "Escolha para quando você quer seu pedido:"
   maps_open: "Aberto"
   maps_closed: "Fechado"
+  map_title: "Mapa"
   hubs_buy: "Compre por:"
   hubs_shopping_here: "Comprando aqui"
   hubs_orders_closed: "Fechado para pedidos"
@@ -2876,10 +2881,10 @@ pt_BR:
     your_order_is_empty_add_product: "Seu pedido está vazio, pesquise e adicione um produto acima"
     add_product: "Adicionar produto"
     name_or_sku: "Nome ou SKU (digite pelo menos os 4 primeiros caracteres do nome do produto)"
-    resend: Re-enviar
-    back_to_orders_list: Voltar à lista de pedidos
-    return_authorizations: Autorizações de Devolução
-    cannot_create_returns: Não é possível criar devoluções, pois esse pedido não possui unidades enviadas.
+    resend: "Re-enviar"
+    back_to_orders_list: "Voltar à lista de pedidos"
+    return_authorizations: "Autorizações de Devolução"
+    cannot_create_returns: "Não é possível criar devoluções, pois esse pedido não possui unidades enviadas."
     select_stock: "Selecionar estoque"
     location: "Localização"
     count_on_hand: "Contagem na mão"
@@ -2994,6 +2999,9 @@ pt_BR:
     back_to_taxonomies_list: "Voltar à lista de taxonomias"
     shipping_methods: "Métodos de envio"
     shipping_method: "Método de envio"
+    shipment: "Envio"
+    payment: "Pagamento"
+    status: "Status"
     shipping_categories: "Categorias de Remessa"
     new_shipping_category: "Nova categoria de frete"
     back_to_shipping_categories: "Voltar para categorias de remessa"
@@ -3382,7 +3390,6 @@ pt_BR:
         new:
           new_variant: "Nova Variante"
         form:
-          cost_price: "Preço de Custo"
           sku: "SKU"
           price: "Preço"
           display_as: "Mostrar Como"
