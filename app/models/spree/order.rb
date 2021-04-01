@@ -9,7 +9,9 @@ require 'concerns/order_shipment'
 module Spree
   class Order < ActiveRecord::Base
     prepend OrderShipment
+
     include Checkout
+    include Balance
 
     checkout_flow do
       go_to_state :address
@@ -19,12 +21,6 @@ module Spree
         order.payment_required?
       }
       go_to_state :complete
-    end
-
-    state_machine.after_transition to: :payment, do: :charge_shipping_and_payment_fees!
-
-    state_machine.event :restart_checkout do
-      transition to: :cart, unless: :completed?
     end
 
     token_resource
@@ -46,14 +42,15 @@ module Spree
              as: :adjustable,
              dependent: :destroy
 
-    has_many :line_item_adjustments, through: :line_items, source: :adjustments
-    has_many :all_adjustments, class_name: 'Spree::Adjustment', dependent: :destroy
-
     has_many :shipments, dependent: :destroy do
       def states
         pluck(:state).uniq
       end
     end
+
+    has_many :line_item_adjustments, through: :line_items, source: :adjustments
+    has_many :shipment_adjustments, through: :shipments, source: :adjustments
+    has_many :all_adjustments, class_name: 'Spree::Adjustment', dependent: :destroy
 
     belongs_to :order_cycle
     belongs_to :distributor, class_name: 'Enterprise'
@@ -90,7 +87,6 @@ module Spree
     before_create :link_by_email
     after_create :create_tax_charge!
 
-    validate :has_available_shipment
     validates :email, presence: true,
                       format: /\A([\w\.%\+\-']+)@([\w\-]+\.)+([\w]{2,})\z/i,
                       if: :require_email
@@ -131,7 +127,7 @@ module Spree
     }
 
     scope :not_state, lambda { |state|
-      where("state != ?", state)
+      where.not(state: state)
     }
 
     # All the states an order can be in after completing the checkout
@@ -172,20 +168,12 @@ module Spree
       self[:currency] || Spree::Config[:currency]
     end
 
-    def display_outstanding_balance
-      Spree::Money.new(outstanding_balance, currency: currency)
-    end
-
     def display_item_total
       Spree::Money.new(item_total, currency: currency)
     end
 
     def display_adjustment_total
       Spree::Money.new(adjustment_total, currency: currency)
-    end
-
-    def display_tax_total
-      Spree::Money.new(tax_total, currency: currency)
     end
 
     def display_total
@@ -218,11 +206,6 @@ module Spree
     #   be completed to draw from stock levels and trigger emails.
     def payment_required?
       total.to_f > 0.0 && !skip_payment_for_subscription?
-    end
-
-    # Indicates the number of items in the order
-    def item_count
-      line_items.inject(0) { |sum, li| sum + li.quantity }
     end
 
     def backordered?
@@ -295,7 +278,7 @@ module Spree
     # Spree::OrderContents#add is the more modern version in Spree history
     #   but this add_variant has been customized for OFN FrontOffice.
     def add_variant(variant, quantity = 1, max_quantity = nil, currency = nil)
-      line_items(:reload)
+      line_items.reload
       current_item = find_line_item_by_variant(variant)
 
       # Notify bugsnag if we get line items with a quantity of zero
@@ -380,25 +363,13 @@ module Spree
     end
 
     def ship_total
-      adjustments.shipping.sum(:amount)
-    end
-
-    def tax_total
-      adjustments.tax.sum(:amount)
+      all_adjustments.shipping.sum(:amount)
     end
 
     # Creates new tax charges if there are any applicable rates. If prices already
     # include taxes then price adjustments are created instead.
     def create_tax_charge!
       Spree::TaxRate.adjust(self)
-    end
-
-    def outstanding_balance
-      total - payment_total
-    end
-
-    def outstanding_balance?
-      outstanding_balance != 0
     end
 
     def name
@@ -422,7 +393,7 @@ module Spree
     def finalize!
       touch :completed_at
 
-      adjustments.update_all state: 'closed'
+      all_adjustments.update_all state: 'closed'
 
       # update payment and shipment(s) states, and save
       updater.update_payment_state
@@ -493,14 +464,6 @@ module Spree
     rescue Core::GatewayError => e
       errors.add(:base, e.message)
       false
-    end
-
-    def billing_firstname
-      bill_address.try(:firstname)
-    end
-
-    def billing_lastname
-      bill_address.try(:lastname)
     end
 
     def products
@@ -616,7 +579,7 @@ module Spree
       shipments.each do |shipment|
         next if shipment.shipped?
 
-        update_adjustment! shipment.adjustment if shipment.adjustment
+        update_adjustment! shipment.fee_adjustment if shipment.fee_adjustment
         save_or_rescue_shipment(shipment)
       end
     end
@@ -657,7 +620,7 @@ module Spree
     end
 
     def remove_variant(variant)
-      line_items(:reload)
+      line_items.reload
       current_item = find_line_item_by_variant(variant)
       current_item.andand.destroy
     end
@@ -683,15 +646,15 @@ module Spree
     end
 
     def shipping_tax
-      adjustments(:reload).shipping.sum(:included_tax)
+      shipment_adjustments.reload.shipping.sum(:included_tax)
     end
 
     def enterprise_fee_tax
-      adjustments(:reload).enterprise_fee.sum(:included_tax)
+      all_adjustments.reload.enterprise_fee.sum(:included_tax)
     end
 
     def total_tax
-      (adjustments.to_a + line_item_adjustments.to_a).sum(&:included_tax)
+      additional_tax_total + included_tax_total
     end
 
     def has_taxes_included
@@ -741,12 +704,6 @@ module Spree
       return if line_items.present?
 
       errors.add(:base, Spree.t(:there_are_no_items_for_this_order)) && (return false)
-    end
-
-    def has_available_shipment
-      return unless address?
-      return unless ship_address&.valid?
-      # errors.add(:base, :no_shipping_methods_available) if available_shipping_methods.empty?
     end
 
     def ensure_available_shipping_rates

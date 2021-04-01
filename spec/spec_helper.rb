@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require 'simplecov'
-SimpleCov.start 'rails'
+require 'simplecov' if ENV["COVERAGE"]
 
 require 'rubygems'
 
@@ -22,7 +21,6 @@ require 'rspec/rails'
 require 'capybara'
 require 'database_cleaner'
 require 'rspec/retry'
-require 'coverage_helper'
 require 'paper_trail/frameworks/rspec'
 
 require 'webdrivers'
@@ -57,6 +55,8 @@ Capybara.register_driver :chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new(
     args: %w[headless disable-gpu no-sandbox window-size=1280,768]
   )
+  options.add_preference(:download, default_directory: DownloadsHelper.path.to_s)
+
   Capybara::Selenium::Driver
     .new(app, browser: :chrome, options: options)
     .tap { |driver| driver.browser.download_path = DownloadsHelper.path.to_s }
@@ -103,6 +103,9 @@ RSpec.configure do |config|
   # Only retry when Selenium raises Net::ReadTimeout
   config.exceptions_to_retry = [Net::ReadTimeout]
 
+  # Force colored output, whether or not the output is a TTY
+  config.color_mode = :on
+
   # Force use of expect (over should)
   config.expect_with :rspec do |expectations|
     expectations.syntax = :expect
@@ -135,6 +138,9 @@ RSpec.configure do |config|
     example.run
     ActionController::Base.perform_caching = caching
   end
+
+  # Fix encoding issue in Rails 5.0; allows passing empty arrays or hashes as params.
+  config.before(:each, type: :controller) { @request.env["CONTENT_TYPE"] = 'application/json' }
 
   # Show javascript errors in test output with `js_debug: true`
   config.after(:each, :js_debug) do
@@ -172,14 +178,12 @@ RSpec.configure do |config|
       spree_config.checkout_zone = checkout_zone
       spree_config.currency = currency
       spree_config.shipping_instructions = true
-      spree_config.auto_capture = true
     end
   end
 
   # Helpers
   config.include Rails.application.routes.url_helpers
   config.include Spree::UrlHelpers
-  config.include Spree::CheckoutHelpers
   config.include Spree::MoneyHelper
   config.include PreferencesHelper
   config.include ControllerRequestsHelper, type: :controller

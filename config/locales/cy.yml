@@ -1174,6 +1174,8 @@ cy:
     terms_and_conditions:
       message_html: "Rwy&#39;n cytuno i %{terms_and_conditions_link} y gwerthwr."
       link_text: "Telerau ac Amodau"
+    all_terms_and_conditions:
+      terms_and_conditions: "Telerau ac Amodau"
     failed: "Methodd y ddesg dalu. Rhowch wybod i ni fel y gallwn brosesu eich archeb."
   shops:
     hubs:
@@ -3337,6 +3339,7 @@ cy:
           value: "Gwerth"
           unit_name: "Enw&#39;r uned"
           price: "Pris"
+          unit_price: "Pris Uned"
           on_hand: "Wrth Law"
           on_demand: "Ar alw"
           product_description: "Disgrifiad o&#39;r Cynnyrch"

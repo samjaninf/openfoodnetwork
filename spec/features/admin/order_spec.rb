@@ -85,7 +85,7 @@ feature '
     find('button.add_variant').click
 
     expect(page).to have_selector 'td', text: product.name
-    expect(order.line_items(true).map(&:product)).to include product
+    expect(order.line_items.reload.map(&:product)).to include product
   end
 
   scenario "displays error when incorrect distribution for products is chosen" do
@@ -323,7 +323,7 @@ feature '
 
       scenario "editing shipping fees" do
         click_link "Adjustments"
-        shipping_adjustment_tr_selector = "tr#spree_adjustment_#{order.adjustments.shipping.first.id}"
+        shipping_adjustment_tr_selector = "tr#spree_adjustment_#{order.shipment_adjustments.first.id}"
         page.find("#{shipping_adjustment_tr_selector} td.actions a.icon-edit").click
 
         fill_in "Amount", with: "5"
@@ -340,6 +340,16 @@ feature '
         it "still lists the variant in the order page" do
           within ".stock-contents" do
             expect(page).to have_content deleted_variant.product_and_full_name
+          end
+        end
+      end
+
+      context "and the order has been canceled" do
+        it "does not allow modifying line items" do
+          order.cancel!
+          visit spree.edit_admin_order_path(order)
+          within("tr.stock-item", text: order.products.first.name) do
+            expect(page).to_not have_selector("a.edit-item")
           end
         end
       end

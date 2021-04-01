@@ -47,9 +47,6 @@ module Spree
     validates :label, presence: true
     validates :amount, numericality: true
 
-    after_save :update_adjustable
-    after_destroy :update_adjustable
-
     state_machine :state, initial: :open do
       event :close do
         transition from: :open, to: :closed
@@ -69,7 +66,7 @@ module Spree
     scope :optional, -> { where(mandatory: false) }
     scope :charge, -> { where('amount >= 0') }
     scope :credit, -> { where('amount < 0') }
-    scope :return_authorization, -> { where(source_type: "Spree::ReturnAuthorization") }
+    scope :return_authorization, -> { where(originator_type: "Spree::ReturnAuthorization") }
     scope :inclusive, -> { where(included: true) }
     scope :additional, -> { where(included: false) }
 
@@ -87,16 +84,6 @@ module Spree
 
     localize_number :amount
 
-    # Update the boolean _eligible_ attribute which determines which adjustments
-    # count towards the order's adjustment_total.
-    def set_eligibility
-      result = mandatory || amount != 0
-      update_columns(
-        eligible: result,
-        updated_at: Time.zone.now
-      )
-    end
-
     # Update both the eligibility and amount of the adjustment. Adjustments
     # delegate updating of amount to their Originator when present, but only if
     # +locked+ is false. Adjustments that are +locked+ will never change their amount.
@@ -113,13 +100,14 @@ module Spree
     # adjustment calculations would not performed on proper values
     def update!(calculable = nil, force: false)
       return if immutable? && !force
+      return if originator.blank?
 
-      # Fix for Spree issue #3381
-      # If we attempt to call 'source' before the reload, then source is currently
-      # the order object. After calling a reload, the source is the Shipment.
-      reload
-      originator.update_adjustment(self, calculable || source) if originator.present?
-      set_eligibility
+      amount = originator.compute_amount(calculable || adjustable)
+
+      update_columns(
+        amount: amount,
+        updated_at: Time.zone.now,
+      )
     end
 
     def currency
@@ -155,29 +143,11 @@ module Spree
       included_tax.positive?
     end
 
-    def self.without_callbacks
-      skip_callback :save, :after, :update_adjustable
-      skip_callback :destroy, :after, :update_adjustable
-
-      result = yield
-    ensure
-      set_callback :save, :after, :update_adjustable
-      set_callback :destroy, :after, :update_adjustable
-
-      result
-    end
-
     # Allow accessing soft-deleted originator objects
     def originator
       return if originator_type.blank?
 
       originator_type.constantize.unscoped { super }
-    end
-
-    private
-
-    def update_adjustable
-      adjustable.update! if adjustable.is_a? Order
     end
   end
 end

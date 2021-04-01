@@ -47,8 +47,8 @@ feature "Shops caching", js: true, caching: true do
     let(:exchange) { order_cycle.exchanges.to_enterprises(distributor).outgoing.first }
 
     let(:test_domain) { "#{Capybara.current_session.server.host}:#{Capybara.current_session.server.port}" }
-    let(:taxons_key) { "views/#{test_domain}/api/order_cycles/#{order_cycle.id}/taxons.json?distributor=#{distributor.id}" }
-    let(:properties_key) { "views/#{test_domain}/api/order_cycles/#{order_cycle.id}/properties.json?distributor=#{distributor.id}" }
+    let(:taxons_key) { "views/#{test_domain}/api/v0/order_cycles/#{order_cycle.id}/taxons.json?distributor=#{distributor.id}" }
+    let(:properties_key) { "views/#{test_domain}/api/v0/order_cycles/#{order_cycle.id}/properties.json?distributor=#{distributor.id}" }
     let(:options) { { expires_in: CacheService::FILTERS_EXPIRY } }
 
     before do
@@ -73,7 +73,7 @@ feature "Shops caching", js: true, caching: true do
         expect(page).to have_content taxon.name
         expect(page).to have_content property.presentation
 
-        product.update_attribute(:taxons, [taxon2])
+        product.taxons << taxon2
         product.update_attribute(:primary_taxon, taxon2)
         product.update_attribute(:properties, [property2])
 

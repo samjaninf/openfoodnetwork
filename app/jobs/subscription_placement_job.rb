@@ -62,12 +62,18 @@ class SubscriptionPlacementJob < ActiveJob::Base
     unavailable_stock_lines_for(order).each do |line_item|
       changes[line_item.id] = changes[line_item.id] || line_item.quantity
       line_item.update(quantity: 0)
+
+      Spree::OrderInventory.new(order).verify(line_item, order.shipment)
+    end
+    if changes.present?
+      order.line_items.reload
+      order.update_order_fees!
     end
     changes
   end
 
   def handle_empty_order(order, changes)
-    order.reload.adjustments.destroy_all
+    order.reload.all_adjustments.destroy_all
     order.update!
     send_empty_email(order, changes)
   end

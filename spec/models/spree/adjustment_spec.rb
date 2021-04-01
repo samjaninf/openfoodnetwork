@@ -9,7 +9,7 @@ module Spree
 
     describe "scopes" do
       let!(:arbitrary_adjustment) { create(:adjustment, source: nil, label: "Arbitrary") }
-      let!(:return_authorization_adjustment) { create(:adjustment, source: create(:return_authorization)) }
+      let!(:return_authorization_adjustment) { create(:adjustment, originator: create(:return_authorization)) }
 
       it "returns return_authorization adjustments" do
         expect(Spree::Adjustment.return_authorization.to_a).to eq [return_authorization_adjustment]
@@ -18,44 +18,39 @@ module Spree
 
     context "#update!" do
       context "when originator present" do
-        let(:originator) { double("originator", update_adjustment: nil) }
+        let(:originator) { instance_double(EnterpriseFee, compute_amount: 10.0) }
+
         before do
-          allow(originator).to receive_messages update_amount: true
           allow(adjustment).to receive_messages originator: originator, label: 'adjustment', amount: 0
         end
 
         it "should do nothing when closed" do
           adjustment.close
-          expect(originator).not_to receive(:update_adjustment)
+          expect(originator).not_to receive(:compute_amount)
           adjustment.update!
         end
 
         it "should do nothing when finalized" do
           adjustment.finalize
-          expect(originator).not_to receive(:update_adjustment)
+          expect(originator).not_to receive(:compute_amount)
           adjustment.update!
         end
 
-        it "should set the eligibility" do
-          expect(adjustment).to receive(:set_eligibility)
-          adjustment.update!
-        end
-
-        it "should ask the originator to update_adjustment" do
-          expect(originator).to receive(:update_adjustment)
+        it "should ask the originator to recalculate the amount" do
+          expect(originator).to receive(:compute_amount)
           adjustment.update!
         end
 
         context "using the :force argument" do
           it "should update adjustments without changing their state" do
-            expect(originator).to receive(:update_adjustment)
+            expect(originator).to receive(:compute_amount)
             adjustment.update!(force: true)
             expect(adjustment.state).to eq "open"
           end
 
           it "should update closed adjustments" do
             adjustment.close
-            expect(originator).to receive(:update_adjustment)
+            expect(originator).to receive(:compute_amount)
             adjustment.update!(force: true)
           end
         end
@@ -63,47 +58,8 @@ module Spree
 
       it "should do nothing when originator is nil" do
         allow(adjustment).to receive_messages originator: nil
-        expect(adjustment).not_to receive(:amount=)
+        expect(adjustment).not_to receive(:update_columns)
         adjustment.update!
-      end
-    end
-
-    context "#eligible? after #set_eligibility" do
-      context "when amount is 0" do
-        before { adjustment.amount = 0 }
-        it "should be eligible if mandatory?" do
-          adjustment.mandatory = true
-          adjustment.set_eligibility
-          expect(adjustment).to be_eligible
-        end
-
-        it "should not be eligible unless mandatory?" do
-          adjustment.mandatory = false
-          adjustment.set_eligibility
-          expect(adjustment).to_not be_eligible
-        end
-      end
-
-      context "when amount is greater than 0" do
-        before { adjustment.amount = 25.00 }
-
-        it "should be eligible if mandatory?" do
-          adjustment.mandatory = true
-          adjustment.set_eligibility
-          expect(adjustment).to be_eligible
-        end
-      end
-    end
-
-    context "#save" do
-      it "should call order#update!" do
-        adjustment = Spree::Adjustment.new(
-          adjustable: order,
-          amount: 10,
-          label: "Foo"
-        )
-        expect(order).to receive(:update!)
-        adjustment.save
       end
     end
 
@@ -222,16 +178,16 @@ module Spree
         let!(:order)       { create(:order, bill_address: create(:address)) }
         let!(:line_item)   { create(:line_item, order: order) }
         let(:tax_rate)     { create(:tax_rate, included_in_price: true, calculator: ::Calculator::FlatRate.new(preferred_amount: 0.1)) }
-        let(:adjustment)   { line_item.adjustments(:reload).first }
+        let(:adjustment)   { line_item.adjustments.reload.first }
 
         before do
           order.reload
           tax_rate.adjust(order)
         end
 
-        it "has 100% tax included" do
-          expect(adjustment.amount).to be > 0
-          expect(adjustment.included_tax).to eq(adjustment.amount)
+        it "has tax included" do
+          expect(adjustment.amount).to be_positive
+          expect(adjustment.included).to be true
         end
 
         it "does not crash when order data has been updated previously" do
@@ -251,7 +207,8 @@ module Spree
         describe "the shipping charge" do
           it "is the adjustment amount" do
             order.shipments = [shipment]
-            expect(order.adjustments.first.amount).to eq(50)
+            expect(order.shipment_adjustments.first.amount).to eq(50)
+            expect(shipment.cost).to eq(50)
           end
         end
 
@@ -264,14 +221,14 @@ module Spree
             allow(Config).to receive(:shipping_tax_rate).and_return(0)
             order.shipments = [shipment]
 
-            expect(order.adjustments.first.included_tax).to eq(0)
+            expect(order.shipment_adjustments.first.included_tax).to eq(0)
           end
 
           it "records 0% tax on shipments when a rate is set but shipment_inc_vat is false" do
             allow(Config).to receive(:shipping_tax_rate).and_return(0.25)
             order.shipments = [shipment]
 
-            expect(order.adjustments.first.included_tax).to eq(0)
+            expect(order.shipment_adjustments.first.included_tax).to eq(0)
           end
         end
 
@@ -288,21 +245,21 @@ module Spree
             # total - ( total / (1 + rate) )
             # 50    - ( 50    / (1 + 0.25) )
             # = 10
-            expect(order.adjustments.first.included_tax).to eq(10.00)
+            expect(order.shipment_adjustments.first.included_tax).to eq(10.00)
           end
 
           it "records 0% tax on shipments when shipping_tax_rate is not set" do
             allow(Config).to receive(:shipping_tax_rate).and_return(0)
             order.shipments = [shipment]
 
-            expect(order.adjustments.first.included_tax).to eq(0)
+            expect(order.shipment_adjustments.first.included_tax).to eq(0)
           end
 
           it "records 0% tax on shipments when the distributor does not charge sales tax" do
             order.distributor.update! charges_sales_tax: false
             order.shipments = [shipment]
 
-            expect(order.adjustments.first.included_tax).to eq(0)
+            expect(order.shipment_adjustments.first.included_tax).to eq(0)
           end
         end
       end
@@ -317,7 +274,7 @@ module Spree
         let(:order_cycle) { create(:simple_order_cycle, coordinator: coordinator, coordinator_fees: [enterprise_fee], distributors: [coordinator], variants: [variant]) }
         let(:line_item)   { create(:line_item, variant: variant) }
         let(:order)       { create(:order, line_items: [line_item], order_cycle: order_cycle, distributor: coordinator) }
-        let(:adjustment)  { order.adjustments(:reload).enterprise_fee.first }
+        let(:adjustment)  { order.all_adjustments.reload.enterprise_fee.first }
 
         context "when enterprise fees have a fixed tax_category" do
           before do
@@ -408,7 +365,7 @@ module Spree
                 # so tax on the enterprise_fee adjustment will be 0
                 # Tax on line item is: 0.2/1.2 x $10 = $1.67
                 expect(adjustment.included_tax).to eq(0.0)
-                expect(line_item.adjustments.first.included_tax).to eq(1.67)
+                expect(line_item.adjustments.tax.first.amount).to eq(1.67)
               end
             end
 
@@ -438,7 +395,7 @@ module Spree
                 # gives tax on fee of 0.2/1.2 x $50 = $8.33
                 # Tax on line item is: 0.2/1.2 x $10 = $1.67
                 expect(adjustment.included_tax).to eq(8.33)
-                expect(line_item.adjustments.first.included_tax).to eq(1.67)
+                expect(line_item.adjustments.tax.first.amount).to eq(1.67)
               end
             end
 
@@ -531,6 +488,22 @@ module Spree
           it "is returned by the #additional scope" do
             expect(Spree::Adjustment.additional).to eq [adjustment]
           end
+        end
+      end
+    end
+
+    context "return authorization adjustments" do
+      let!(:return_authorization) { create(:return_authorization, amount: 123) }
+      let(:order) { return_authorization.order }
+      let!(:return_adjustment) {
+        create(:adjustment, originator: return_authorization, order: order,
+                            adjustable: order, amount: 456)
+      }
+
+      describe "#update!" do
+        it "sets a negative value equal to the return authorization amount" do
+          expect { return_adjustment.update! }.
+            to change { return_adjustment.reload.amount }.to(-123)
         end
       end
     end

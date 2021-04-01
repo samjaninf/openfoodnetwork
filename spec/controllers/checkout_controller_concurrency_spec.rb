@@ -42,12 +42,21 @@ describe CheckoutController, concurrency: true, type: :controller do
     allow(controller).to receive(:spree_current_user).and_return(order.user)
     allow(controller).to receive(:current_distributor).and_return(order.distributor)
     allow(controller).to receive(:current_order_cycle).and_return(order.order_cycle)
+
+    # Avoid setting headers as Rails 5 is not thread-safe here:
+    allow(controller).to receive(:restrict_iframes)
   end
 
   it "handles two concurrent orders successfully" do
     # New threads start running straight away. The breakpoint is after loading
     # the order and before advancing the order's state and making payments.
     breakpoint.lock
+
+    checkout_workflow_original = controller.method(:checkout_workflow)
+    expect(controller).to receive(:checkout_workflow) do |shipping_method_id|
+      breakpoint.synchronize {}
+      checkout_workflow_original.call(shipping_method_id)
+    end
 
     # Starting two checkout threads. The controller code will determine if
     # these two threads are synchronised correctly or run into a race condition.

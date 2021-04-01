@@ -3,6 +3,8 @@
 require 'spec_helper'
 
 describe CheckoutController, type: :controller do
+  include StripeStubs
+
   let(:distributor) { create(:distributor_enterprise, with_payment_and_shipping: true) }
   let(:order_cycle) { create(:simple_order_cycle) }
   let(:order) { create(:order) }
@@ -97,18 +99,34 @@ describe CheckoutController, type: :controller do
       end
 
       describe "when the order is in payment state and a stripe payment intent is provided" do
+        let(:order) { create(:order_with_totals) }
+        let(:payment_method) { create(:stripe_sca_payment_method) }
+        let(:payment) {
+          create(
+            :payment,
+            amount: order.total,
+            state: "pending",
+            payment_method: payment_method,
+            response_code: "pi_123"
+          )
+        }
+
         before do
+          allow(Stripe).to receive(:api_key) { "sk_test_12345" }
+          stub_payment_intent_get_request
+          stub_successful_capture_request(order: order)
+
           order.update_attribute :state, "payment"
           order.ship_address = create(:address)
           order.save!
-          order.payments << create(:payment, state: "pending", response_code: "pi_123")
+          order.payments << payment
 
           # this is called a 2nd time after order completion from the reset_order_service
           expect(order_cycle_distributed_variants).to receive(:distributes_order_variants?).twice.and_return(true)
         end
 
         it "completes the order and redirects to the order confirmation page" do
-          get :edit, { payment_intent: "pi_123" }
+          get :edit, params: { payment_intent: "pi_123" }
           expect(order.completed?).to be true
           expect(response).to redirect_to order_path(order)
         end
@@ -189,12 +207,12 @@ describe CheckoutController, type: :controller do
 
       it 'expires the current order' do
         allow(controller).to receive(:expire_current_order)
-        put :update, order: {}
+        put :update, params: { order: {} }
         expect(controller).to have_received(:expire_current_order)
       end
 
       it 'sets the access_token of the session' do
-        put :update, order: {}
+        put :update, params: { order: {} }
         expect(session[:access_token]).to eq(controller.current_order.token)
       end
     end

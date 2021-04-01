@@ -1148,6 +1148,8 @@ pt:
       message_html: "Já tem uma encomenda para este ciclo de encomendas. Verifique o %{cart} para ver os itens já encomendados. Também pode cancelar itens enquanto o ciclo estiver aberto."
     terms_and_conditions:
       link_text: "Termos e Condições"
+    all_terms_and_conditions:
+      terms_and_conditions: "Termos e Condições"
   shops:
     hubs:
       show_closed_shops: "Mostrar lojas fechadas"
@@ -3076,6 +3078,7 @@ pt:
           value: "Valor"
           unit_name: "Nome da Unidade"
           price: "Preço"
+          unit_price: "Preço Unitário"
           on_hand: "Disponível"
           on_demand: "Sob Encomenda"
           product_description: "Descrição do Produto"

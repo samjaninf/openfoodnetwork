@@ -2,20 +2,30 @@ module Spree
   module Admin
     class AdjustmentsController < ::Admin::ResourceController
       belongs_to 'spree/order', find_by: :number
-      destroy.after :reload_order
 
       prepend_before_action :set_included_tax, only: [:create, :update]
+      before_action :set_order_id, only: [:create, :update]
+      after_action :update_order, only: [:create, :update, :destroy]
       before_action :set_default_tax_rate, only: :edit
       before_action :enable_updates, only: :update
 
       private
 
-      def reload_order
+      def update_order
         @order.reload
+        @order.update!
       end
 
       def collection
-        parent.adjustments.eligible
+        parent.all_adjustments.eligible
+      end
+
+      def find_resource
+        parent.all_adjustments.eligible.find(params[:id])
+      end
+
+      def set_order_id
+        @adjustment.order_id = parent.id
       end
 
       # Choose a default tax rate to show on the edit form. The adjustment stores its included

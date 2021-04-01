@@ -176,12 +176,9 @@ describe Spree::Order do
     end
 
     it "should freeze all adjustments" do
-      # Stub this method as it's called due to a callback
-      # and it's irrelevant to this test
-      allow(order).to receive :has_available_shipment
       allow(Spree::OrderMailer).to receive_message_chain :confirm_email, :deliver_later
       adjustments = double
-      allow(order).to receive_messages adjustments: adjustments
+      allow(order).to receive_messages all_adjustments: adjustments
       expect(adjustments).to receive(:update_all).with(state: 'closed')
       order.finalize!
     end
@@ -237,37 +234,6 @@ describe Spree::Order do
     end
   end
 
-  context "#outstanding_balance" do
-    it "should return positive amount when payment_total is less than total" do
-      order.payment_total = 20.20
-      order.total = 30.30
-      expect(order.outstanding_balance).to eq 10.10
-    end
-    it "should return negative amount when payment_total is greater than total" do
-      order.total = 8.20
-      order.payment_total = 10.20
-      expect(order.outstanding_balance).to be_within(0.001).of(-2.00)
-    end
-  end
-
-  context "#outstanding_balance?" do
-    it "should be true when total greater than payment_total" do
-      order.total = 10.10
-      order.payment_total = 9.50
-      expect(order.outstanding_balance?).to be_truthy
-    end
-    it "should be true when total less than payment_total" do
-      order.total = 8.25
-      order.payment_total = 10.44
-      expect(order.outstanding_balance?).to be_truthy
-    end
-    it "should be false when total equals payment_total" do
-      order.total = 10.10
-      order.payment_total = 10.10
-      expect(order.outstanding_balance?).to be_falsy
-    end
-  end
-
   context "#completed?" do
     it "should indicate if order is completed" do
       order.completed_at = nil
@@ -286,16 +252,6 @@ describe Spree::Order do
     it "should be false if there are no line_items in the order" do
       allow(order).to receive_message_chain(:line_items, count: 0)
       expect(order.checkout_allowed?).to be_falsy
-    end
-  end
-
-  context "#item_count" do
-    before do
-      @order = create(:order, user: user)
-      @order.line_items = [create(:line_item, quantity: 2), create(:line_item, quantity: 1)]
-    end
-    it "should return the correct number of items" do
-      expect(@order.item_count).to eq 3
     end
   end
 
@@ -354,7 +310,7 @@ describe Spree::Order do
 
   context "#display_outstanding_balance" do
     it "returns the value as a spree money" do
-      allow(order).to receive(:outstanding_balance) { 10.55 }
+      allow(order).to receive(:old_outstanding_balance) { 10.55 }
       expect(order.display_outstanding_balance).to eq Spree::Money.new(10.55)
     end
   end
@@ -534,10 +490,12 @@ describe Spree::Order do
   end
 
   describe "applying enterprise fees" do
+    subject { create(:order) }
     let(:fee_handler) { ::OrderFeesHandler.new(subject) }
 
     before do
       allow(subject).to receive(:fee_handler) { fee_handler }
+      allow(subject).to receive(:update!)
     end
 
     it "clears all enterprise fee adjustments on the order" do
@@ -704,8 +662,14 @@ describe Spree::Order do
     let!(:order) { create(:order) }
     let(:enterprise_fee1) { create(:enterprise_fee) }
     let(:enterprise_fee2) { create(:enterprise_fee) }
-    let!(:adjustment1) { create(:adjustment, adjustable: order, originator: enterprise_fee1, label: "EF 1", amount: 123, included_tax: 10.00) }
-    let!(:adjustment2) { create(:adjustment, adjustable: order, originator: enterprise_fee2, label: "EF 2", amount: 123, included_tax: 2.00) }
+    let!(:adjustment1) {
+      create(:adjustment, adjustable: order, originator: enterprise_fee1, label: "EF 1",
+             amount: 123, included_tax: 10.00, order: order)
+    }
+    let!(:adjustment2) {
+      create(:adjustment, adjustable: order, originator: enterprise_fee2, label: "EF 2",
+             amount: 123, included_tax: 2.00, order: order)
+    }
 
     it "returns a sum of the tax included in all enterprise fees" do
       expect(order.reload.enterprise_fee_tax).to eq(12)
@@ -728,13 +692,14 @@ describe Spree::Order do
     before do
       create(
         :adjustment,
+        order: order,
         adjustable: order,
         originator: enterprise_fee,
         label: "EF",
         amount: 123,
         included_tax: 2
       )
-      order.reload
+      order.update!
     end
 
     it "returns a sum of all tax on the order" do
@@ -797,13 +762,13 @@ describe Spree::Order do
 
     it "removes the variant's line item" do
       order.remove_variant v1
-      expect(order.line_items(:reload).map(&:variant)).to eq([v2])
+      expect(order.line_items.reload.map(&:variant)).to eq([v2])
     end
 
     it "does nothing when there is no matching line item" do
       expect do
         order.remove_variant v3
-      end.to change(order.line_items(:reload), :count).by(0)
+      end.to change(order.line_items.reload, :count).by(0)
     end
 
     context "when the item has an associated adjustment" do
@@ -820,13 +785,14 @@ describe Spree::Order do
 
       it "removes the variant's line item" do
         order.remove_variant v1
-        expect(order.line_items(:reload).map(&:variant)).to eq([v2])
+        expect(order.line_items.reload.map(&:variant)).to eq([v2])
       end
 
       it "removes the variant's adjustment" do
         line_item = order.line_items.where(variant_id: v1.id).first
-        adjustment_scope = Spree::Adjustment.where(source_type: "Spree::LineItem",
-                                                   source_id: line_item.id)
+        adjustment_scope = Spree::Adjustment.where(adjustable_type: "Spree::LineItem",
+                                                   adjustable_id: line_item.id)
+
         expect(adjustment_scope.count).to eq(1)
         adjustment = adjustment_scope.first
         order.remove_variant v1
@@ -1088,10 +1054,11 @@ describe Spree::Order do
       Spree::Config.shipping_tax_rate = 0.25
 
       # Sanity check the fees
-      expect(order.adjustments.length).to eq 2
+      expect(order.all_adjustments.length).to eq 2
+      expect(order.shipment_adjustments.length).to eq 1
       expect(item_num).to eq 2
       expect(order.adjustment_total).to eq expected_fees
-      expect(order.shipment.adjustment.included_tax).to eq 1.2
+      expect(order.shipment.fee_adjustment.included_tax).to eq 1.2
     end
 
     context "removing line_items" do
@@ -1100,12 +1067,12 @@ describe Spree::Order do
         order.save
 
         expect(order.adjustment_total).to eq expected_fees - shipping_fee - payment_fee
-        expect(order.shipment.adjustment.included_tax).to eq 0.6
+        expect(order.shipment.fee_adjustment.included_tax).to eq 0.6
       end
 
       context "when finalized fee adjustments exist on the order" do
-        let(:payment_fee_adjustment) { order.adjustments.payment_fee.first }
-        let(:shipping_fee_adjustment) { order.adjustments.shipping.first }
+        let(:payment_fee_adjustment) { order.all_adjustments.payment_fee.first }
+        let(:shipping_fee_adjustment) { order.shipment_adjustments.first }
 
         before do
           payment_fee_adjustment.finalize!
@@ -1119,7 +1086,7 @@ describe Spree::Order do
           # Check if fees got updated
           order.reload
           expect(order.adjustment_total).to eq expected_fees
-          expect(order.shipment.adjustment.included_tax).to eq 1.2
+          expect(order.shipment.fee_adjustment.included_tax).to eq 1.2
         end
       end
     end
@@ -1132,7 +1099,7 @@ describe Spree::Order do
         order.save
 
         expect(order.adjustment_total).to eq expected_fees - (item_num * shipping_fee)
-        expect(order.shipment.adjustment.included_tax).to eq 0
+        expect(order.shipment.fee_adjustment.included_tax).to eq 0
       end
     end
 
@@ -1212,20 +1179,11 @@ describe Spree::Order do
         expect { order.next! }.to change { order.state }.from("delivery").to("payment")
       end
 
-      it "advances to complete state despite error" do
+      # Regression test for https://github.com/openfoodfoundation/openfoodnetwork/issues/3924
+      it "advances to complete state without error" do
         advance_to_delivery_state(order)
-        # advance to payment state
         order.next!
-
         create(:payment, order: order)
-        # https://github.com/openfoodfoundation/openfoodnetwork/issues/3924
-        observed_error = ActiveRecord::RecordNotUnique.new(
-          "PG::UniqueViolation",
-          StandardError.new
-        )
-        expect(order.shipment).to receive(:save).and_call_original
-        expect(order.shipment).to receive(:save).and_call_original
-        expect(order.shipment).to receive(:save).and_raise(observed_error)
 
         expect { order.next! }.to change { order.state }.from("payment").to("complete")
       end

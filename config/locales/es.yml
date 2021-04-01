@@ -264,7 +264,7 @@ es:
   error: Error
   processing_payment: "Procesando el pago..."
   no_pending_payments: "No tiene pagos pendientes"
-  invalid_payment_state: "Estado de pago no válido"
+  invalid_payment_state: "Estado de pago inválido: %{state}"
   filter_results: Filtrar resultados
   quantity: Cantidad
   pick_up: Recogida
@@ -1178,6 +1178,13 @@ es:
     terms_and_conditions:
       message_html: "Acepto el %{terms_and_conditions_link} del vendedor."
       link_text: "Términos y Condiciones"
+    platform_terms_of_service:
+      message_html: "Acepto los %{tos_link} de la plataforma."
+      terms_of_service: "Términos de servicio"
+    all_terms_and_conditions:
+      message_html: "Acepto el %{terms_and_conditions_link} del vendedor y la plataforma %{tos_link}."
+      terms_and_conditions: "Términos y Condiciones"
+      terms_of_service: "Términos de servicio"
     failed: "La finalización de compra falló, por favor comunicate con nosotros para procesar la orden."
   shops:
     hubs:
@@ -1567,7 +1574,9 @@ es:
   shopping_tabs_home: "Inicio"
   shopping_tabs_shop: "Tienda"
   shopping_tabs_about: "Acerca de"
+  shopping_tabs_producers: "Productoras"
   shopping_tabs_contact: "Contacto"
+  shopping_tabs_groups: "Redes"
   shopping_contact_address: "Dirección"
   shopping_contact_web: "Contacto"
   shopping_contact_social: "Seguir"
@@ -2410,6 +2419,7 @@ es:
           Ha habido un problema al añadir este producto en el carrito. Puede que haya
           dejado de estar disponible o que la tinda haya cerrado.
     admin:
+      unit_price_tooltip: "El precio unitario aumenta la transparencia al permitir a sus clientes comparar fácilmente los precios entre diferentes productos y tamaños de envase. Tenga en cuenta que el precio unitario final que se muestra en el escaparate puede diferir, ya que incluye impuestos y tarifas."
       enterprise_limit_reached: "Has alcanzado el límite estándar de organizaciones por cuenta. Escriba a %{contact_email} si necesita aumentarlo."
       modals:
         got_it: "Lo entiendo"
@@ -3088,6 +3098,7 @@ es:
           header:
             store: Tienda
     admin:
+      unit_price_tooltip: "El precio unitario aumenta la transparencia al permitir a sus clientes comparar fácilmente los precios entre diferentes productos y tamaños de envase. Tenga en cuenta que el precio unitario final que se muestra en el escaparate puede diferir, ya que incluye impuestos y tarifas."
       tab:
         dashboard: "Panel de inicio"
         orders: "Pedidos"
@@ -3156,6 +3167,8 @@ es:
           received: "recibido"
           canceled: "cancelado"
       orders:
+        add_product:
+          cannot_add_item_to_canceled_order: "No se puede agregar el artículo al pedido cancelado"
         index:
           listing_orders: "Pedidos de listado"
           new_order: "Nuevo pedido"
@@ -3316,6 +3329,8 @@ es:
           value: "Valor"
           unit_name: "Nombre de la unidad"
           price: "Precio"
+          unit_price: "Precio por unidad"
+          unit_price_legend: "Calculado en base al precio del artículo"
           on_hand: "Disponibles"
           on_demand: "Bajo demanda"
           product_description: "Descripción del producto"
@@ -3421,6 +3436,7 @@ es:
           cookies_consent_banner_toggle: "Mostrar el banner de consentimiento de cookies"
           privacy_policy_url: "Vínculo con la Política de privacidad"
           enterprises_require_tos: "Las organizaciones deben aceptar los Términos del Servicio"
+          shoppers_require_tos: "Los compradores deben aceptar los términos de servicio"
           cookies_policy_matomo_section: "Mostrar la sección de Matomo en la página de política de cookies"
           footer_tos_url: "URL de términos y servicios"
     checkout:
@@ -3633,3 +3649,42 @@ es:
         spree/payment:
           one: Pago
           other: Pagos
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one: alrededor de 1 hora
+        other: aprox. %{count} horas
+      about_x_months:
+        one: alrededor de 1 mes
+        other: aprox. %{count} meses
+      about_x_years:
+        one: alrededor de 1 año
+        other: aprox. %{count} años
+      almost_x_years:
+        one: casi 1 año
+        other: casi %{count} años
+      half_a_minute: medio minuto
+      less_than_x_seconds:
+        one: menos de 1 segundo
+        other: menos de %{count} segundos
+      less_than_x_minutes:
+        one: menos de un minuto
+        other: menos de %{count} minutos
+      over_x_years:
+        one: más de 1 año
+        other: más de %{count} años
+      x_seconds:
+        one: "1 segundo"
+        other: "%{count} segundos"
+      x_minutes:
+        one: "1 minuto"
+        other: "%{count} minutos"
+      x_days:
+        one: "1 día"
+        other: "%{count} días"
+      x_months:
+        one: "1 mes"
+        other: "%{count} meses"
+      x_years:
+        one: "1 año"
+        other: "%{count} años"

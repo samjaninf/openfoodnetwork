@@ -1178,6 +1178,8 @@ es_US:
     terms_and_conditions:
       message_html: "Acepto el %{terms_and_conditions_link} del vendedor."
       link_text: "Términos y Condiciones"
+    all_terms_and_conditions:
+      terms_and_conditions: "Términos y Condiciones"
     failed: "La finalización de compra falló, por favor comunicate con nosotros para procesar la orden."
   shops:
     hubs:
@@ -2657,7 +2659,8 @@ es_US:
         min_quantity: "Cantidad mínima"
         max_quantity: "Cantidad máxima"
       price_breakdown: "Desglose de el precio"
-      unit_price_tooltip: "Este es el precio unitario de este producto. Le permite comparar el precio de los productos independientemente de los tamaños y pesos de los envases."
+      unit_price_tooltip:
+        shopfront: "Este es el precio unitario de este producto. Le permite comparar el precio de los productos independientemente de los tamaños y pesos de los envases."
     variants:
       on_demand:
         'yes': "Bajo demanda"
@@ -3314,6 +3317,7 @@ es_US:
           value: "Valor"
           unit_name: "Nombre de la unidad"
           price: "Precio"
+          unit_price: "Precio por unidad"
           on_hand: "Disponibles"
           on_demand: "Bajo demanda"
           product_description: "Descripción del producto"

@@ -24,7 +24,7 @@ describe LineItemsController, type: :controller do
       get :bought, format: :json
       expect(response.status).to eq 200
       json_response = JSON.parse(response.body)
-      expect(json_response.length).to eq completed_order.line_items(:reload).count
+      expect(json_response.length).to eq completed_order.line_items.reload.count
       expect(json_response[0]['id']).to eq completed_order.line_items.first.id
     end
   end
@@ -48,7 +48,7 @@ describe LineItemsController, type: :controller do
 
         context "where the item's order is not associated with the user" do
           it "denies deletion" do
-            delete :destroy, params
+            delete :destroy, params: params
             expect(response.status).to eq 403
           end
         end
@@ -61,7 +61,7 @@ describe LineItemsController, type: :controller do
 
           context "without an order cycle or distributor" do
             it "denies deletion" do
-              delete :destroy, params
+              delete :destroy, params: params
               expect(response.status).to eq 403
             end
           end
@@ -71,7 +71,7 @@ describe LineItemsController, type: :controller do
 
             context "where changes are not allowed" do
               it "denies deletion" do
-                delete :destroy, params
+                delete :destroy, params: params
                 expect(response.status).to eq 403
               end
             end
@@ -80,9 +80,21 @@ describe LineItemsController, type: :controller do
               before { distributor.update_attributes!(allow_order_changes: true) }
 
               it "deletes the line item" do
-                delete :destroy, params
+                delete :destroy, params: params
                 expect(response.status).to eq 204
                 expect { item.reload }.to raise_error ActiveRecord::RecordNotFound
+              end
+
+              context "after a payment is captured" do
+                let(:payment) { create(:check_payment, amount: order.total, order: order, state: 'completed') }
+                before { payment.capture! }
+
+                it 'updates the payment state' do
+                  expect(order.payment_state).to eq 'paid'
+                  delete :destroy, params: params
+                  order.reload
+                  expect(order.payment_state).to eq 'credit_owed'
+                end
               end
             end
           end
@@ -106,22 +118,21 @@ describe LineItemsController, type: :controller do
         item_num = order.line_items.length
         initial_fees = item_num * (shipping_fee + payment_fee)
         expect(order.adjustment_total).to eq initial_fees
-        expect(order.shipments.last.adjustment.included_tax).to eq 1.2
+        expect(order.shipments.last.fee_adjustment.included_tax).to eq 1.2
 
         # Delete the item
         item = order.line_items.first
         allow(controller).to receive_messages spree_current_user: order.user
-        request = { format: :json, id: item }
-        delete :destroy, request
+        delete :destroy, format: :json, params: { id: item }
         expect(response.status).to eq 204
 
         # Check the fees again
         order.reload
         order.shipment.reload
         expect(order.adjustment_total).to eq initial_fees - shipping_fee - payment_fee
-        expect(order.shipments.last.adjustment.amount).to eq shipping_fee
+        expect(order.shipments.last.fee_adjustment.amount).to eq shipping_fee
         expect(order.payments.first.adjustment.amount).to eq payment_fee
-        expect(order.shipments.last.adjustment.included_tax).to eq 0.6
+        expect(order.shipments.last.fee_adjustment.included_tax).to eq 0.6
       end
     end
 
@@ -148,7 +159,7 @@ describe LineItemsController, type: :controller do
         expect(order.reload.adjustment_total).to eq calculator.preferred_discount_amount
 
         allow(controller).to receive_messages spree_current_user: user
-        delete :destroy, params
+        delete :destroy, params: params
         expect(response.status).to eq 204
 
         expect(order.reload.adjustment_total).to eq calculator.preferred_normal_amount

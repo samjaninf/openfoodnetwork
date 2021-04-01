@@ -6,15 +6,15 @@ class CheckoutController < ::BaseController
   layout 'darkswarm'
 
   include OrderStockCheck
-  include CheckoutHelper
-  include OrderCyclesHelper
-  include EnterprisesHelper
+
+  helper 'terms_and_conditions'
+  helper 'checkout'
 
   ssl_required
 
   # We need pessimistic locking to avoid race conditions.
   # Otherwise we fail on duplicate indexes or end up with negative stock.
-  prepend_around_action CurrentOrderLocker, only: :update
+  prepend_around_action CurrentOrderLocker, only: [:edit, :update]
 
   prepend_before_action :check_hub_ready_for_checkout
   prepend_before_action :check_order_cycle_expiry
@@ -46,7 +46,7 @@ class CheckoutController < ::BaseController
 
   def update
     params_adapter = Checkout::FormDataAdapter.new(permitted_params, @order, spree_current_user)
-    return action_failed unless @order.update(params_adapter.params[:order])
+    return action_failed unless @order.update(params_adapter.params[:order] || {})
 
     checkout_workflow(params_adapter.shipping_method_id)
   rescue Spree::Core::GatewayError => e
@@ -54,6 +54,8 @@ class CheckoutController < ::BaseController
   rescue StandardError => e
     flash[:error] = I18n.t("checkout.failed")
     action_failed(e)
+  ensure
+    @order.update!
   end
 
   # Clears the cached order. Required for #current_order to return a new order

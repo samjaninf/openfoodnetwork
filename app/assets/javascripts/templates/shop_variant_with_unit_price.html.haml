@@ -8,11 +8,12 @@
       "price-breakdown-placement" => "bottom",
       "price-breakdown-animation" => true}
     {{ variant.price_with_fees | localizeCurrency }}
-    .variant-unit-price
+    .unit-price.variant-unit-price
       %question-mark-with-tooltip{"question-mark-with-tooltip" => "_",
       "question-mark-with-tooltip-append-to-body" => "true",
       "question-mark-with-tooltip-placement" => "top",
-      "question-mark-with-tooltip-animation" => true}
+      "question-mark-with-tooltip-animation" => true,
+      key: "'js.shopfront.unit_price_tooltip'"}
       {{ variant.unit_price_price | localizeCurrency }} / {{ variant.unit_price_unit }}
         
   .medium-2.large-2.columns.total-price

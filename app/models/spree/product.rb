@@ -52,11 +52,11 @@ module Spree
             dependent: :destroy
 
     has_many :variants, -> {
-      where(is_master: false).order("#{::Spree::Variant.quoted_table_name}.position ASC")
+      where(is_master: false).order("spree_variants.position ASC")
     }, class_name: 'Spree::Variant'
 
     has_many :variants_including_master,
-             -> { order("#{::Spree::Variant.quoted_table_name}.position ASC") },
+             -> { order("spree_variants.position ASC") },
              class_name: 'Spree::Variant',
              dependent: :destroy
 
@@ -86,11 +86,12 @@ module Spree
     validates :name, presence: true
     validates :permalink, presence: true
     validates :price, presence: true, if: proc { Spree::Config[:require_master_price] }
-    validates :shipping_category_id, presence: true
+    validates :shipping_category, presence: true
 
     validates :supplier, presence: true
     validates :primary_taxon, presence: true
-    validates :tax_category_id, presence: true, if: "Spree::Config.products_require_tax_category"
+    validates :tax_category, presence: true,
+                             if: proc { Spree::Config[:products_require_tax_category] }
 
     validates :variant_unit, presence: true
     validates :unit_value, presence: { if: ->(p) { %w(weight volume).include? p.variant_unit } }
@@ -172,7 +173,7 @@ module Spree
     scope :in_distributors, lambda { |distributors|
       with_order_cycles_outer.
         where('(o_exchanges.incoming = ? AND o_exchanges.receiver_id IN (?))', false, distributors).
-        uniq
+        distinct
     }
 
     # Products supplied by a given enterprise or distributed via that enterprise through an OC
@@ -366,7 +367,7 @@ module Spree
       Spree::OptionType.where('name LIKE ?', 'unit_%%')
     end
 
-    def destroy_with_delete_from_order_cycles
+    def destroy
       transaction do
         touch_distributors
 
@@ -374,10 +375,9 @@ module Spree
           where('exchange_variants.variant_id IN (?)', variants_including_master.with_deleted.
           select(:id)).destroy_all
 
-        destroy_without_delete_from_order_cycles
+        super
       end
     end
-    alias_method_chain :destroy, :delete_from_order_cycles
 
     private
 

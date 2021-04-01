@@ -4,29 +4,23 @@ class CartController < BaseController
   def populate
     order = current_order(true)
 
-    # Without intervention, the Spree::Adjustment#update_adjustable callback is called many times
-    # during cart population, for both taxation and enterprise fees. This operation triggers a
-    # costly Spree::Order#update!, which only needs to be run once. We avoid this by disabling
-    # callbacks on Spree::Adjustment and then manually invoke Spree::Order#update! on success.
-    Spree::Adjustment.without_callbacks do
-      cart_service = CartService.new(order)
+    cart_service = CartService.new(order)
 
-      cart_service.populate(params.slice(:variants, :quantity), true)
-      if cart_service.valid?
-        order.recreate_all_fees!
-        order.cap_quantity_at_stock!
-        order.update!
+    cart_service.populate(params.slice(:variants, :quantity), true)
+    if cart_service.valid?
+      order.cap_quantity_at_stock!
+      order.recreate_all_fees!
 
-        variant_ids = variant_ids_in(cart_service.variants_h)
+      variant_ids = variant_ids_in(cart_service.variants_h)
 
-        render json: { error: false,
-                       stock_levels: VariantsStockLevels.new.call(order, variant_ids) },
-               status: :ok
-      else
-        render json: { error: cart_service.errors.full_messages.join(",") },
-               status: :precondition_failed
-      end
+      render json: { error: false,
+                     stock_levels: VariantsStockLevels.new.call(order, variant_ids) },
+             status: :ok
+    else
+      render json: { error: cart_service.errors.full_messages.join(",") },
+             status: :precondition_failed
     end
+
     populate_variant_attributes
   end
 
@@ -56,7 +50,8 @@ class CartController < BaseController
 
   def populate_variant_attributes_from_variant(order)
     params[:variant_attributes].each do |variant_id, attributes|
-      order.set_variant_attributes(Spree::Variant.find(variant_id), attributes)
+      permitted = attributes.permit(:quantity, :max_quantity).to_h.with_indifferent_access
+      order.set_variant_attributes(Spree::Variant.find(variant_id), permitted)
     end
   end
 

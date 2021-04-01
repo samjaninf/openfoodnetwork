@@ -227,7 +227,9 @@ describe Spree::Admin::ReportsController, type: :controller do
 
     it "creates a ProductAndInventoryReport" do
       expect(OpenFoodNetwork::ProductsAndInventoryReport).to receive(:new)
-        .with(@admin_user, { "test" => "foo", "controller" => "spree/admin/reports", "action" => "products_and_inventory" }, false)
+        .with(@admin_user,
+              { "test" => "foo", "controller" => "spree/admin/reports", "report" => {},
+                "action" => "products_and_inventory", "use_route" => "main_app" }, false)
         .and_return(report = double(:report))
       allow(report).to receive(:header).and_return []
       allow(report).to receive(:table).and_return []
@@ -278,12 +280,38 @@ describe Spree::Admin::ReportsController, type: :controller do
 
     it "creates a CustomersReport" do
       expect(OpenFoodNetwork::CustomersReport).to receive(:new)
-        .with(@admin_user, { "test" => "foo", "controller" => "spree/admin/reports", "action" => "customers" }, false)
+        .with(@admin_user, { "test" => "foo", "controller" => "spree/admin/reports",
+                             "action" => "customers", "use_route" => "main_app",
+                             "report" => {} }, false)
         .and_return(report = double(:report))
       allow(report).to receive(:header).and_return []
       allow(report).to receive(:table).and_return []
       spree_get :customers, test: "foo"
       expect(assigns(:report)).to eq(report)
+    end
+  end
+
+
+  context 'Order Cycle Management' do
+    let!(:present_objects) { [orderA1, orderA2, orderB1, orderB2] }
+
+    context 'when the customer_balance feature is enabled' do
+      before do
+        allow(OpenFoodNetwork::FeatureToggle)
+          .to receive(:enabled?).with(:customer_balance, kind_of(Spree::User)) { true }
+
+        controller_login_as_enterprise_user [coordinator1]
+      end
+
+      it 'renders the delivery report' do
+        spree_post :order_cycle_management, {
+          q: { completed_at_lt: 1.day.ago },
+          shipping_method_in: [ "123" ], # We just need to search for shipping methods
+          report_type: "delivery",
+        }
+
+        expect(response).to have_http_status(:ok)
+      end
     end
   end
 

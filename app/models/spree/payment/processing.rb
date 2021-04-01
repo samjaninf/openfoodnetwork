@@ -6,22 +6,14 @@ module Spree
       def process!
         return unless validate!
 
-        if payment_method.auto_capture?
-          purchase!
-        else
-          authorize!
-        end
+        purchase!
       end
 
       def process_offline!
         return unless validate!
         return if authorization_action_required?
 
-        if payment_method.auto_capture?
-          charge_offline!
-        else
-          authorize!
-        end
+        charge_offline!
       end
 
       def authorize!(return_url = nil)
@@ -175,7 +167,7 @@ module Spree
                     order_id: gateway_order_id }
 
         options.merge!(shipping: order.ship_total * 100,
-                       tax: order.tax_total * 100,
+                       tax: order.additional_tax_total * 100,
                        subtotal: order.item_total * 100,
                        discount: 0,
                        currency: currency)

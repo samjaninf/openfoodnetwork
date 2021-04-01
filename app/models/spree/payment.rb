@@ -20,7 +20,7 @@ module Spree
              class_name: "Spree::Payment", foreign_key: :source_id
     has_many :log_entries, as: :source, dependent: :destroy
 
-    has_one :adjustment, as: :source, dependent: :destroy
+    has_one :adjustment, as: :adjustable, dependent: :destroy
 
     validate :validate_source
     before_create :set_unique_identifier
@@ -135,8 +135,8 @@ module Spree
         adjustment.label = adjustment_label
         adjustment.save
       else
-        payment_method.create_adjustment(adjustment_label, order, self, true)
-        association(:adjustment).reload
+        payment_method.create_adjustment(adjustment_label, self, self, true)
+        adjustment.reload
       end
     end
 
@@ -154,8 +154,10 @@ module Spree
       return unless adjustment.try(:reload)
       return if adjustment.finalized?
 
-      adjustment.update_attribute(:eligible, false)
-      adjustment.finalize!
+      adjustment.update(
+        eligible: false,
+        state: "finalized"
+      )
     end
 
     def validate_source
@@ -199,8 +201,7 @@ module Spree
     end
 
     def update_order
-      order.payments.reload
-      order.update!
+      order.reload.update!
     end
 
     # Necessary because some payment gateways will refuse payments with

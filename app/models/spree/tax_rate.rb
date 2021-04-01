@@ -20,7 +20,7 @@ module Spree
     belongs_to :tax_category, class_name: "Spree::TaxCategory", inverse_of: :tax_rates
 
     validates :amount, presence: true, numericality: true
-    validates :tax_category_id, presence: true
+    validates :tax_category, presence: true
     validates_with DefaultTaxZoneValidator
 
     scope :by_zone, ->(zone) { where(zone_id: zone) }
@@ -80,13 +80,8 @@ module Spree
         create_adjustment(label, order, order)
       end
 
-      order.adjustments(:reload)
-      order.line_items(:reload)
-      # TaxRate adjustments (order.adjustments.tax)
-      #   and line item adjustments (tax included on line items) consist of 100% tax
-      (order.adjustments.tax + order.line_item_adjustments.reload).each do |adjustment|
-        adjustment.set_absolute_included_tax! adjustment.amount
-      end
+      order.adjustments.reload
+      order.line_items.reload
     end
 
     def default_zone_or_zone_match?(order)
