@@ -31,7 +31,7 @@ gem 'web', path: './engines/web'
 gem 'activerecord-postgresql-adapter'
 gem 'pg', '~> 0.21.0'
 
-gem 'acts_as_list', '1.0.3'
+gem 'acts_as_list', '1.0.4'
 gem 'cancancan', '~> 1.15.0'
 gem 'ffaker'
 gem 'highline', '2.0.3' # Necessary for the install generator
@@ -83,7 +83,7 @@ gem 'roadie-rails', '~> 1.3.0'
 
 gem 'combine_pdf'
 gem 'wicked_pdf'
-gem 'wkhtmltopdf-binary', '0.12.5' # We need to upgrade our CI before we can bump this :/
+gem 'wkhtmltopdf-binary'
 
 gem 'immigrant'
 gem 'roo', '~> 2.8.3'
@@ -95,7 +95,7 @@ gem 'test-unit', '~> 3.4'
 gem 'coffee-rails', '~> 4.2.2'
 gem 'compass-rails'
 
-gem 'mini_racer', '0.3.1'
+gem 'mini_racer', '0.4.0'
 
 gem 'uglifier', '>= 1.0.3'
 
@@ -112,6 +112,12 @@ gem 'select2-rails', '~> 3.4.7'
 gem 'ofn-qz', github: 'openfoodfoundation/ofn-qz', branch: 'ofn-rails-4'
 
 gem 'good_migrations'
+
+gem 'flipper'
+gem 'flipper-active_record'
+gem 'flipper-ui'
+
+gem "view_component", require: "view_component/engine"
 
 group :production, :staging do
   gem 'ddtrace'
@@ -159,6 +165,8 @@ group :development do
   gem 'rubocop-rails'
   gem 'spring'
   gem 'spring-commands-rspec'
+
+  gem "view_component_storybook", require: "view_component/storybook/engine"
 
   # 1.0.9 fixed openssl issues on macOS https://github.com/eventmachine/eventmachine/issues/602
   # While we don't require this gem directly, no dependents forced the upgrade to a version

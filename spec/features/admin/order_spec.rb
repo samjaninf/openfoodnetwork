@@ -61,6 +61,13 @@ feature '
     select2_select order_cycle.name, from: 'order_order_cycle_id'
     click_button 'Next'
 
+    expect(page).not_to have_selector '.flash.error'
+    expect(page).not_to have_content "Line items can't be blank"
+
+    click_button "Update And Recalculate Fees"
+    expect(page).to have_selector '.flash.error'
+    expect(page).to have_content "Line items can't be blank"
+
     # it suppresses validation errors when setting distribution
     expect(page).not_to have_selector '#errorExplanation'
     expect(page).to have_content 'ADD PRODUCT'
@@ -144,6 +151,27 @@ feature '
       expect(page).to have_text("#{max_quantity} x")
     end
     expect(order.reload.line_items.first.quantity).to eq(max_quantity)
+  end
+
+  scenario "there are infinite items available (variant is on demand)" do
+    # Move the order back to the cart state
+    order.state = 'cart'
+    order.completed_at = nil
+    order.line_items.first.variant.update_attribute(:on_demand, true)
+
+    login_as_admin_and_visit spree.edit_admin_order_path(order)
+
+    within("tr.stock-item", text: order.products.first.name) do
+      find("a.edit-item").click
+      expect(page).to have_input(:quantity)
+      fill_in(:quantity, with: 1000)
+      find("a.save-item").click
+    end
+
+    within("tr.stock-item", text: order.products.first.name) do
+      expect(page).to have_text("1000 x")
+    end
+    expect(order.reload.line_items.first.quantity).to eq(1000)
   end
 
   scenario "can't change distributor or order cycle once order has been finalized" do

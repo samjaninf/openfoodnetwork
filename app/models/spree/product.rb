@@ -24,7 +24,7 @@ require 'concerns/product_stock'
 # Sum of on_hand each variant's inventory level determine "on_hand" level for the product.
 #
 module Spree
-  class Product < ActiveRecord::Base
+  class Product < ApplicationRecord
     include PermalinkGenerator
     include ProductStock
 
@@ -287,12 +287,6 @@ module Spree
           arel_table[field].matches("%#{value}%")
         }.inject(:or)
       }.inject(:or)
-    end
-
-    def empty_option_values?
-      options.empty? || options.any? do |opt|
-        opt.option_type.option_values.empty?
-      end
     end
 
     def property(property_name)

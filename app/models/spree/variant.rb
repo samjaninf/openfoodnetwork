@@ -6,7 +6,7 @@ require 'concerns/variant_stock'
 require 'spree/localized_number'
 
 module Spree
-  class Variant < ActiveRecord::Base
+  class Variant < ApplicationRecord
     extend Spree::LocalizedNumber
     include VariantUnits::VariantAndLineItemNaming
     include VariantStock
@@ -58,6 +58,8 @@ module Spree
     validates :unit_value, presence: true, if: ->(variant) {
       %w(weight volume).include?(variant.product.andand.variant_unit)
     }
+
+    validates :unit_value, numericality: { greater_than: 0 }
 
     validates :unit_description, presence: true, if: ->(variant) {
       variant.product.andand.variant_unit.present? && variant.unit_value.nil?
