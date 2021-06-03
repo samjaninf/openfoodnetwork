@@ -317,6 +317,8 @@ en_IE:
   height: "Height"
   width: "Width"
   depth: "Depth"
+  payment_could_not_process: "The payment could not be processed"
+  payment_could_not_complete: "The payment could not be completed"
   actions:
     create_and_add_another: "Create and Add Another"
     create: "Create"
@@ -332,6 +334,8 @@ en_IE:
     destroy: "Destroy"
     rename: "Rename"
   admin:
+    adjustments:
+      skipped_changing_canceled_order: "You can't change a cancelled order."
     begins_at: Begins At
     begins_on: Begins On
     bill_address: "Bill address"
@@ -1111,7 +1115,7 @@ en_IE:
         unpause_subscription: Unpause Subscription
         cancel_subscription: Cancel Subscription
       filters:
-        query_placeholder: "Search by email..."
+        query_placeholder: "Search by email or name..."
       setup_explanation:
         title: "Subscriptions"
         just_a_few_more_steps: 'Just a few more steps before you can begin:'
@@ -1350,6 +1354,12 @@ en_IE:
   address2: Address (contd.)
   city: City
   city_placeholder: eg. Dublin
+  latitude: Latitude
+  latitude_placeholder: eg. -37.4713077
+  latitude_longitude_tip: Latitude and longitude are needed to display your enterprise on the map.
+  longitude: Longitude
+  longitude_placeholder: eg. 144.7851531
+  use_geocoder: Calculate latitude and longitude automatically from address?
   postcode: Eircode
   postcode_placeholder: eg. D01 XXXX
   suburb: Town
@@ -1558,6 +1568,7 @@ en_IE:
   email_order_summary_includes_tax: "(includes tax):"
   email_payment_paid: PAID
   email_payment_not_paid: NOT PAID
+  email_payment_description: Payment Description at Checkout
   email_payment_summary: Payment summary
   email_payment_method: "Paying via:"
   email_so_placement_intro_html: "You have a new order with <strong>%{distributor}</strong>"
@@ -1883,7 +1894,7 @@ en_IE:
       details:
         title: "Details"
         headline: "Let's Get Started"
-        enterprise: "Yippee! First need to know a little bit about your enterprise:"
+        enterprise: "Woot! First we need to know a little bit about your enterprise:"
         producer: "Great! First we need to know a little bit about your farm:"
         enterprise_name_field: "Enterprise Name:"
         producer_name_field: "Farm Name:"
@@ -1903,6 +1914,11 @@ en_IE:
         state_field_error: "County Required"
         country_field: "Country:"
         country_field_error: "Please select a country"
+        map_location: "Map Location"
+        locate_address: "Locate address on map"
+        drag_pin: "Drag and drop the pin to the correct location if not accurate."
+        confirm_address: "I confirm that the indicated position of the enterprise on the map is correct."
+        drag_map_marker: "Due to many producers operating in rural areas, the accuracy of maps is always being improved on. Help us to understand where you’re located better by interacting with the map above to move the pin by clicking or tapping to hold the pin and then dragging to the location that is more accurate based off your knowledge."
       contact:
         title: "Contact"
         who_is_managing_enterprise: "Who is responsible for managing %{enterprise}?"
@@ -2949,7 +2965,6 @@ en_IE:
     adjustment: "Adjustment"
     all: "All"
     associated_adjustment_closed: "Associated adjustment closed"
-    authorization_failure: "Authorization failure"
     back_to_adjustments_list: "Back to adjustments"
     back_to_users_list: "Back to users"
     back_to_zones_list: "Back to zones"

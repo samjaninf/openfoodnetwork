@@ -1352,6 +1352,12 @@ en_CA:
   address2: Address (contd.)
   city: City
   city_placeholder: eg. Northcote
+  latitude: Latitude
+  latitude_placeholder: eg. -37.4713077
+  latitude_longitude_tip: Latitude and longitude are needed to display your enterprise on the map.
+  longitude: Longitude
+  longitude_placeholder: eg. 144.7851531
+  use_geocoder: Calculate latitude and longitude automatically from address?
   postcode: Postal Code
   postcode_placeholder: eg. N0B 2L0
   suburb: City
@@ -1500,7 +1506,7 @@ en_CA:
   checkout_instructions: "Any comments or special instructions?"
   checkout_payment: Payment
   checkout_send: Place order now
-  checkout_your_order: Your order
+  checkout_your_order: Your order (applicable taxes charged at checkout)
   checkout_cart_total: Cart total
   checkout_shipping_price: Shipping
   checkout_total_price: Total
@@ -1885,7 +1891,7 @@ en_CA:
       details:
         title: "Details"
         headline: "Let's Get Started"
-        enterprise: "Great! First we need to know a little bit about your enterprise:"
+        enterprise: "Woot! First we need to know a little bit about your enterprise:"
         producer: "Woot! First we need to know a little bit about your farm:"
         enterprise_name_field: "Enterprise Name:"
         producer_name_field: "Farm Name:"
@@ -1905,6 +1911,11 @@ en_CA:
         state_field_error: "Province required"
         country_field: "Country:"
         country_field_error: "Please select a country"
+        map_location: "Map Location"
+        locate_address: "Locate address on map"
+        drag_pin: "Drag and drop the pin to the correct location if not accurate."
+        confirm_address: "I confirm that the indicated position of the enterprise on the map is correct."
+        drag_map_marker: "Due to many producers operating in rural areas, the accuracy of maps is always being improved on. Help us to understand where you’re located better by interacting with the map above to move the pin by clicking or tapping to hold the pin and then dragging to the location that is more accurate based off your knowledge."
       contact:
         title: "Contact"
         who_is_managing_enterprise: "Who is responsible for managing %{enterprise}?"
@@ -2944,7 +2955,6 @@ en_CA:
     adjustment: "Adjustment"
     all: "All"
     associated_adjustment_closed: "Associated adjustment closed"
-    authorization_failure: "Authorization failure"
     back_to_adjustments_list: "Back to adjustments"
     back_to_users_list: "Back to users"
     back_to_zones_list: "Back to zones"

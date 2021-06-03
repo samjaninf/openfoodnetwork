@@ -4,6 +4,8 @@ require 'open_food_network/order_cycle_permissions'
 
 module Admin
   class EnterprisesController < Admin::ResourceController
+    include GeocodeEnterpriseAddress
+
     # These need to run before #load_resource so that @object is initialised with sanitised values
     prepend_before_action :override_owner, only: :create
     prepend_before_action :override_sells, only: :create
@@ -21,6 +23,8 @@ module Admin
     before_action :strip_new_properties, only: [:create, :update]
     before_action :load_properties, only: [:edit, :update]
     before_action :setup_property, only: [:edit]
+
+    after_action  :geocode_address_if_use_geocoder, only: [:create, :update]
 
     helper 'spree/products'
     include OrderCyclesHelper
@@ -115,7 +119,7 @@ module Admin
     def build_resource
       enterprise = super
       enterprise.address ||= Spree::Address.new
-      enterprise.address.country ||= Spree::Country.find_by(id: Spree::Config[:default_country_id])
+      enterprise.address.country ||= DefaultCountry.country
       enterprise
     end
 

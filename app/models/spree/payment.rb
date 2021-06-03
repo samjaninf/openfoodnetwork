@@ -50,6 +50,7 @@ module Spree
     scope :failed, -> { with_state('failed') }
     scope :valid, -> { where('state NOT IN (?)', %w(failed invalid)) }
     scope :authorization_action_required, -> { where.not(cvv_response_message: nil) }
+    scope :with_payment_intent, ->(code) { where(response_code: code) }
 
     # order state machine (see http://github.com/pluginaweek/state_machine/tree/master for details)
     state_machine initial: :checkout do
@@ -144,6 +145,10 @@ module Spree
       I18n.t('payment_method_fee')
     end
 
+    def mark_as_processed
+      update_attribute(:cvv_response_message, nil)
+    end
+
     private
 
     # Don't charge fees for invalid or failed payments.
@@ -201,7 +206,7 @@ module Spree
     end
 
     def update_order
-      order.update!
+      OrderManagement::Order::Updater.new(order).after_payment_update(self)
     end
 
     # Necessary because some payment gateways will refuse payments with

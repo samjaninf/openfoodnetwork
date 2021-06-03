@@ -1,27 +1,27 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby "2.5.8"
+ruby "2.5.9"
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}.git" }
 
-gem 'rails', '~> 5.0.0'
+gem 'rails', '~> 6.0.3.6'
 
 gem 'activemerchant', '>= 1.78.0'
 gem 'angular-rails-templates', '>= 0.3.0'
 gem 'awesome_nested_set'
-gem 'ransack', '2.3.0'
+gem 'ransack', '2.4.1'
 gem 'responders'
-gem 'sass', '<= 4.7.1'
-gem 'sass-rails', '< 6.0.0'
+gem 'sass', '~> 3.4.0' # this restriction originates from foundation-rails's version
+gem 'sass-rails', '< 5.1.0' # this restriction originates from the compass-rails's version
 
 gem 'i18n'
-gem 'i18n-js', '~> 3.8.2'
+gem 'i18n-js', '~> 3.8.3'
 gem 'rails-i18n'
 gem 'rails_safe_tasks', '~> 1.0'
 
 gem "activerecord-import"
-gem "db2fog", github: "openfoodfoundation/db2fog", branch: "rails-5"
-gem "fog-aws", ">= 0.6.0"
+gem "db2fog", github: "openfoodfoundation/db2fog", branch: "rails-6"
+gem "fog-aws", "~> 2.0" # db2fog does not support v3
 
 gem "catalog", path: "./engines/catalog"
 gem 'dfc_provider', path: './engines/dfc_provider'
@@ -29,7 +29,7 @@ gem "order_management", path: "./engines/order_management"
 gem 'web', path: './engines/web'
 
 gem 'activerecord-postgresql-adapter'
-gem 'pg', '~> 0.21.0'
+gem 'pg', '~> 1.2.3'
 
 gem 'acts_as_list', '1.0.4'
 gem 'cancancan', '~> 1.15.0'
@@ -52,7 +52,6 @@ gem 'oauth2', '~> 1.4.7' # Used for Stripe Connect
 
 gem 'daemons'
 gem 'delayed_job_active_record'
-gem 'delayed_job_web'
 
 gem 'kaminari', '~> 1.2.1'
 
@@ -75,11 +74,17 @@ gem 'dalli'
 gem 'figaro'
 gem 'geocoder'
 gem 'gmaps4rails'
+gem 'mimemagic', '> 0.3.5'
 gem 'paper_trail', '~> 10.3.1'
 gem 'paperclip', '~> 3.4.1'
 gem 'rack-rewrite'
 gem 'rack-ssl', require: 'rack/ssl'
-gem 'roadie-rails', '~> 1.3.0'
+gem 'roadie-rails'
+
+gem 'redis', '>= 4.0', require: ['redis', 'redis/connection/hiredis']
+gem 'hiredis'
+gem 'sidekiq'
+gem 'sidekiq-scheduler'
 
 gem 'combine_pdf'
 gem 'wicked_pdf'
@@ -92,7 +97,7 @@ gem 'whenever', require: false
 
 gem 'test-unit', '~> 3.4'
 
-gem 'coffee-rails', '~> 4.2.2'
+gem 'coffee-rails', '~> 5.0.0'
 gem 'compass-rails'
 
 gem 'mini_racer', '0.4.0'
@@ -108,6 +113,9 @@ gem 'jquery-migrate-rails'
 gem 'jquery-rails', '4.4.0'
 gem 'jquery-ui-rails', '~> 4.2'
 gem 'select2-rails', '~> 3.4.7'
+# Thor v0.20 works with both select2-rails 3.4.7 and railties 6.0.3.6
+#   To upgrade to thor v1 we need to upgrade select2-rails to v3.5 which requires some work
+gem 'thor', '~> 0.20'
 
 gem 'ofn-qz', github: 'openfoodfoundation/ofn-qz', branch: 'ofn-rails-4'
 
@@ -126,12 +134,11 @@ end
 
 group :test, :development do
   # Pretty printed test output
-  gem 'atomic'
   gem 'awesome_print'
   gem 'bullet'
   gem 'capybara'
   gem 'database_cleaner', require: false
-  gem "factory_bot_rails", '6.1.0', require: false
+  gem "factory_bot_rails", '6.2.0', require: false
   gem 'fuubar', '~> 2.5.1'
   gem 'json_spec', '~> 1.1.4'
   gem 'knapsack'
@@ -152,6 +159,7 @@ group :test do
   gem 'test-prof'
   gem 'webmock'
   gem 'rails-controller-testing'
+  gem 'pdf-reader'
   # See spec/spec_helper.rb for instructions
   # gem 'perftools.rb'
 end
@@ -167,11 +175,6 @@ group :development do
   gem 'spring-commands-rspec'
 
   gem "view_component_storybook", require: "view_component/storybook/engine"
-
-  # 1.0.9 fixed openssl issues on macOS https://github.com/eventmachine/eventmachine/issues/602
-  # While we don't require this gem directly, no dependents forced the upgrade to a version
-  # greater than 1.0.9, so we just required the latest available version here.
-  gem 'eventmachine', '>= 1.2.3'
 
   gem 'rack-mini-profiler', '< 3.0.0'
 end

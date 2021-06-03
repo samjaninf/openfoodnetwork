@@ -5,6 +5,7 @@ require 'spec_helper'
 describe Spree::OrdersController, type: :controller do
   include OpenFoodNetwork::EmailHelper
   include CheckoutHelper
+  include StripeStubs
 
   let(:distributor) { double(:distributor) }
   let(:order) { create(:order) }
@@ -24,7 +25,7 @@ describe Spree::OrdersController, type: :controller do
 
       it "loads page" do
         get :show, params: { id: order.number, token: order.token }
-        expect(response).to be_success
+        expect(response.status).to eq 200
       end
 
       it "stores order token in session as 'access_token'" do
@@ -43,7 +44,7 @@ describe Spree::OrdersController, type: :controller do
 
       it "loads page" do
         get :show, params: { id: order.number }
-        expect(response).to be_success
+        expect(response.status).to eq 200
       end
     end
 
@@ -52,7 +53,7 @@ describe Spree::OrdersController, type: :controller do
 
       it "loads page" do
         get :show, params: { id: order.number }
-        expect(response).to be_success
+        expect(response.status).to eq 200
       end
     end
 
@@ -82,9 +83,14 @@ describe Spree::OrdersController, type: :controller do
 
   describe "confirming a payment intent" do
     let(:customer) { create(:customer) }
-    let(:order) { create(:order, customer: customer, distributor: customer.enterprise) }
+    let(:order) {
+      create(:order_with_totals, customer: customer, distributor: customer.enterprise,
+                                 state: "payment")
+    }
+    let(:payment_method) { create(:stripe_sca_payment_method) }
     let!(:payment) { create(
       :payment,
+      payment_method: payment_method,
       cvv_response_message: "https://stripe.com/redirect",
       response_code: "pi_123",
       order: order,
@@ -100,22 +106,91 @@ describe Spree::OrdersController, type: :controller do
 
       context "with a valid payment intent" do
         let(:payment_intent) { "pi_123" }
+        let(:payment_intent_response) { double(id: "pi_123", status: "requires_capture") }
 
-        it "completes the payment" do
-          get :show, params: { id: order.number, payment_intent: payment_intent }
-          expect(response).to be_success
-          payment.reload
-          expect(payment.cvv_response_message).to be nil
-          expect(payment.state).to eq("completed")
+        before do
+          allow_any_instance_of(Stripe::PaymentIntentValidator)
+            .to receive(:call)
+            .with(payment_intent, kind_of(String))
+            .and_return(payment_intent_response)
+
+          allow(Spree::Order).to receive(:find_by!) { order }
+        end
+
+        context "when the order is in payment state" do
+          it "completes the payment" do
+            expect(order).to receive(:process_payments!) do
+              payment.complete!
+            end
+
+            get :show, params: { id: order.number, payment_intent: payment_intent }
+
+            expect(response.status).to eq 200
+            payment.reload
+            expect(payment.state).to eq("completed")
+            expect(payment.cvv_response_message).to be nil
+          end
+        end
+
+        context "when the order is already completed" do
+          before do
+            order.update_columns(state: "complete")
+          end
+
+          it "should still process the payment" do
+            expect(order).to receive(:process_payments!) do
+              payment.complete!
+            end
+
+            get :show, params: { id: order.number, payment_intent: payment_intent }
+            expect(response.status).to eq 200
+            payment.reload
+            expect(payment.state).to eq("completed")
+            expect(payment.cvv_response_message).to be nil
+          end
         end
       end
 
-      context "with an invalid payment intent" do
-        let(:payment_intent) { "invalid" }
+      context "when the payment intent response has errors" do
+        let(:payment_intent) { "pi_123" }
+
+        before do
+          allow_any_instance_of(Stripe::PaymentIntentValidator)
+            .to receive(:call)
+            .with(payment_intent, kind_of(String))
+            .and_raise(Stripe::StripeError, "error message")
+        end
 
         it "does not complete the payment" do
           get :show, params: { id: order.number, payment_intent: payment_intent }
-          expect(response).to be_success
+
+          expect(response.status).to eq 200
+          expect(flash[:error]).to eq("#{I18n.t("payment_could_not_process")}. error message")
+          payment.reload
+          expect(payment.cvv_response_message).to eq("https://stripe.com/redirect")
+          expect(payment.state).to eq("pending")
+        end
+      end
+
+      context "with an invalid last payment" do
+        let(:payment_intent) { "valid" }
+        let(:finder) { instance_double(OrderPaymentFinder, last_payment: payment) }
+
+        before do
+          allow(payment).to receive(:response_code).and_return("invalid")
+          allow(OrderPaymentFinder).to receive(:new).with(order).and_return(finder)
+          allow_any_instance_of(Stripe::PaymentIntentValidator)
+            .to receive(:call)
+            .with(payment_intent, kind_of(String))
+            .and_return(payment_intent)
+          stub_payment_intent_get_request(payment_intent_id: "valid")
+        end
+
+        it "does not complete the payment" do
+          get :show, params: { id: order.number, payment_intent: payment_intent }
+
+          expect(response.status).to eq 200
+          expect(flash[:error]).to eq("#{I18n.t("payment_could_not_process")}. ")
           payment.reload
           expect(payment.cvv_response_message).to eq("https://stripe.com/redirect")
           expect(payment.state).to eq("pending")
@@ -180,10 +255,6 @@ describe Spree::OrdersController, type: :controller do
 
       describe "the page" do
         render_views
-
-        it "provides the right registration path" do
-          expect(subject.registration_path).to eq registration_path
-        end
 
         it "shows the right registration link" do
           # We fixed our view by hardcoding the link.
@@ -459,7 +530,7 @@ describe Spree::OrdersController, type: :controller do
             end
 
             before do
-              order.update_attributes!(order_cycle_id: order_cycle.id, distributor_id: distributor.id)
+              order.update!(order_cycle_id: order_cycle.id, distributor_id: distributor.id)
             end
 
             it "returns the order" do

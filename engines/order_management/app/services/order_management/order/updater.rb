@@ -19,6 +19,11 @@ module OrderManagement
       # object with callbacks (otherwise you will end up in an infinite recursion as the
       # associations try to save and then in turn try to call +update!+ again.)
       def update
+        update_all_adjustments
+        update_totals_and_states
+      end
+
+      def update_totals_and_states
         update_totals
 
         if order.completed?
@@ -27,9 +32,6 @@ module OrderManagement
           update_shipment_state
         end
 
-        update_all_adjustments
-        # update totals a second time in case updated adjustments have an effect on the total
-        update_totals
         persist_totals
       end
 
@@ -40,7 +42,7 @@ module OrderManagement
       # - adjustment_total - total value of all adjustments
       # - total - order total, it's the equivalent to item_total plus adjustment_total
       def update_totals
-        order.payment_total = payments.completed.sum(:amount)
+        update_payment_total
         update_item_total
         update_adjustment_total
         update_order_total
@@ -49,6 +51,10 @@ module OrderManagement
       # Give each of the shipments a chance to update themselves
       def update_shipments
         shipments.each { |shipment| shipment.update!(order) }
+      end
+
+      def update_payment_total
+        order.payment_total = payments.completed.sum(:amount)
       end
 
       def update_item_total
@@ -101,6 +107,7 @@ module OrderManagement
                                end
 
         order.state_changed('shipment')
+        order.shipment_state
       end
 
       # Updates the +payment_state+ attribute according to the following logic:
@@ -122,7 +129,7 @@ module OrderManagement
       end
 
       def update_all_adjustments
-        order.all_adjustments.reload.each(&:update!)
+        order.all_adjustments.reload.each(&:update_adjustment!)
       end
 
       def before_save_hook
@@ -136,6 +143,22 @@ module OrderManagement
         return if order.shipping_method.blank? || order.shipping_method.require_ship_address
 
         order.ship_address = order.address_from_distributor
+      end
+
+      def after_payment_update(payment)
+        if payment.completed? || payment.void?
+          update_payment_total
+        end
+
+        if order.completed?
+          update_payment_state
+          update_shipments
+          update_shipment_state
+        end
+
+        if payment.completed? || order.completed?
+          persist_totals
+        end
       end
 
       private

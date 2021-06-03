@@ -266,13 +266,6 @@ module Spree
       duplicator.duplicate
     end
 
-    # use deleted? rather than checking the attribute directly. this
-    # allows extensions to override deleted? if they want to provide
-    # their own definition.
-    def deleted?
-      !!deleted_at
-    end
-
     # split variants list into hash which shows mapping of opt value onto matching variants
     # eg categorise_variants_from_option(color) => {"red" -> [...], "blue" -> [...]}
     def categorise_variants_from_option(opt_type)
@@ -433,7 +426,7 @@ module Spree
     end
 
     def update_units
-      return unless variant_unit_changed?
+      return unless saved_change_to_variant_unit?
 
       option_types.delete self.class.all_variant_unit_option_types
       option_types << variant_unit_option_type if variant_unit.present?
@@ -449,9 +442,9 @@ module Spree
     end
 
     def remove_previous_primary_taxon_from_taxons
-      return unless primary_taxon_id_changed? && primary_taxon_id_was
+      return unless saved_change_to_primary_taxon_id? && primary_taxon_id_before_last_save
 
-      taxons.destroy(primary_taxon_id_was)
+      taxons.destroy(primary_taxon_id_before_last_save)
     end
 
     def ensure_standard_variant
@@ -465,7 +458,7 @@ module Spree
 
     # Spree creates a permalink already but our implementation fixes an edge case.
     def sanitize_permalink
-      return unless permalink.blank? || permalink_changed?
+      return unless permalink.blank? || saved_change_to_permalink? || permalink_changed?
 
       requested = permalink.presence || permalink_was.presence || name.presence || 'product'
       self.permalink = create_unique_permalink(requested.parameterize)

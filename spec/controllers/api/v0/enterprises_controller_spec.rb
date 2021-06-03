@@ -31,7 +31,7 @@ describe Api::V0::EnterprisesController, type: :controller do
 
       it "creates as sells=any when it is not a producer" do
         api_post :create, { enterprise: new_enterprise_params }
-        expect(response).to be_success
+        expect(response.status).to eq 201
 
         enterprise = Enterprise.last
         expect(enterprise.sells).to eq('any')
@@ -44,10 +44,24 @@ describe Api::V0::EnterprisesController, type: :controller do
           enterprise: new_enterprise_params.
             merge({ user_ids: [enterprise_owner.id, manager1.id, manager2.id] })
         }
-        expect(response).to be_success
+        expect(response.status).to eq 201
 
         enterprise = Enterprise.last
         expect(enterprise.user_ids).to match_array([enterprise_owner.id, manager1.id, manager2.id])
+      end
+
+      context "geocoding" do
+        it "geocodes the address when the :use_geocoder parameter is set" do
+          expect_any_instance_of(AddressGeocoder).to receive(:geocode)
+
+          api_post :create, { enterprise: new_enterprise_params, use_geocoder: "1" }
+        end
+
+        it "doesn't geocode the address when the :use_geocoder parameter is not set" do
+          expect_any_instance_of(AddressGeocoder).not_to receive(:geocode)
+
+          api_post :create, { enterprise: new_enterprise_params, use_geocoder: "0" }
+        end
       end
     end
   end
@@ -61,15 +75,24 @@ describe Api::V0::EnterprisesController, type: :controller do
     end
 
     describe "submitting a valid image" do
+      let!(:logo) { fixture_file_upload("files/logo.png", "image/png") }
       before do
         allow(Enterprise)
           .to receive(:find_by).with({ permalink: enterprise.id.to_s }) { enterprise }
-        allow(enterprise).to receive(:update).and_return(true)
       end
 
-      it "I can update enterprise image" do
-        api_post :update_image, logo: 'a logo', id: enterprise.id
-        expect(response).to be_success
+      it "I can update enterprise logo image" do
+        api_post :update_image, logo: logo, id: enterprise.id
+        expect(response.status).to eq 200
+        expect(response.content_type).to eq "text/html"
+        expect(response.body).to match %r{/images/enterprises/logos/\d*/medium/logo\.png\?\d*}
+      end
+
+      it "I can update enterprise promo image" do
+        api_post :update_image, promo: logo, id: enterprise.id
+        expect(response.status).to eq 200
+        expect(response.content_type).to eq "text/html"
+        expect(response.body).to match %r{/images/enterprises/promo_images/\d*/medium/logo\.jpg\?\d*}
       end
     end
   end

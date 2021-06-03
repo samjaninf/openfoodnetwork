@@ -100,13 +100,12 @@ class Enterprise < ApplicationRecord
 
   before_validation :initialize_permalink, if: lambda { permalink.nil? }
   before_validation :set_unused_address_fields
-  after_validation :geocode_address
   after_validation :ensure_owner_is_manager, if: lambda { owner_id_changed? && !owner_id.nil? }
 
   after_touch :touch_distributors
   after_create :set_default_contact
   after_create :relate_to_owners_enterprises
-  after_create :send_welcome_email
+  after_create_commit :send_welcome_email
 
   after_rollback :restore_permalink
 
@@ -409,10 +408,6 @@ class Enterprise < ApplicationRecord
 
   def set_unused_address_fields
     address.firstname = address.lastname = address.phone = 'unused' if address.present?
-  end
-
-  def geocode_address
-    address.geocode if address.andand.changed?
   end
 
   def ensure_owner_is_manager

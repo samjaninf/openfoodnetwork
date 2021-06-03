@@ -6,7 +6,7 @@ This is a general guide to setting up an Open Food Network **development environ
 
 The fastest way to make it work locally is to use Docker, you only need to setup git, see the [Docker setup guide](docker/README.md).
 Otherwise, for a local setup you will need:
-* Ruby 2.4.4 and bundler (check current Ruby version in [.ruby-version](https://github.com/openfoodfoundation/openfoodnetwork/blob/master/.ruby-version) file)
+* Ruby and bundler (check current Ruby version in [.ruby-version](https://github.com/openfoodfoundation/openfoodnetwork/blob/master/.ruby-version) file)
 * PostgreSQL database
 * Chrome (for testing)
 
@@ -47,7 +47,11 @@ $ sudo -u postgres psql -c "CREATE USER ofn WITH SUPERUSER CREATEDB PASSWORD 'f0
 
 This will create the "ofn" user as superuser and allowing it to create databases. If this command fails, check the [troubleshooting section](#creating-the-database) for an alternative.
 
-Once done, run `script/setup`. If the script succeeds you're ready to start developing. If not, take a look at the output as it should be informative enough to help you troubleshoot.
+Next, it is _strongly recommended_ to run the setup script.
+```sh
+$ script/setup
+```
+If the script succeeds you're ready to start developing. If not, take a look at the output as it should be informative enough to help you troubleshoot.
 
 Now, your dreams of spinning up a development server can be realised:
 
@@ -77,8 +81,6 @@ The tests of all custom engines can be run with:
 Note: If your OS is not explicitly supported in the setup guides then not all tests may pass. However, you may still be able to develop.
 
 Note: The time zone on your machine should match the one defined in `config/application.yml`.
-
-The project is configured to use [Zeus][zeus] to reduce the pre-test startup time while Rails loads. See the [Zeus GitHub page][zeus] for usage instructions.
 
 Once [npm dependencies are installed][karma], AngularJS tests can be run with:
 
@@ -119,7 +121,6 @@ If these commands succeed, you should be able to [continue the setup process](#g
 [ubuntu]: https://github.com/openfoodfoundation/openfoodnetwork/wiki/Development-Environment-Setup:-Ubuntu
 [debian]: https://github.com/openfoodfoundation/openfoodnetwork/wiki/Development-Environment-Setup:-Debian
 [wiki]: https://github.com/openfoodfoundation/openfoodnetwork/wiki
-[zeus]: https://github.com/burke/zeus
 [rubocop]: https://rubocop.readthedocs.io/en/latest/
 [karma]: https://github.com/openfoodfoundation/openfoodnetwork/wiki/Karma
 [slack-dev]: https://openfoodnetwork.slack.com/messages/C2GQ45KNU

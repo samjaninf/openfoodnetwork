@@ -22,11 +22,9 @@ module Spree
     alias_attribute :last_name, :lastname
     delegate :name, to: :state, prefix: true, allow_nil: true
 
-    geocoded_by :geocode_address
-
     def self.default
       country = begin
-                  Spree::Country.find(Spree::Config[:default_country_id])
+                  DefaultCountry.country
                 rescue StandardError
                   Spree::Country.first
                 end
@@ -87,10 +85,6 @@ module Spree
         country: country.try(:iso),
         phone: phone
       }
-    end
-
-    def geocode_address
-      render_address([address1, address2, zipcode, city, country.andand.name, state.andand.name])
     end
 
     def full_address

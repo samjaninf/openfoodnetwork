@@ -318,6 +318,8 @@ ru:
   height: "Высота"
   width: "Ширина"
   depth: "Глубина"
+  payment_could_not_process: "Платеж не может быть обработан"
+  payment_could_not_complete: "Платеж не может быть завершен"
   actions:
     create_and_add_another: "Создать и Добавить Другой"
     create: "Создать"
@@ -1236,7 +1238,7 @@ ru:
     mailers:
       powered_by:
         open_food_network: "Открытая Сеть Продуктов"
-        powered_html: "Ваш опыт покупок обеспечивается %{open_food_network}."
+        powered_html: "Ваш опыт покупок обеспечивает %{open_food_network}."
     menu:
       cart:
         cart: "Корзина"
@@ -1355,12 +1357,18 @@ ru:
   address2: Адрес (продолжение)
   city: Город
   city_placeholder: Город или Место
+  latitude: Широта
+  latitude_placeholder: например. -37,4713077
+  latitude_longitude_tip: Широта и долгота необходимы для отображения вашего предприятия на карте.
+  longitude: Долгота
+  longitude_placeholder: например. 144,7851531
+  use_geocoder: Автоматически рассчитывать широту и долготу по адресу?
   postcode: Почтовый индекс
   postcode_placeholder: напр. 240910
   suburb: Город
   state: Область
   country: Страна
-  unauthorized: На разрешено
+  unauthorized: Неавторизованный
   terms_of_service: "Условия Сервиса"
   on_demand: По запросу
   none: Ничего
@@ -1563,6 +1571,7 @@ ru:
   email_order_summary_includes_tax: "(включает налог):"
   email_payment_paid: ОПЛАЧЕН
   email_payment_not_paid: НЕ ОПЛАЧЕН
+  email_payment_description: Описание Платежа при Оформлении Заказа
   email_payment_summary: Статус оплаты
   email_payment_method: "Тип оплаты:"
   email_so_placement_intro_html: "У Вас есть новый заказ с <strong>%{distributor}</strong>"
@@ -1888,7 +1897,7 @@ ru:
       details:
         title: "Подробности"
         headline: "Начнем"
-        enterprise: "Ура! Сначала нужно немного узнать о вашем предприятии:"
+        enterprise: "Отлично! Для начала нам нужно немного узнать о вашем предприятии:"
         producer: "Ура! Для начала нам нужно немного узнать о вашей ферме:"
         enterprise_name_field: "Название Предприятия:"
         producer_name_field: "Название Фермы:"
@@ -1908,6 +1917,11 @@ ru:
         state_field_error: "Область обязательна"
         country_field: "Страна:"
         country_field_error: "Пожалуйста выберите страну"
+        map_location: "Расположение на карте"
+        locate_address: "Найдите адрес на карте"
+        drag_pin: "Если неточно, перетащите булавку в нужное место."
+        confirm_address: "Подтверждаю, что указанное положение предприятия на карте правильное."
+        drag_map_marker: "Поскольку многие производители работают в сельской местности, точность карт постоянно повышается. Помогите нам лучше понять, где вы находитесь, взаимодействуя с картой выше, чтобы переместить булавку, нажмите и удерживая булавку, перетащите в более точное ваше местоположение"
       contact:
         title: "Контакты"
         who_is_managing_enterprise: "Кто ответственный по управлению %{enterprise}?"
@@ -3001,7 +3015,6 @@ ru:
     adjustment: "Корректирование"
     all: "Все"
     associated_adjustment_closed: "Связанная корректировка закрыта"
-    authorization_failure: "Ошибка авторизации"
     back_to_adjustments_list: "Вернуться к корректировкам"
     back_to_users_list: "Вернуться к пользователям"
     back_to_zones_list: "Вернуться в зоны"

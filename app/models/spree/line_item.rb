@@ -226,11 +226,11 @@ module Spree
     end
 
     def update_order
-      return unless changed? || destroyed?
+      return unless saved_changes.present? || destroyed?
 
       # update the order totals, etc.
       order.create_tax_charge!
-      order.update!
+      order.update_order!
     end
 
     def update_inventory_before_destroy

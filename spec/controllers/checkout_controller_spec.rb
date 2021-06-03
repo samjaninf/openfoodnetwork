@@ -118,7 +118,7 @@ describe CheckoutController, type: :controller do
 
         it "does not redirect" do
           get :edit
-          expect(response).to be_success
+          expect(response.status).to eq 200
         end
 
         it "returns a specific flash message when Spree::Core::GatewayError occurs" do
@@ -153,7 +153,7 @@ describe CheckoutController, type: :controller do
         }
 
         before do
-          allow(Stripe).to receive(:api_key) { "sk_test_12345" }
+          Stripe.api_key = "sk_test_12345"
           stub_payment_intent_get_request
           stub_successful_capture_request(order: order)
 
@@ -291,7 +291,7 @@ describe CheckoutController, type: :controller do
       allow(controller).to receive(:current_order).and_return(order)
     end
 
-    it "returns errors and flash if order.update_attributes fails" do
+    it "returns errors and flash if order.update fails" do
       spree_post :update, format: :json, order: {}
       expect(response.status).to eq(400)
       expect(response.body).to eq({ errors: assigns[:order].errors, flash: { error: order.errors.full_messages.to_sentence } }.to_json)

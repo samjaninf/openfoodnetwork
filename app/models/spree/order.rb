@@ -126,38 +126,14 @@ module Spree
         joins('LEFT OUTER JOIN spree_products ON (spree_products.id = spree_variants.product_id)')
     }
 
-    scope :not_state, lambda { |state|
-      where.not(state: state)
-    }
-
     # All the states an order can be in after completing the checkout
     FINALIZED_STATES = %w(complete canceled resumed awaiting_return returned).freeze
 
     scope :finalized, -> { where(state: FINALIZED_STATES) }
-
-    def self.by_number(number)
-      where(number: number)
-    end
-
-    def self.between(start_date, end_date)
-      where(created_at: start_date..end_date)
-    end
-
-    def self.by_customer(customer)
-      joins(:user).where("#{Spree.user_class.table_name}.email" => customer)
-    end
-
-    def self.by_state(state)
-      where(state: state)
-    end
-
-    def self.complete
-      where('completed_at IS NOT NULL')
-    end
-
-    def self.incomplete
-      where(completed_at: nil)
-    end
+    scope :complete, -> { where.not(completed_at: nil) }
+    scope :incomplete, -> { where(completed_at: nil) }
+    scope :by_state, lambda { |state| where(state: state) }
+    scope :not_state, lambda { |state| where.not(state: state) }
 
     # For compatiblity with Calculator::PriceSack
     def amount
@@ -236,7 +212,7 @@ module Spree
       @updater ||= OrderManagement::Order::Updater.new(self)
     end
 
-    def update!
+    def update_order!
       updater.update
     end
 
@@ -756,18 +732,24 @@ module Spree
     def ensure_customer
       return if associate_customer
 
-      customer_name = bill_address.andand.full_name
-      self.customer = Customer.create(enterprise: distributor, email: email_for_customer,
-                                      user: user, name: customer_name,
-                                      bill_address: bill_address.andand.clone,
-                                      ship_address: ship_address.andand.clone)
+      self.customer = Customer.new(
+        enterprise: distributor,
+        email: email_for_customer,
+        user: user,
+        name: bill_address.andand.full_name,
+        bill_address: bill_address.andand.clone,
+        ship_address: ship_address.andand.clone
+      )
+      customer.save
+
+      Bugsnag.notify(customer.errors.full_messages.join(", ")) unless customer.persisted?
     end
 
     def update_adjustment!(adjustment)
       return if adjustment.finalized?
 
-      adjustment.update!(force: true)
-      update!
+      adjustment.update_adjustment!(force: true)
+      update_order!
     end
 
     # object_params sets the payment amount to the order total, but it does this
