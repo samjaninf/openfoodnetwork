@@ -6,11 +6,18 @@ class Enterprise < ApplicationRecord
   SELLS = %w(unspecified none own any).freeze
   ENTERPRISE_SEARCH_RADIUS = 100
 
+  searchable_attributes :sells, :is_primary_producer
+  searchable_associations :properties
+  searchable_scopes :is_primary_producer, :is_distributor, :is_hub, :activated, :visible,
+                    :ready_for_checkout, :not_ready_for_checkout
+
   preference :shopfront_message, :text, default: ""
   preference :shopfront_closed_message, :text, default: ""
   preference :shopfront_taxon_order, :string, default: ""
+  preference :shopfront_producer_order, :string, default: ""
   preference :shopfront_order_cycle_order, :string, default: "orders_close_at"
   preference :show_customer_names_to_suppliers, :boolean, default: false
+  preference :shopfront_product_sorting_method, :string, default: "by_category"
 
   # Allow hubs to restrict visible variants to only those in their inventory
   preference :product_selection_from_inventory_only, :boolean, default: false
@@ -38,7 +45,6 @@ class Enterprise < ApplicationRecord
   has_many :enterprise_roles, dependent: :destroy
   has_many :users, through: :enterprise_roles
   belongs_to :owner, class_name: 'Spree::User',
-                     foreign_key: :owner_id,
                      inverse_of: :owned_enterprises
   has_and_belongs_to_many :payment_methods, join_table: 'distributors_payment_methods',
                                             class_name: 'Spree::PaymentMethod',
@@ -96,6 +102,7 @@ class Enterprise < ApplicationRecord
   validates :owner, presence: true
   validates :permalink, uniqueness: true, presence: true
   validate :shopfront_taxons
+  validate :shopfront_producers
   validate :enforce_ownership_limit, if: lambda { owner_id_changed? && !owner_id.nil? }
 
   before_validation :initialize_permalink, if: lambda { permalink.nil? }
@@ -121,7 +128,7 @@ class Enterprise < ApplicationRecord
   scope :not_ready_for_checkout, lambda {
     # When ready_for_checkout is empty, return all rows when there are no enterprises ready for
     # checkout.
-    ready_enterprises = Enterprise.ready_for_checkout.
+    ready_enterprises = Enterprise.default_scoped.ready_for_checkout.
       except(:select).
       select('DISTINCT enterprises.id')
 
@@ -456,6 +463,12 @@ class Enterprise < ApplicationRecord
   def shopfront_taxons
     unless preferred_shopfront_taxon_order =~ /\A((\d+,)*\d+)?\z/
       errors.add(:shopfront_category_ordering, "must contain a list of taxons.")
+    end
+  end
+
+  def shopfront_producers
+    unless preferred_shopfront_producer_order =~ /\A((\d+,)*\d+)?\z/
+      errors.add(:shopfront_category_ordering, "must contain a list of producers.")
     end
   end
 

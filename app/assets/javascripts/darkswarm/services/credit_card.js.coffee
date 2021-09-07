@@ -1,4 +1,4 @@
-Darkswarm.factory 'CreditCard', ($injector, $rootScope, CreditCards, StripeElements, Navigation, $http, Messages)->
+angular.module('Darkswarm').factory 'CreditCard', ($injector, $rootScope, CreditCards, StripeElements, Navigation, $http, Messages)->
   new class CreditCard
     visible: false
     errors: {}
@@ -11,16 +11,16 @@ Darkswarm.factory 'CreditCard', ($injector, $rootScope, CreditCards, StripeEleme
     submit: =>
       params = @process_params()
       $http.put('/credit_cards/new_from_token', params )
-        .success (data, status) =>
+        .then (response) =>
           Messages.clear()
           @reset()
-          CreditCards.add(data)
-        .error (response, status) =>
-          if response.path
-            Navigation.go response.path
+          CreditCards.add(response.data)
+        .catch (response) =>
+          if response.data.path
+            Navigation.go response.data.path
           else
-            @errors = response.errors
-            Messages.flash(response.flash)
+            @errors = response.data.errors
+            Messages.flash(response.data.flash)
 
     setFullName: ->
       @secrets.name = "#{@secrets.first_name} #{@secrets.last_name}"

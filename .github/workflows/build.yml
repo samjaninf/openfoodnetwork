@@ -9,6 +9,8 @@ env:
   DISABLE_KNAPSACK: true
   TIMEZONE: UTC
   COVERAGE: true
+  RSPEC_RETRY_RETRY_COUNT: 3
+  RAILS_ENV: test
 
 jobs:
   test-controllers-and-serializers:
@@ -272,13 +274,19 @@ jobs:
       - name: Run JS tests
         run: RAILS_ENV=test bundle exec rake karma:run
 
+      - name: Run jest tests
+        run: yarn jest
+
       # Migration tests need to be run in a separate task.
       # See: https://github.com/openfoodfoundation/openfoodnetwork/pull/6924#issuecomment-813056525
       - name: Run migration tests
         run: bundle exec rspec --pattern "spec/{migrations}/**/*_spec.rb"
 
+      - name: Run system tests
+        run: bundle exec rspec --profile -- spec/system
+
       - name: Run all other tests
-        run: bundle exec rake ofn:specs:run:excluding_folders["models,controllers,serializers,features,lib,migrations"]
+        run: bundle exec rake ofn:specs:run:excluding_folders["models,controllers,serializers,features,lib,migrations,system"]
 
   test-the-rest:
     runs-on: ubuntu-18.04

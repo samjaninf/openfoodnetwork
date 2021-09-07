@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_support/concern'
 
 # This module is an adapter for OFN to work with Spree 2 code.
@@ -10,6 +12,10 @@ require 'active_support/concern'
 # Methods in this module may become deprecated.
 module OrderShipment
   extend ActiveSupport::Concern
+
+  included do
+    attr_accessor :manual_shipping_selection
+  end
 
   def shipment
     shipments.first

@@ -2,15 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_14_171109) do
+ActiveRecord::Schema.define(version: 2021_06_17_203927) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -388,9 +388,11 @@ ActiveRecord::Schema.define(version: 2021_04_14_171109) do
     t.string "state", limit: 255
     t.integer "order_id"
     t.boolean "included", default: false
+    t.integer "tax_category_id"
     t.index ["adjustable_type", "adjustable_id"], name: "index_spree_adjustments_on_adjustable_type_and_adjustable_id"
     t.index ["order_id"], name: "index_spree_adjustments_on_order_id"
     t.index ["originator_type", "originator_id"], name: "index_spree_adjustments_on_originator_type_and_originator_id"
+    t.index ["tax_category_id"], name: "index_spree_adjustments_on_tax_category_id"
   end
 
   create_table "spree_assets", force: :cascade do |t|
@@ -1143,6 +1145,15 @@ ActiveRecord::Schema.define(version: 2021_04_14_171109) do
     t.string "name", limit: 255
     t.integer "taggings_count", default: 0
     t.index ["name"], name: "index_tags_on_name", unique: true
+  end
+
+  create_table "terms_of_service_files", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "attachment_file_name"
+    t.string "attachment_content_type"
+    t.integer "attachment_file_size"
+    t.datetime "attachment_updated_at"
   end
 
   create_table "variant_overrides", force: :cascade do |t|

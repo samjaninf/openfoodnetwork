@@ -6,8 +6,7 @@
 //
 
 // jquery and angular
-//= require jquery
-//= require jquery-migrate-min
+//= require jquery2
 //= require jquery_ujs
 //= require jquery.ui.all
 //= require jquery.powertip
@@ -109,6 +108,9 @@
 
 // foundation
 //= require ../shared/mm-foundation-tpls-0.9.0-20180826174721.min.js
+
+// LocalStorage
+//= require ../shared/angular-local-storage.js
 
 // requires the rest of the JS code in this folder
 //= require_tree .

@@ -148,7 +148,7 @@ feature '
 
     expect(page).to_not have_content "Loading..."
     within("tr.stock-item", text: order.products.first.name) do
-      expect(page).to have_text("#{max_quantity} x")
+      expect(page).to have_text("#{max_quantity}")
     end
     expect(order.reload.line_items.first.quantity).to eq(max_quantity)
   end
@@ -169,15 +169,17 @@ feature '
     end
 
     within("tr.stock-item", text: order.products.first.name) do
-      expect(page).to have_text("1000 x")
+      expect(page).to have_text("1000")
     end
     expect(order.reload.line_items.first.quantity).to eq(1000)
   end
 
   # Regression test for #7337
   context "creating a new order with a variant override" do
-    let!(:override) { create(:variant_override, hub: distributor, variant: product.variants.first,
-                                                      count_on_hand: 100) }
+    let!(:override) {
+      create(:variant_override, hub: distributor, variant: product.variants.first,
+                                count_on_hand: 100)
+    }
 
     before do
       product.variants.first.update(on_demand: false, on_hand: 0)
@@ -200,7 +202,7 @@ feature '
       expect(page).to have_selector("table.stock-contents")
 
       within("tr.stock-item") do
-        expect(page).to have_text("50 x")
+        expect(page).to have_text("50")
       end
 
       order = Spree::Order.last
@@ -308,9 +310,9 @@ feature '
       let!(:order) do
         create(:order_with_taxes, distributor: distributor1, ship_address: create(:address),
                                   product_price: 110, tax_rate_amount: 0.1,
-                                  tax_rate_name: "Tax 1").tap do |record|
-                                    Spree::TaxRate.adjust(record)
-                                    record.update_shipping_fees!
+                                  tax_rate_name: "Tax 1").tap do |order|
+                                    order.create_tax_charge!
+                                    order.update_shipping_fees!
                                   end
       end
 
@@ -358,7 +360,8 @@ feature '
                                     href: spree.resend_admin_order_path(order)
           expect(page).to have_link "Send Invoice", href: spree.invoice_admin_order_path(order)
           expect(page).to have_link "Print Invoice", href: spree.print_admin_order_path(order)
-          expect(page).to have_link "Cancel Order", href: spree.fire_admin_order_path(order, e: 'cancel')
+          expect(page).to have_link "Cancel Order",
+                                    href: spree.fire_admin_order_path(order, e: 'cancel')
         end
       end
 
@@ -406,15 +409,14 @@ feature '
         expect(page).to have_content test_tracking_number
       end
 
-      scenario "editing shipping fees" do
+      scenario "viewing shipping fees" do
+        shipping_fee = order.shipment_adjustments.first
+
         click_link "Adjustments"
-        shipping_adjustment_tr_selector = "tr#spree_adjustment_#{order.shipment_adjustments.first.id}"
-        page.find("#{shipping_adjustment_tr_selector} td.actions a.icon-edit").click
 
-        fill_in "Amount", with: "5"
-        click_button "Continue"
-
-        expect(page.find("#{shipping_adjustment_tr_selector} td.amount")).to have_content "5.00"
+        expect(page).to have_selector "tr#spree_adjustment_#{shipping_fee.id}"
+        expect(page).to have_selector 'td.amount', text: shipping_fee.amount.to_s
+        expect(page).to have_selector 'td.tax', text: shipping_fee.included_tax_total.to_s
       end
 
       context "when an included variant has been deleted" do

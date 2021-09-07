@@ -8,6 +8,10 @@ module Spree
     include VariantUnits::VariantAndLineItemNaming
     include LineItemStockChanges
 
+    searchable_attributes :price, :quantity, :order_id, :variant_id, :tax_category_id
+    searchable_associations :order, :variant, :tax_category, :option_values
+    searchable_scopes :with_tax, :without_tax
+
     belongs_to :order, class_name: "Spree::Order", inverse_of: :line_items
     belongs_to :variant, -> { with_deleted }, class_name: "Spree::Variant"
     belongs_to :tax_category, class_name: "Spree::TaxCategory"
@@ -41,8 +45,7 @@ module Spree
 
     delegate :product, :unit_description, :display_name, to: :variant
 
-    attr_accessor :skip_stock_check # Allows manual skipping of Stock::AvailabilityValidator
-    attr_accessor :target_shipment
+    attr_accessor :skip_stock_check, :target_shipment # Allows manual skipping of Stock::AvailabilityValidator
 
     # -- Scopes
     scope :managed_by, lambda { |user|
@@ -65,10 +68,10 @@ module Spree
     # Find line items that are from order sorted by variant name and unit value
     scope :sorted_by_name_and_unit_value, -> {
       joins(variant: :product).
-        reorder("
+        reorder(Arel.sql("
           lower(spree_products.name) asc,
             lower(spree_variants.display_name) asc,
-            spree_variants.unit_value asc")
+            spree_variants.unit_value asc"))
     }
 
     scope :from_order_cycle, lambda { |order_cycle|
@@ -230,7 +233,6 @@ module Spree
 
       # update the order totals, etc.
       order.create_tax_charge!
-      order.update_order!
     end
 
     def update_inventory_before_destroy

@@ -2,7 +2,7 @@
 
 module Spree
   class ShippingMethod < ApplicationRecord
-    include Spree::Core::CalculatedAdjustments
+    include CalculatedAdjustments
     DISPLAY = [:both, :front_end, :back_end].freeze
 
     acts_as_paranoid
@@ -20,8 +20,7 @@ module Spree
                             foreign_key: 'distributor_id'
 
     has_and_belongs_to_many :zones, join_table: 'spree_shipping_methods_zones',
-                                    class_name: 'Spree::Zone',
-                                    foreign_key: 'shipping_method_id'
+                                    class_name: 'Spree::Zone'
 
     belongs_to :tax_category, class_name: 'Spree::TaxCategory'
 
@@ -115,7 +114,7 @@ module Spree
     def at_least_one_shipping_category
       return unless shipping_categories.empty?
 
-      errors[:base] << "You need to select at least one shipping category"
+      errors.add(:base, "You need to select at least one shipping category")
     end
 
     def touch_distributors

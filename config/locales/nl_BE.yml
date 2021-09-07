@@ -2,6 +2,8 @@ nl_BE:
   language_name: "Nederlands"
   activerecord:
     attributes:
+      spree/user:
+        password: "Wachtwoord"
       enterprise_fee:
         fee_type: Soort commissie
       spree/order:
@@ -755,6 +757,8 @@ nl_BE:
           shopfront_category_ordering: "Etalage Categorie Bestelling"
           open_date: "Open Datum"
           close_date: "Sluiten Datum"
+          shopfront_sort_by_category_placeholder: "Categorie"
+          shopfront_sort_by_producer_placeholder: "Producent"
         social:
           twitter_placeholder: "bv. @de_prof"
           instagram_placeholder: "bv. de_prof"
@@ -875,7 +879,6 @@ nl_BE:
         cancel: "Annuleren"
         back_to_list: "Terug naar lijst"
       edit:
-        advanced_settings: "Geavanceerde Instellingen"
         save: "Save"
         save_and_next: "Opslaan en volgende"
         next: "Volgende"
@@ -928,6 +931,8 @@ nl_BE:
         preferred_product_selection_from_coordinator_inventory_only_here: 'Enkel Coördinator Inventaris '
         preferred_product_selection_from_coordinator_inventory_only_all: Alle Beschikbare Producten
         save_reload: Bewaar en Herlaad Webpagina
+      order_cycle_top_buttons:
+        advanced_settings: "Geavanceerde Instellingen"
       coordinator_fees:
         add: Voeg Coördinatievergoeding toe
       filters:
@@ -1198,7 +1203,6 @@ nl_BE:
       footer_join_body: "Creëer een lijst, winkel of groep directory in het Open Food Network."
       footer_join_cta: "Vertel mij meer !"
       footer_legal_call: "Lees onze"
-      footer_legal_tos: "Voorwaarden"
       footer_legal_visit: "Vind ons op"
       footer_legal_text_html: "Open Food Network is een vrij en opensource-software-platform. Onze inhoud valt onder de %{content_license} en onze code onder %{code_license} licentie."
       footer_data_text_with_privacy_policy_html: "We dragen op een goede manier zorg voor je gegevens. Neem een kijkje naar onze %{privacy_policy} en onze %{cookies_policy}."
@@ -1311,8 +1315,6 @@ nl_BE:
   label_producers: "Producenten"
   label_groups: "Groepen"
   label_about: "Over"
-  label_connect: "Verbinden"
-  label_learn: "Ontdek"
   label_blog: "Blog"
   label_support: "Ondersteuning"
   label_shopping: "Winkelen"
@@ -1400,10 +1402,6 @@ nl_BE:
   brandstory_part4: "U bent\n● Een producent: registreer en presenteer uw producten om ze in uw regio te promoten. U geeft het platform energie en maakt contact met nieuwe klanten.\n● Een distributeur: registreer en presenteer uw project om het bekend te maken en nieuwe klanten te overtuigen.\n● Een consument: vind producten bij u in de buurt en ontdek hun verhalen."
   brandstory_part5_strong: "Wij noemen het Open Food Network."
   brandstory_part6: "We kunnen allemaal meewerken aan de opbouw van een eerlijker voedselsysteem dat de mensheid respecteert en de planeet in stand houdt."
-  learn_body: "Verken rolmodellen, verhalen en bronnen om je te ondersteunen in de ontwikkeling van een eerlijke voedselzaak of organisatie. Vind opleidingen, evenementen, en andere mogelijkheden om te leren van mensen zoals jij."
-  learn_cta: "Vind Inspiratie"
-  connect_body: "Zoek in onze volledige lijst van producenten, hubs en groepen om een eerlijke voedselhandelaar te vinden bij jou in de buurt. Maak je zaak or organisatie deel van het OFN zodat klanten je kunnen vinden. Maak deel van de gemeenschap om advies te krijgen en samen moeilijkheden te overkomen."
-  connect_cta: "Ontdek Nu"
   system_headline: "Winkelen - dit is hoe het werkt."
   system_step1: "1. Zoek"
   system_step1_text: "Zoek in onze uitgebreide, onafhankelijke winkels voor lokale seizoenswaren. Zoek op basis van buurt-en-voedselcategorie, of indien je levering of ophaling verkiest. "
@@ -1442,6 +1440,37 @@ nl_BE:
   checkout_total_price: Totaal
   checkout_back_to_cart: "Terug naar je Winkelwagentje"
   cost_currency: "Kosten in deviezen "
+  split_checkout:
+    step1:
+      your_details:
+        title: Jouw gegevens
+        first_name:
+          label: Voornaam
+        last_name:
+          label: Familienaam
+        email:
+          label: E-mail
+        phone:
+          label: Telefoonnummer
+      billing_address:
+        title: 'Facturatie-adres:'
+        city:
+          label: Stad
+        state_id:
+          label: Staat
+        zipcode:
+          label: Postcode
+        country_id:
+          label: Land
+      delivery_address:
+        title: Leveringsadres
+    step3:
+      your_details:
+        title: Jouw gegevens
+      billing_address:
+        title: 'Facturatie-adres:'
+    errors:
+      invalid_email: "Vul een geldig e-mailadres in"
   order_paid: BETAALD
   order_not_paid: NIET BETAALD
   order_total: Totale bestelling
@@ -2096,7 +2125,6 @@ nl_BE:
   new_order: "Nieuwe bestelling"
   enterprise_tos_link: "Link Voorwaarden Onderneming"
   enterprise_tos_message: "We willen met mensen werken die onze normen en waarden en delen. Daarom vragen wij aan de nieuwe bedrijven akkoord te gaan met onze  "
-  enterprise_tos_link_text: "Dienstvoorwaarden"
   enterprise_tos_agree: "Ik ga akkoord met bovenstaande Voorwaarden"
   tax_settings: "Belastings Instellingen"
   products_require_tax_category: "product vereist een belastingscategorie"
@@ -2752,6 +2780,7 @@ nl_BE:
   shipment_inc_vat: "Verzending BTW inbegrepen"
   shipping_tax_rate: "Toegepaste BTW op verzending "
   category: "Categorie"
+  import_date: "Importdatum"
   delivery: "Levering"
   temperature_controlled: "Temperatuurgestuurd"
   new_product: "Nieuw product"
@@ -2839,7 +2868,6 @@ nl_BE:
     default_meta_description: "Standaard Meta Beschrijving"
     default_meta_keywords: "Standaard Meta Sleutelwoorden "
     security_settings: "Beveiligheidsinstellingen"
-    allow_ssl_in_development_and_test: "SSL toelaten bij ontwikkeling en testmode"
     allow_ssl_in_production: "SSl toelaten wanneer  in productiemode wordt gebruikt "
     allow_ssl_in_staging: "SSL toelaten wanneer in mode zichtbaar wordt gebruikt"
     currency_decimal_mark: "Valuta 1 decimaal bij"
@@ -3373,7 +3401,6 @@ nl_BE:
     shipment_mailer:
       shipped_email:
         dear_customer: "Geachte klant,"
-        instructions: "Uw bestelling is verzonden"
         shipment_summary: "Samenvatting van de zending"
         subject: "Kennisgeving van verzending"
         thanks: "Bedankt voor uw bedrijf."

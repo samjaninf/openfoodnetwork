@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class EnterpriseFee < ApplicationRecord
-  include Spree::Core::CalculatedAdjustments
+  include CalculatedAdjustments
 
   acts_as_paranoid
 
   belongs_to :enterprise
-  belongs_to :tax_category, class_name: 'Spree::TaxCategory', foreign_key: 'tax_category_id'
+  belongs_to :tax_category, class_name: 'Spree::TaxCategory'
 
   has_many :coordinator_fees, dependent: :destroy
   has_many :order_cycles, through: :coordinator_fees
@@ -19,6 +21,7 @@ class EnterpriseFee < ApplicationRecord
 
   validates :fee_type, inclusion: { in: FEE_TYPES }
   validates :name, presence: true
+  validates :enterprise_id, presence: true
 
   before_save :ensure_valid_tax_category_settings
 

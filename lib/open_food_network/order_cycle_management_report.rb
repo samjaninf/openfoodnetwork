@@ -126,7 +126,7 @@ module OpenFoodNetwork
 
     def filter_to_shipping_method(orders)
       if params[:shipping_method_in].present?
-        orders.joins(shipments: :shipping_rates).where(spree_shipping_rates: { shipping_method_id: params[:shipping_method_in] })
+        orders.joins(shipments: :shipping_rates).where(spree_shipping_rates: { selected: true, shipping_method_id: params[:shipping_method_in] })
       else
         orders
       end
@@ -141,7 +141,9 @@ module OpenFoodNetwork
     end
 
     def has_temperature_controlled_items?(order)
-      order.line_items.any? { |line_item| line_item.product.shipping_category.andand.temperature_controlled }
+      order.line_items.any? { |line_item|
+        line_item.product.shipping_category.andand.temperature_controlled
+      }
     end
 
     def is_payment_methods?

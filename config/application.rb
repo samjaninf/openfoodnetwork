@@ -21,9 +21,9 @@ require "rails"
 end
 
 require_relative "../lib/open_food_network/i18n_config"
-
 require_relative '../lib/spree/core/environment'
 require_relative '../lib/spree/core/mail_interceptor'
+require_relative "../lib/session_cookie_upgrader"
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line
@@ -34,13 +34,14 @@ end
 
 module Openfoodnetwork
   class Application < Rails::Application
-
-    config.to_prepare do
-      # Load application's model / class decorators
-      Dir.glob(File.join(File.dirname(__FILE__), "../app/**/*_decorator*.rb")) do |c|
-        Rails.configuration.cache_classes ? require(c) : load(c)
-      end
-    end
+    config.middleware.insert_before(
+      ActionDispatch::Cookies,
+      SessionCookieUpgrader, {
+        old_key: "_session_id",
+        new_key: "_ofn_session_id",
+        domain: ".#{ENV['SITE_URL'].gsub(/^(www\.)|^(app\.)|^(staging\.)|^(stg\.)/, '')}"
+      }
+    ) if Rails.env.staging? || Rails.env.production?
 
     config.after_initialize do
       # We need this here because the test env file loads before the Spree engine is loaded
@@ -97,7 +98,8 @@ module Openfoodnetwork
     end
 
     # Register Spree calculators
-    initializer 'spree.register.calculators' do |app|
+    Rails.application.reloader.to_prepare do
+      app = Openfoodnetwork::Application
       app.config.spree.calculators.shipping_methods = [
         Calculator::FlatPercentItemTotal,
         Calculator::FlatRate,
@@ -108,7 +110,7 @@ module Openfoodnetwork
       ]
 
       app.config.spree.calculators.add_class('enterprise_fees')
-      config.spree.calculators.enterprise_fees = [
+      app.config.spree.calculators.enterprise_fees = [
         Calculator::FlatPercentPerItem,
         Calculator::FlatRate,
         Calculator::FlexiRate,
@@ -118,7 +120,7 @@ module Openfoodnetwork
       ]
 
       app.config.spree.calculators.add_class('payment_methods')
-      config.spree.calculators.payment_methods = [
+      app.config.spree.calculators.payment_methods = [
         Calculator::FlatPercentItemTotal,
         Calculator::FlatRate,
         Calculator::FlexiRate,
@@ -127,7 +129,7 @@ module Openfoodnetwork
       ]
 
       app.config.spree.calculators.add_class('tax_rates')
-      config.spree.calculators.tax_rates = [
+      app.config.spree.calculators.tax_rates = [
         Calculator::DefaultTax
       ]
     end
@@ -213,5 +215,7 @@ module Openfoodnetwork
     config.action_controller.include_all_helpers = false
 
     config.generators.template_engine = :haml
+
+    config.autoloader = :zeitwerk
   end
 end

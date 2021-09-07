@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LineItemsController < BaseController
   respond_to :json
 
@@ -39,12 +41,8 @@ class LineItemsController < BaseController
   def destroy_with_lock(item)
     order = item.order
     order.with_lock do
-      item.destroy
-      order.update_shipping_fees!
+      order.contents.remove(item.variant)
       order.update_payment_fees!
-      order.update_order_fees!
-      order.update_order!
-      order.create_tax_charge!
     end
   end
 end

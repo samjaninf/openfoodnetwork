@@ -1,15 +1,21 @@
+# frozen_string_literal: true
+
 class Subscription < ApplicationRecord
   ALLOWED_PAYMENT_METHOD_TYPES = ["Spree::PaymentMethod::Check",
                                   "Spree::Gateway::StripeConnect",
                                   "Spree::Gateway::StripeSCA"].freeze
+
+  searchable_attributes :shop_id, :canceled_at, :paused_at
+  searchable_associations :shop
+  searchable_scopes :active, :not_ended, :not_paused, :not_canceled
 
   belongs_to :shop, class_name: 'Enterprise'
   belongs_to :customer
   belongs_to :schedule
   belongs_to :shipping_method, class_name: 'Spree::ShippingMethod'
   belongs_to :payment_method, class_name: 'Spree::PaymentMethod'
-  belongs_to :bill_address, foreign_key: :bill_address_id, class_name: "Spree::Address"
-  belongs_to :ship_address, foreign_key: :ship_address_id, class_name: "Spree::Address"
+  belongs_to :bill_address, class_name: "Spree::Address"
+  belongs_to :ship_address, class_name: "Spree::Address"
   has_many :subscription_line_items, inverse_of: :subscription
   has_many :order_cycles, through: :schedule
   has_many :proxy_orders
@@ -21,10 +27,14 @@ class Subscription < ApplicationRecord
   accepts_nested_attributes_for :subscription_line_items, allow_destroy: true
   accepts_nested_attributes_for :bill_address, :ship_address
 
-  scope :not_ended, -> { where('subscriptions.ends_at > (?) OR subscriptions.ends_at IS NULL', Time.zone.now) }
+  scope :not_ended, -> {
+                      where('subscriptions.ends_at > (?) OR subscriptions.ends_at IS NULL', Time.zone.now)
+                    }
   scope :not_canceled, -> { where('subscriptions.canceled_at IS NULL') }
   scope :not_paused, -> { where('subscriptions.paused_at IS NULL') }
-  scope :active, -> { not_canceled.not_ended.not_paused.where('subscriptions.begins_at <= (?)', Time.zone.now) }
+  scope :active, -> {
+                   not_canceled.not_ended.not_paused.where('subscriptions.begins_at <= (?)', Time.zone.now)
+                 }
 
   def closed_proxy_orders
     proxy_orders.closed

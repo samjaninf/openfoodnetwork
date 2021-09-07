@@ -8,6 +8,9 @@ angular.module("ofn.admin", [
   "admin.dropdown",
   "admin.products",
   "admin.taxons",
-  "infinite-scroll"
-]).config ($httpProvider) ->
+  "infinite-scroll",
+  "admin.orders"
+]).config ($httpProvider, $locationProvider, $qProvider) ->
   $httpProvider.defaults.headers.common["Accept"] = "application/json, text/javascript, */*"
+  $locationProvider.hashPrefix('')
+  $qProvider.errorOnUnhandledRejections(false)

@@ -2,6 +2,9 @@ en_CA:
   language_name: "English"
   activerecord:
     attributes:
+      spree/user:
+        password: "Password"
+        password_confirmation: "Password confirmation"
       enterprise_fee:
         fee_type: Fee Type
       spree/order:
@@ -300,6 +303,7 @@ en_CA:
   no_pending_payments: "No pending payments"
   invalid_payment_state: "Invalid payment state %{state}"
   filter_results: Filter Results
+  clear_filters: Clear filters
   quantity: Quantity
   pick_up: Pick up
   copy: Copy
@@ -317,6 +321,8 @@ en_CA:
   height: "Height"
   width: "Width"
   depth: "Depth"
+  payment_could_not_process: "The payment could not be processed"
+  payment_could_not_complete: "The payment could not be completed"
   actions:
     create_and_add_another: "Create and Add Another"
     create: "Create"
@@ -398,6 +404,17 @@ en_CA:
       embedded_shopfront_settings: "Embedded Shopfront Settings"
       enable_embedded_shopfronts: "Enable Embedded Shopfronts"
       embedded_shopfronts_whitelist: "External Domains Whitelist"
+    terms_of_service_files:
+      create:
+        select_file: "Please select a file first."
+      show:
+        title: "Terms of Service files"
+        no_files: "No terms of services have been uploaded yet."
+        using_default_terms_html: "This site is currently linking to your old %{tos_link}."
+        current_terms_html: "View the current %{tos_link}.. Upload time: %{datetime}."
+        terms_of_service: "Terms of Service"
+        delete: "Delete file"
+        confirm_delete: "Are you sure you want to delete the current Terms of Service file?"
     number_localization:
       number_localization_settings: "Number Localization Settings"
       enable_localized_number: "Use the international thousand/decimal separator logic"
@@ -805,6 +822,11 @@ en_CA:
           shopfront_category_ordering_note: "(top to bottom)"
           open_date: "Open Date"
           close_date: "Close Date"
+          display_ordering_in_shopfront: "Display ordering in shopfront:"
+          shopfront_sort_by_category: "By  category"
+          shopfront_sort_by_producer: "By producer"
+          shopfront_sort_by_category_placeholder: "Category"
+          shopfront_sort_by_producer_placeholder: "Producer"
         social:
           twitter_placeholder: "eg. @the_prof"
           instagram_placeholder: "eg. www.instagram.com/YourAccountHere"
@@ -925,7 +947,6 @@ en_CA:
         cancel: "Cancel"
         back_to_list: "Back to List"
       edit:
-        advanced_settings: "Advanced Settings"
         save: "Save"
         save_and_next: "Save and Next"
         next: "Next"
@@ -978,6 +999,8 @@ en_CA:
         preferred_product_selection_from_coordinator_inventory_only_here: Coordinator's Inventory Only
         preferred_product_selection_from_coordinator_inventory_only_all: All Available Products
         save_reload: Save and Reload Page
+      order_cycle_top_buttons:
+        advanced_settings: "Advanced Settings"
       coordinator_fees:
         add: Add coordinator fee
       filters:
@@ -1001,6 +1024,7 @@ en_CA:
         schedule: Schedule
         schedules: Schedules
         new_schedule: New Schedule
+        new_schedule_tooltip: The frequency with which a standing order is placed
       name_and_timing_form:
         name: Name
         orders_open: Orders open at
@@ -1218,12 +1242,11 @@ en_CA:
       link_text: "Terms and Conditions"
     platform_terms_of_service:
       message_html: "I agree to the platform %{tos_link}"
-      terms_of_service: "Terms of Service"
     all_terms_and_conditions:
       message_html: "I agree to the seller's %{terms_and_conditions_link} and the platform %{tos_link}"
       terms_and_conditions: "Terms and Conditions"
-      terms_of_service: "Terms of Service"
     failed: "The checkout failed. Please let us know so that we can process your order."
+    payment_cancelled_due_to_stock: "Payment cancelled: the checkout could not be completed due to stock issues."
   shops:
     hubs:
       show_closed_shops: "Show closed shops"
@@ -1262,7 +1285,6 @@ en_CA:
       footer_join_body: "Create a listing, shop or group directory on the Open Food Network."
       footer_join_cta: "Tell me more!"
       footer_legal_call: "Read our"
-      footer_legal_tos: "Terms and conditions"
       footer_legal_visit: "Find us on"
       footer_legal_text_html: "Open Food Network is a free and open source software platform. Our content is licensed with %{content_license} and our code with %{code_license}."
       footer_data_text_with_privacy_policy_html: "We take good care of your data. See our %{privacy_policy} and %{cookies_policy}"
@@ -1381,8 +1403,6 @@ en_CA:
   label_producers: "Producers"
   label_groups: "Markets"
   label_about: "About"
-  label_connect: "Connect"
-  label_learn: "Learn"
   label_blog: "Blog"
   label_support: "Support"
   label_shopping: "Shopping"
@@ -1470,10 +1490,6 @@ en_CA:
   brandstory_part4: "It works everywhere. It changes everything."
   brandstory_part5_strong: "We call it Open Food Network."
   brandstory_part6: "We all love food. Now we can love our food system too."
-  learn_body: "Explore models, stories and resources to support you to develop your local business or organisation.  Find training, events and other opportunities to learn from peers."
-  learn_cta: "Get Inspired"
-  connect_body: "Search our full directories of producers, hubs and markets to find fair and sustainably produced products near you.  List your business or organisation on the OFN so buyers can find you.  Join the community to get advice and solve problems together."
-  connect_cta: "Go Exploring"
   system_headline: "Shopping - here's how it works."
   system_step1: "1. Search"
   system_step1_text: "Search our diverse, independent shops for seasonal, sustainably produced products locally. Search by neighbourhood and food category, or whether you prefer delivery or pickup."
@@ -1512,6 +1528,67 @@ en_CA:
   checkout_total_price: Total
   checkout_back_to_cart: "Back to Cart"
   cost_currency: "Cost Currency"
+  split_checkout:
+    your_details: 1 - Your details
+    payment_method: 2 - Payment Method
+    order_summary: 3 - Order Summary
+    step1:
+      your_details:
+        title: Your details
+        first_name:
+          label: First Name
+          placeholder: e.g. Jane
+        last_name:
+          label: Last Name
+          placeholder: e.g. Doe
+        email:
+          label: Email
+          placeholder: e.g. Janedoe@email.com
+        phone:
+          label: Phone number
+          placeholder: e.g. 07987654321
+      billing_address:
+        title: Billing address
+        address1:
+          label: Address (Street + House Number)
+          placeholder: e.g. Flat 1 Elm Apartments
+        address2:
+          label: Additional address info (optional)
+          placeholder: e.g. Cavalier avenue
+        city:
+          label: City
+          placeholder: e.g. London
+        state_id:
+          label: State
+        zipcode:
+          label: Postal Code
+          placeholder: e.g. N0B 2L0
+        country_id:
+          label: Country
+      delivery_address:
+        title: Delivery address
+      submit: Next - Payment Method
+      cancel: Back to edit basket
+    step2:
+      payment_method:
+        title: Payment Method
+      explaination: You can review and confirm your order in the next step which includes the final costs
+      submit: Next - Order Summary
+      cancel: Back to your details
+    step3:
+      your_details:
+        title: Your details
+      billing_address:
+        title: Billing address
+      payment_method:
+        title: Payment Method
+      terms_and_conditions:
+        message_html: "I agree to the seller's %{terms_and_conditions_link}."
+        link_text: "Terms and Conditions"
+    errors:
+      required: Field cannot be blank
+      invalid_number: "Please enter a valid phone number"
+      invalid_email: "Please enter a valid email address"
   order_paid: PAID
   order_not_paid: NOT PAID
   order_total: Total order
@@ -1566,6 +1643,7 @@ en_CA:
   email_order_summary_includes_tax: "(includes tax):"
   email_payment_paid: PAID
   email_payment_not_paid: NOT PAID
+  email_payment_description: Payment Description at Checkout
   email_payment_summary: Payment summary
   email_payment_method: "Paying via:"
   email_so_placement_intro_html: "You have a new order with <strong>%{distributor}</strong>"
@@ -2018,6 +2096,8 @@ en_CA:
   fundraising_fee: "Fundraising fee"
   price_graph: "Price graph"
   included_tax: "Included tax"
+  tax: "Tax"
+  tax_amount_included: "%{amount} (included)"
   balance: "Balance"
   transaction: "Transaction"
   transaction_date: "Date"
@@ -2096,6 +2176,7 @@ en_CA:
   price_sack: "Price Sack"
   new_order_cycles: "New Order Cycles"
   new_order_cycle: "New Order Cycle"
+  new_order_cycle_tooltip: "Open shop for a certain time period"
   select_a_coordinator_for_your_order_cycle: "Select a coordinator for your order cycle"
   notify_producers: 'Notify producers'
   edit_order_cycle: "Edit Order Cycle"
@@ -2177,7 +2258,6 @@ en_CA:
   new_order: "New Order"
   enterprise_tos_link: "Enterprise Terms of Service link"
   enterprise_tos_message: "We want to work with people that share our aims and values. As such we ask new enterprises to agree to our "
-  enterprise_tos_link_text: "Terms of Service."
   enterprise_tos_agree: "I agree to the above Terms of Service"
   tax_settings: "Tax Settings"
   products_require_tax_category: "products require tax category"
@@ -2652,6 +2732,7 @@ en_CA:
           failed: "failed"
           paid: "paid"
           pending: "pending"
+          requires_authorization: "authorization required"
           processing: "processing"
           void: "void"
           invalid: "invalid"
@@ -2933,6 +3014,7 @@ en_CA:
   shipment_inc_vat: "Shipment including taxes"
   shipping_tax_rate: "Shipping Tax Rate"
   category: "Category"
+  import_date: "Import Date"
   delivery: "Delivery"
   temperature_controlled: "Temperature Controlled"
   new_product: "New Product"
@@ -2987,6 +3069,7 @@ en_CA:
     payment_method_not_supported: "Payment method not supported"
     resend_authorization_email: "Resend authorization email"
     rma_credit: "RMA credit"
+    refund: "Refund"
     server_error: "Server error"
     shipping_method_names:
       UPS Ground: "UPS Ground"
@@ -3066,7 +3149,6 @@ en_CA:
     default_meta_description: "Default Meta Description"
     default_meta_keywords: "Default Meta Keywords"
     security_settings: "Security Settings"
-    allow_ssl_in_development_and_test: "Allow SSL to be used when in development and test modes"
     allow_ssl_in_production: "Allow SSL to be used in production mode"
     allow_ssl_in_staging: "Allow SSL to be used in staging mode"
     currency_decimal_mark: "Currency decimal mark"
@@ -3543,6 +3625,8 @@ en_CA:
           producer_name: "Producer"
           unit: "Unit"
       shared:
+        configuration_menu:
+          terms_of_service: "Terms of Service"
         sortable_header:
           name: "Name"
           number: "Number"
@@ -3605,6 +3689,7 @@ en_CA:
       paid: paid
       pending: pending
       processing: processing
+      requires_authorization: "authorization required"
       void: void
       invalid: invalid
       authorise: authorise
@@ -3652,7 +3737,7 @@ en_CA:
     shipment_mailer:
       shipped_email:
         dear_customer: "Dear Customer, "
-        instructions: "Your order has been shipped or picked up."
+        instructions: "Your order from %{distributor}has been shipped."
         shipment_summary: "Shipment/Pick Up Summary"
         subject: "Shipment/Pick Up Notification"
         thanks: "Thank you for your business."

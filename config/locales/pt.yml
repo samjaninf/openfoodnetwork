@@ -2,6 +2,8 @@ pt:
   language_name: "Português"
   activerecord:
     attributes:
+      spree/user:
+        password: "Palavra-passe"
       enterprise_fee:
         fee_type: Tipo de Taxa
       spree/order:
@@ -759,6 +761,8 @@ pt:
           shopfront_category_ordering: "Ordem das Categorias da Loja"
           open_date: "Dia de Abertura"
           close_date: "Data de fecho"
+          shopfront_sort_by_category_placeholder: "Categoria"
+          shopfront_sort_by_producer_placeholder: "Produtor/a"
         social:
           twitter_placeholder: "ex:  @o_prof"
           instagram_placeholder: "ex. o_agricultor"
@@ -879,7 +883,6 @@ pt:
         cancel: "Cancelar"
         back_to_list: "Voltar à Lista"
       edit:
-        advanced_settings: "Configurações Avançadas"
         save: "Guardar"
         save_and_next: "Guardar e Continuar"
         next: "Seguinte"
@@ -925,6 +928,8 @@ pt:
         preferred_product_selection_from_coordinator_inventory_only_here: Apenas inventário do coordenador
         preferred_product_selection_from_coordinator_inventory_only_all: Todos os Produtos Disponíveis
         save_reload: Guardar e recarregar página
+      order_cycle_top_buttons:
+        advanced_settings: "Configurações Avançadas"
       coordinator_fees:
         add: Adicionar taxa de coordenador
       filters:
@@ -1181,7 +1186,6 @@ pt:
       footer_join_body: "Crie uma lista de ofertas, uma loja ou um grupo de consumo na Open Food Network"
       footer_join_cta: "Quero saber mais!"
       footer_legal_call: "Leia os nossos"
-      footer_legal_tos: "Termos e condições"
       footer_legal_visit: "Encontre-nos no"
       footer_legal_text_html: "A Open Food Network é uma plataforma livre e de código aberto. O nosso conteúdo tem uma licença %{content_license} e o nosso código %{code_license}."
       footer_data_text_with_privacy_policy_html: "Nós tratamos com cuidado dos nosso dados. Veja a nossa %{privacy_policy} e a nossa %{cookies_policy}"
@@ -1287,8 +1291,6 @@ pt:
   label_producers: "Produtores"
   label_groups: "Grupos"
   label_about: "Sobre"
-  label_connect: "Conectar"
-  label_learn: "Aprender"
   label_blog: "Blog"
   label_support: "Assistência"
   label_shopping: "A comprar"
@@ -1375,10 +1377,6 @@ pt:
   brandstory_part4: "Funciona em todo o lado e muda tudo. "
   brandstory_part5_strong: "Chamamos-lhe Open Food Network"
   brandstory_part6: "Todos nós adoramos comer bem. Agora também podemos amar o nosso sistema alimentar. "
-  learn_body: "Explore novos modelos, histórias e recursos para apoiar a sua iniciativa agroalimentar. Encontre acções de formação, eventos e outras oportunidades para aprender com os seus pares. "
-  learn_cta: "Inspire-se"
-  connect_body: "Procure no nosso directório de produtores, centrais de abastecimento e grupos de consumo para encontrar um comércio justo perto de si. Registe o seu negócio ou organização na OFN para que os consumidores possam encontrá-lo. Junte-se à comunidade para trocar experiências e resolver problemas em conjunto."
-  connect_cta: "Explore"
   system_headline: "As Compras — eis como funcionam:"
   system_step1: "1. Procurar"
   system_step1_text: "Escolha produtos sazonais de proximidade entre diversos pontos de venda independentes. Procure por região, tipo de alimento, e participe num grupo de consumo. "
@@ -1417,6 +1415,39 @@ pt:
   checkout_total_price: Total
   checkout_back_to_cart: "Voltar ao Carrinho"
   cost_currency: "Moeda de Custo"
+  split_checkout:
+    step1:
+      your_details:
+        title: Os seus detalhes
+        first_name:
+          label: Primeiro Nome
+        last_name:
+          label: Último Nome
+        email:
+          label: Email
+        phone:
+          label: Número de telefone
+      billing_address:
+        title: Morada de faturação
+        city:
+          label: Cidade
+        state_id:
+          label: Estado
+        zipcode:
+          label: Código postal
+        country_id:
+          label: País
+      delivery_address:
+        title: Morada de entrega
+    step3:
+      your_details:
+        title: Os seus detalhes
+      billing_address:
+        title: Morada de faturação
+      terms_and_conditions:
+        link_text: "Termos e Condições"
+    errors:
+      invalid_email: "Por favor usar um endereço de email válido"
   order_paid: PAGO
   order_not_paid: NÃO PAGO
   order_total: Total da encomenda
@@ -2058,7 +2089,6 @@ pt:
   new_order: "Nova Encomenda"
   enterprise_tos_link: "Ligação para Termos de Serviço da Organização"
   enterprise_tos_message: "Queremos trabalhar com pessoas que partilham os nossos objectivos e valores. Por isso pedimos às organizações novas que concordem com os nossos"
-  enterprise_tos_link_text: "Termos de Serviço."
   enterprise_tos_agree: "Concordo com os Termos e Serviço acima"
   tax_settings: "Configurações de Impostos"
   products_require_tax_category: "produtos necessitam uma categoria de imposto"
@@ -2719,6 +2749,7 @@ pt:
   shipment_inc_vat: "Envio incluíndo IVA"
   shipping_tax_rate: "Taxa de Imposto sobre o Envio"
   category: "Categoria"
+  import_date: "Data de Importação"
   delivery: "Entrega"
   temperature_controlled: "Temperatura Controlada"
   new_product: "Novo Produto"
@@ -2797,7 +2828,6 @@ pt:
     default_meta_description: "Meta Description por defeito"
     default_meta_keywords: "Meta keywords por defeito"
     security_settings: "Configurações de Segurança"
-    allow_ssl_in_development_and_test: "Permitir que SSL seja utilizado quando em desenvolvimento e testes"
     allow_ssl_in_production: "Permitir que SSL seja usado em produção"
     allow_ssl_in_staging: "Permitir que SSL seja usado em pre-produção"
     currency_decimal_mark: "Separador Decimal da Moeda"
@@ -3282,7 +3312,6 @@ pt:
     shipment_mailer:
       shipped_email:
         dear_customer: "Caro Consumidor,"
-        instructions: "A sua encomenda foi enviada"
         shipment_summary: "Sumário de Envio"
         subject: "Notificação de Envio"
         thanks: "Obrigado."

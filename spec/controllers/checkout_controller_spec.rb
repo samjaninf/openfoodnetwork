@@ -49,7 +49,7 @@ describe CheckoutController, type: :controller do
     let(:shipping_method) { distributor.shipping_methods.first }
 
     before do
-      order.line_items << create(:line_item, variant: order_cycle.variants_distributed_by(distributor).first)
+      order.contents.add(order_cycle.variants_distributed_by(distributor).first)
 
       allow(controller).to receive(:current_distributor).and_return(distributor)
       allow(controller).to receive(:current_order_cycle).and_return(order_cycle)
@@ -68,7 +68,7 @@ describe CheckoutController, type: :controller do
           "default_bill_address" => false,
           "default_ship_address" => false,
           "email" => user.email,
-          "payments_attributes" => [{"payment_method_id" => payment_method.id}],
+          "payments_attributes" => [{ "payment_method_id" => payment_method.id }],
           "ship_address_attributes" => order.bill_address.attributes,
           "shipping_method_id" => shipping_method.id
         }
@@ -91,19 +91,54 @@ describe CheckoutController, type: :controller do
       allow(OrderCycleDistributedVariants).to receive(:new).and_return(order_cycle_distributed_variants)
     end
 
-    it "redirects when some items are out of stock" do
-      allow(order).to receive_message_chain(:insufficient_stock_lines, :empty?).and_return false
+    context "running out of stock" do
+      it "redirects when some items are out of stock" do
+        allow(order).to receive_message_chain(:insufficient_stock_lines, :empty?).and_return false
 
-      get :edit
-      expect(response).to redirect_to cart_path
-    end
+        get :edit
+        expect(response).to redirect_to cart_path
+      end
 
-    it "redirects when some items are not available" do
-      allow(order).to receive_message_chain(:insufficient_stock_lines, :empty?).and_return true
-      expect(order_cycle_distributed_variants).to receive(:distributes_order_variants?).with(order).and_return(false)
+      it "redirects when some items are not available" do
+        allow(order).to receive_message_chain(:insufficient_stock_lines, :empty?).and_return true
+        expect(order_cycle_distributed_variants).to receive(:distributes_order_variants?).with(order).and_return(false)
 
-      get :edit
-      expect(response).to redirect_to cart_path
+        get :edit
+        expect(response).to redirect_to cart_path
+      end
+
+      context "after redirecting back from Stripe" do
+        let(:order) { create(:order_with_totals_and_distribution) }
+        let!(:payment) { create(:payment, state: "pending", amount: order.total, order: order) }
+        let!(:transaction_fee) {
+          create(:adjustment, state: "open", amount: 10, order: order, adjustable: payment)
+        }
+
+        before do
+          allow(order).to receive_message_chain(:insufficient_stock_lines, :empty?).and_return(false)
+          allow(order_cycle_distributed_variants).to receive(:distributes_order_variants?).
+            with(order).and_return(true)
+          allow(controller).to receive(:valid_payment_intent_provided?) { true }
+          order.save
+          allow(order).to receive_message_chain(:payments, :completed) { [] }
+          allow(order).to receive_message_chain(:payments, :incomplete) { [payment] }
+          allow(payment).to receive(:adjustment) { transaction_fee }
+        end
+
+        it "cancels the payment and resets the order to cart" do
+          expect(payment).to receive(:void_transaction!).and_call_original
+
+          spree_post :edit
+
+          expect(response).to redirect_to cart_path
+          expect(flash[:notice]).to eq I18n.t('checkout.payment_cancelled_due_to_stock')
+
+          expect(order.state).to eq "cart"
+          expect(payment.state).to eq "void"
+          expect(transaction_fee.reload.eligible).to eq false
+          expect(transaction_fee.state).to eq "finalized"
+        end
+      end
     end
 
     describe "when items are available and in stock" do
@@ -146,7 +181,7 @@ describe CheckoutController, type: :controller do
           create(
             :payment,
             amount: order.total,
-            state: "pending",
+            state: "requires_authorization",
             payment_method: payment_method,
             response_code: "pi_123"
           )
@@ -294,14 +329,16 @@ describe CheckoutController, type: :controller do
     it "returns errors and flash if order.update fails" do
       spree_post :update, format: :json, order: {}
       expect(response.status).to eq(400)
-      expect(response.body).to eq({ errors: assigns[:order].errors, flash: { error: order.errors.full_messages.to_sentence } }.to_json)
+      expect(response.body).to eq({ errors: assigns[:order].errors,
+                                    flash: { error: order.errors.full_messages.to_sentence } }.to_json)
     end
 
     it "returns errors and flash if order.next fails" do
       allow(order).to receive(:update).and_return true
       allow(order).to receive(:next).and_return false
       spree_post :update, format: :json, order: {}
-      expect(response.body).to eq({ errors: assigns[:order].errors, flash: { error: "Payment could not be processed, please check the details you entered" } }.to_json)
+      expect(response.body).to eq({ errors: assigns[:order].errors,
+                                    flash: { error: "Payment could not be processed, please check the details you entered" } }.to_json)
     end
 
     it "returns order confirmation url on success" do
@@ -321,7 +358,8 @@ describe CheckoutController, type: :controller do
 
       spree_post :update, format: :json, order: {}
       expect(response.status).to eq(400)
-      expect(response.body).to eq({ errors: {}, flash: { error: I18n.t("checkout.failed") } }.to_json)
+      expect(response.body).to eq({ errors: {},
+                                    flash: { error: I18n.t("checkout.failed") } }.to_json)
     end
 
     it "returns a specific error on Spree::Core::GatewayError" do
@@ -355,7 +393,9 @@ describe CheckoutController, type: :controller do
 
       it "tries a maximum of 3 times before giving up and returning an error" do
         allow(order).to receive(:update).and_return true
-        allow(order).to receive(:next) { raise ActiveRecord::StaleObjectError.new(Spree::Variant.new, 'update') }
+        allow(order).to receive(:next) {
+                          raise ActiveRecord::StaleObjectError.new(Spree::Variant.new, 'update')
+                        }
 
         spree_post :update, format: :json, order: {}
         expect(response.status).to eq(400)
@@ -380,7 +420,8 @@ describe CheckoutController, type: :controller do
         expect(Checkout::PaypalRedirect).to receive(:new).and_return(paypal_redirect)
         expect(paypal_redirect).to receive(:path).and_return("test_path")
 
-        spree_post :update, order: { payments_attributes: [{ payment_method_id: payment_method.id }] }
+        spree_post :update,
+                   order: { payments_attributes: [{ payment_method_id: payment_method.id }] }
 
         expect(response.body).to eq({ path: "test_path" }.to_json)
       end
@@ -394,7 +435,8 @@ describe CheckoutController, type: :controller do
         expect(Checkout::StripeRedirect).to receive(:new).and_return(stripe_redirect)
         expect(stripe_redirect).to receive(:path).and_return("test_path")
 
-        spree_post :update, order: { payments_attributes: [{ payment_method_id: payment_method.id }] }
+        spree_post :update,
+                   order: { payments_attributes: [{ payment_method_id: payment_method.id }] }
 
         expect(response.body).to eq({ path: "test_path" }.to_json)
       end

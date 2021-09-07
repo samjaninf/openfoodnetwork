@@ -18,6 +18,7 @@ module Spree
     after_save :ensure_correct_adjustment, :update_adjustments
 
     attr_accessor :special_instructions
+
     alias_attribute :amount, :cost
 
     accepts_nested_attributes_for :address
@@ -83,7 +84,9 @@ module Spree
     end
 
     def shipping_method
-      selected_shipping_rate.try(:shipping_method) || shipping_rates.first.try(:shipping_method)
+      method = selected_shipping_rate.try(:shipping_method)
+      method ||= shipping_rates.first.try(:shipping_method) unless order.manual_shipping_selection
+      method
     end
 
     def add_shipping_method(shipping_method, selected = false)
@@ -160,10 +163,6 @@ module Spree
       Spree::Money.new(item_cost, currency: currency)
     end
 
-    def editable_by?(_user)
-      !shipped?
-    end
-
     def update_amounts
       return unless fee_adjustment&.amount != cost
 
@@ -185,14 +184,6 @@ module Spree
 
     def scoper
       @scoper ||= OpenFoodNetwork::ScopeVariantToHub.new(order.distributor)
-    end
-
-    def line_items
-      if order.complete?
-        order.line_items.select { |li| inventory_units.pluck(:variant_id).include?(li.variant_id) }
-      else
-        order.line_items
-      end
     end
 
     def finalize!
@@ -274,7 +265,7 @@ module Spree
         fee_adjustment.amount = selected_shipping_rate.cost if fee_adjustment.open?
         fee_adjustment.save!
         fee_adjustment.reload
-      elsif selected_shipping_rate_id
+      elsif shipping_method
         shipping_method.create_adjustment(adjustment_label,
                                           self,
                                           true,
@@ -295,6 +286,15 @@ module Spree
 
     private
 
+    def line_items
+      if order.complete?
+        inventory_unit_ids = inventory_units.pluck(:variant_id)
+        order.line_items.select { |li| inventory_unit_ids.include?(li.variant_id) }
+      else
+        order.line_items
+      end
+    end
+
     def manifest_unstock(item)
       stock_location.unstock item.variant, item.quantity, self
     end
@@ -309,7 +309,7 @@ module Spree
       record = true
       while record
         random = "H#{Array.new(11) { rand(9) }.join}"
-        record = self.class.find_by(number: random)
+        record = self.class.default_scoped.find_by(number: random)
       end
       self.number = random
     end

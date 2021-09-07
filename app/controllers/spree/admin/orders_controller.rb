@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'open_food_network/spree_api_key_loader'
 
 module Spree
@@ -26,16 +28,17 @@ module Spree
       def edit
         @order.shipments.map(&:refresh_rates)
 
-        OrderWorkflow.new(@order).complete
-
-        # The payment step shows an error of 'No pending payments'
-        # Clearing the errors from the order object will stop this error
-        # appearing on the edit page where we don't want it to.
+        OrderWorkflow.new(@order).advance_to_payment
         @order.errors.clear
       end
 
       def update
         @order.recreate_all_fees!
+
+        unless @order.cart?
+          @order.create_tax_charge!
+          @order.update_order!
+        end
 
         unless order_params.present? && @order.update(order_params) && @order.line_items.present?
           if @order.line_items.empty? && !params[:suppress_error_msg]

@@ -2,6 +2,8 @@ en_IN:
   language_name: "English"
   activerecord:
     attributes:
+      spree/user:
+        password: "Password"
       enterprise_fee:
         fee_type: Fee Type
       spree/order:
@@ -742,6 +744,8 @@ en_IN:
           shopfront_category_ordering: "Shopfront Category Ordering"
           open_date: "Open Date"
           close_date: "Close Date"
+          shopfront_sort_by_category_placeholder: "Category"
+          shopfront_sort_by_producer_placeholder: "Producer"
         social:
           twitter_placeholder: "eg. @the_prof"
           instagram_placeholder: "eg. the_prof"
@@ -862,7 +866,6 @@ en_IN:
         cancel: "Cancel"
         back_to_list: "Back To List"
       edit:
-        advanced_settings: "Advanced Settings"
         save: "Save"
         save_and_next: "Save and Next"
         next: "Next"
@@ -915,6 +918,8 @@ en_IN:
         preferred_product_selection_from_coordinator_inventory_only_here: Coordinator's Inventory Only
         preferred_product_selection_from_coordinator_inventory_only_all: All Available Products
         save_reload: Save and Reload Page
+      order_cycle_top_buttons:
+        advanced_settings: "Advanced Settings"
       coordinator_fees:
         add: Add coordinator fee
       filters:
@@ -1185,7 +1190,6 @@ en_IN:
       footer_join_body: "Create a listing, shop or group directory on the Open Food Network."
       footer_join_cta: "Tell me more!"
       footer_legal_call: "Read our"
-      footer_legal_tos: "Terms and conditions"
       footer_legal_visit: "Find us on"
       footer_legal_text_html: "Open Food Network is a free and open source software platform. Our content is licensed with %{content_license} and our code with %{code_license}."
       footer_data_text_with_privacy_policy_html: "We take good care of your data. See our %{privacy_policy} and %{cookies_policy}"
@@ -1298,8 +1302,6 @@ en_IN:
   label_producers: "Producers"
   label_groups: "Groups"
   label_about: "About"
-  label_connect: "Connect"
-  label_learn: "Learn"
   label_blog: "Blog"
   label_support: "Support"
   label_shopping: "Shopping"
@@ -1387,10 +1389,6 @@ en_IN:
   brandstory_part4: "Communities can bring together producers in their local area to create virtual farmers’ markets, building a resilient local food economy."
   brandstory_part5_strong: "And what’s just as important as the software itself are the values which underpin it. "
   brandstory_part6: "If you sell good food - as a farmer, farmer’s market, food co-op, or food hub- then choose software that aligns with your values to build food systems for people and planet, not profit.  By working collectively rather than competitively, we share the costs of developing new software, and we ensure that our project is resilient!"
-  learn_body: "Explore models, stories and resources to support you to develop your fair food business or organisation. Find training, events and other opportunities to learn from peers."
-  learn_cta: "Get Inspired"
-  connect_body: "Search our full directories of producers, hubs and groups to find fair food traders near you. List your business or organisation on the OFN so buyers can find you. Join the community to get advice and solve problems together."
-  connect_cta: "Go Exploring"
   system_headline: "Selling on OFN - 3 easy steps"
   system_step1: "1. Create Your Enterprise"
   system_step1_text: "Set up your enterprise with a name, description, photos, contact details and social media links."
@@ -1429,6 +1427,37 @@ en_IN:
   checkout_total_price: Total
   checkout_back_to_cart: "Back to cart"
   cost_currency: "Cost Currency"
+  split_checkout:
+    step1:
+      your_details:
+        title: Your details
+        first_name:
+          label: First Name
+        last_name:
+          label: Last Name
+        email:
+          label: Email
+        phone:
+          label: Phone number
+      billing_address:
+        title: Billing address
+        city:
+          label: City
+        state_id:
+          label: State
+        zipcode:
+          label: Postcode
+        country_id:
+          label: Country
+      delivery_address:
+        title: Delivery address
+    step3:
+      your_details:
+        title: Your details
+      billing_address:
+        title: Billing address
+    errors:
+      invalid_email: "Please enter a valid email address"
   order_paid: PAID
   order_not_paid: NOT PAID
   order_total: Total order
@@ -2080,7 +2109,6 @@ en_IN:
   new_order: "New Order"
   enterprise_tos_link: "Enterprise Terms of Service link"
   enterprise_tos_message: "We want to work with people that share our aims and values. As such we ask new enterprises to agree to our "
-  enterprise_tos_link_text: "Terms of Service."
   enterprise_tos_agree: "I agree to the above Terms of Service"
   tax_settings: "Tax Settings"
   products_require_tax_category: "products require tax category"
@@ -2807,6 +2835,7 @@ en_IN:
   shipment_inc_vat: "Shipment including VAT"
   shipping_tax_rate: "Shipping Tax Rate"
   category: "Category"
+  import_date: "Import Date"
   delivery: "Delivery"
   temperature_controlled: "Temperature Controlled"
   new_product: "New Product"
@@ -2894,7 +2923,6 @@ en_IN:
     default_meta_description: "Default Meta Description"
     default_meta_keywords: "Default Meta Keywords"
     security_settings: "Security Settings"
-    allow_ssl_in_development_and_test: "Allow SSL to be used when in development and test modes"
     allow_ssl_in_production: "Allow SSL to be used in production mode"
     allow_ssl_in_staging: "Allow SSL to be used in staging mode"
     currency_decimal_mark: "Currency decimal mark"
@@ -3426,7 +3454,6 @@ en_IN:
     shipment_mailer:
       shipped_email:
         dear_customer: "Dear Customer,"
-        instructions: "Your order has been shipped"
         shipment_summary: "Shipment Summary"
         subject: "Shipment Notification"
         thanks: "Thank you for your order with us."

@@ -8,7 +8,8 @@ describe CheckoutHelper, type: :helper do
       "shared/validated_input",
       name: "test",
       path: "foo",
-      attributes: { :required => true, :type => :email, :name => "foo", :id => "foo", "ng-model" => "foo", "ng-class" => "{error: !fieldValid('foo')}" }
+      attributes: { :required => true, :type => :email, :name => "foo", :id => "foo",
+                    "ng-model" => "foo", "ng-class" => "{error: !fieldValid('foo')}" }
     )
 
     helper.validated_input("test", "foo", type: :email)
@@ -18,7 +19,8 @@ describe CheckoutHelper, type: :helper do
     let(:order) { double(:order, total_tax: 123.45, currency: 'AUD') }
 
     it "retrieves the total tax on the order" do
-      expect(helper.display_checkout_tax_total(order)).to eq(Spree::Money.new(123.45, currency: 'AUD'))
+      expect(helper.display_checkout_tax_total(order)).to eq(Spree::Money.new(123.45,
+                                                                              currency: 'AUD'))
     end
   end
 
@@ -56,6 +58,36 @@ describe CheckoutHelper, type: :helper do
       admin_fee_summary = adjustments.last
       expect(admin_fee_summary.label).to eq I18n.t(:orders_form_admin)
       expect(admin_fee_summary.amount).to eq 123
+    end
+
+    context "tax rate adjustments" do
+      let!(:tax_rate) { create(:tax_rate, amount: 0.1, calculator: ::Calculator::DefaultTax.new) }
+      let!(:line_item_fee_adjustment) {
+        create(:adjustment, originator: enterprise_fee, adjustable: order.line_items.first,
+                            order: order)
+      }
+      let!(:order_tax_adjustment) {
+        create(:adjustment,
+          originator: tax_rate,
+          adjustable: fee_adjustment,
+          order: order
+        )
+      }
+      let!(:line_item_fee_adjustment_tax_adjustment) {
+        create(:adjustment,
+          originator: tax_rate,
+          adjustable: line_item_fee_adjustment,
+          order: order
+        )
+      }
+
+      it "removes tax rate adjustments" do
+        expect(order.all_adjustments.tax.count).to eq(2)
+
+        adjustments = helper.checkout_adjustments_for(order)
+        tax_adjustments = adjustments.select { |a| a.originator_type == "Spree::TaxRate" }
+        expect(tax_adjustments.count).to eq(0)
+      end
     end
 
     context "with return authorization adjustments" do

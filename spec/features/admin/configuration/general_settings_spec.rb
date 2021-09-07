@@ -25,7 +25,8 @@ describe "General Settings" do
       click_button "Update"
 
       within("[class='flash success']") do
-        expect(page).to have_content(Spree.t(:successfully_updated, resource: Spree.t(:general_settings)))
+        expect(page).to have_content(Spree.t(:successfully_updated,
+                                             resource: Spree.t(:general_settings)))
       end
 
       expect(find("#site_name").value).to eq("Harvest To Order")
@@ -42,7 +43,8 @@ describe "General Settings" do
 
       click_button 'Update'
 
-      expect(page).to have_content(Spree.t(:successfully_updated, resource: Spree.t(:general_settings)))
+      expect(page).to have_content(Spree.t(:successfully_updated,
+                                           resource: Spree.t(:general_settings)))
       expect(page).to have_checked_field('10.00 $')
     end
   end

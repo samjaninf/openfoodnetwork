@@ -4,13 +4,17 @@ require 'stripe/profile_storer'
 require 'stripe/credit_card_cloner'
 require 'stripe/authorize_response_patcher'
 require 'stripe/payment_intent_validator'
-require 'active_merchant/billing/gateways/stripe_payment_intents'
-require 'active_merchant/billing/gateways/stripe_decorator'
+require 'active_merchant/billing/gateways/stripe_payment_intents_decorator'
+require 'active_merchant/billing/gateways/stripe'
 
 module Spree
   class Gateway
     class StripeSCA < Gateway
       include FullUrlHelper
+
+      VOIDABLE_STATES = [
+        "requires_payment_method", "requires_capture", "requires_confirmation", "requires_action"
+      ]
 
       preference :enterprise_id, :integer
 
@@ -78,7 +82,13 @@ module Spree
         payment_intent_response = Stripe::PaymentIntent.retrieve(payment_intent_id,
                                                                  stripe_account: stripe_account_id)
         gateway_options[:stripe_account] = stripe_account_id
-        provider.refund(refundable_amount(payment_intent_response), response_code, gateway_options)
+
+        # If a payment has been confirmed it cannot be voided by Stripe, and must be refunded instead
+        if voidable?(payment_intent_response)
+          provider.void(response_code, gateway_options)
+        else
+          provider.refund(refundable_amount(payment_intent_response), response_code, gateway_options)
+        end
       end
 
       # NOTE: the name of this method is determined by Spree::Payment::Processing
@@ -96,6 +106,10 @@ module Spree
 
       private
 
+      def voidable?(payment_intent_response)
+        VOIDABLE_STATES.include? payment_intent_response.status
+      end
+
       def refundable_amount(payment_intent_response)
         payment_intent_response.amount_received -
           payment_intent_response.charges.data.map(&:amount_refunded).sum
@@ -112,6 +126,7 @@ module Spree
         options[:description] = "Spree Order ID: #{gateway_options[:order_id]}"
         options[:currency] = gateway_options[:currency]
         options[:stripe_account] = stripe_account_id
+        options[:execute_threed] = true # Handle 3DS responses
         options
       end
 

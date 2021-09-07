@@ -26,7 +26,7 @@ class ProcessPaymentIntent
   def initialize(payment_intent, order)
     @payment_intent = payment_intent
     @order = order
-    @payment = order.payments.pending.with_payment_intent(payment_intent).first
+    @payment = order.payments.requires_authorization.with_payment_intent(payment_intent).first
   end
 
   def call!
@@ -36,14 +36,18 @@ class ProcessPaymentIntent
     process_payment
 
     if payment.reload.completed?
-      payment.mark_as_processed
+      payment.complete_authorization
+      payment.clear_authorization_url
 
       Result.new(ok: true)
     else
+      payment.fail_authorization
+      payment.clear_authorization_url
       Result.new(ok: false, error: I18n.t("payment_could_not_complete"))
     end
-
   rescue Stripe::StripeError => e
+    payment.fail_authorization
+    payment.clear_authorization_url
     Result.new(ok: false, error: e.message)
   end
 
@@ -52,12 +56,8 @@ class ProcessPaymentIntent
   attr_reader :order, :payment_intent, :payment
 
   def process_payment
-    if order.state == "payment"
-      # Moves the order to completed, which calls #process_payments!
-      OrderWorkflow.new(order).next
-    else
-      order.process_payments!
-    end
+    OrderWorkflow.new(order).next if order.state == "payment"
+    order.process_payments!
   end
 
   def ready_for_capture?

@@ -2,6 +2,9 @@ fr_CA:
   language_name: "Français"
   activerecord:
     attributes:
+      spree/user:
+        password: "Mot de passe"
+        password_confirmation: "Confirmation du mot de passe"
       enterprise_fee:
         fee_type: Type de commissions
       spree/order:
@@ -85,6 +88,10 @@ fr_CA:
               no_default_card: "Pas de carte de paiement par défaut pour cet acheteur"
             shipping_method:
               not_available_to_shop: "n'est pas disponible pour %{shop}"
+  card_details: "Détalis de la carte"
+  card_type: "Type de carte"
+  cardholder_name: "Titulaire de la carte"
+  community_forum_url: "Lien vers le forum"
   customer_instructions: "Précisions pour l'acheteur"
   devise:
     confirmations:
@@ -116,12 +123,38 @@ fr_CA:
         updated_not_active: "Votre mot de passe a été mis à jour, mais votre email n'a pas encore été confirmé."
         updated: "Votre mot de passer a été changé avec succès. Vous êtes maintenant connecté(e)."
         send_instructions: "Un email a été envoyé avec des instructions pour confirmer votre adresse email. Vérifiez votre boite mail!"
+  home_page_alert_html: "Bannière d'alerte sur la page d'acceuil en HTML"
+  hub_signup_case_studies_html: "HTML page cas d'études hub"
+  hub_signup_detail_html: "HTML page inscription hub"
+  hub_signup_pricing_table_html: "HTML table de prix page inscription hub"
+  group_signup_case_studies_html: "HTML page inscription groupe"
+  group_signup_detail_html: "HTML page inscription groupe"
+  group_signup_pricing_table_html: "HTML table de prix page inscription groupe"
+  item_description: "Description de la pièce"
+  menu_1_icon_name: "Nom de l'icône du menu 1"
+  menu_2_icon_name: "Nom de l'icône du menu 2"
+  menu_3_icon_name: "Nom de l'icône du menu 3"
+  menu_4_icon_name: "Nom de l'icône du menu 4"
+  menu_5_icon_name: "Nom de l'icône du menu 5"
+  menu_6_icon_name: "Nom de l'icône du menu 6"
+  menu_7_icon_name: "Nom de l'icône du menu 7"
   models:
     order_cycle:
       cloned_order_cycle_name: "Copie de %{order_cycle}"
     tax_rate:
       included_in_price: "Inclus dans le prix"
+  open_street_map_enabled: "Open Street Map est activé"
+  open_street_map_default_latitude: "Latitude par défaut Open Street Map"
+  open_street_map_default_longitude: "Longitude par défaut Open Street Map"
+  open_street_map_provider_name: "Nom du fournisseur Open Street Map"
+  open_street_map_provider_options: "Options du fournisseur Open Street Map"
+  producer_signup_case_studies_html: "HTML études de cas producteur"
+  producer_signup_detail_html: "HTML page inscription producteur"
+  producer_signup_pricing_table_html: "HTML table de prix page inscription producteur"
+  producers_social: "Réseau social producteur"
+  resume_order: "Reprendre la commande"
   sku: "Référence Produit"
+  subtotal: "Sous-total"
   tax_rate: "Taux de taxe"
   validators:
     date_time_string_validator:
@@ -148,6 +181,7 @@ fr_CA:
   producer_mailer:
     order_cycle:
       subject: "Rapport de cycle de vente pour %{producer}"
+  provider_settings: "Paramètres fournisseur"
   shipment_mailer:
     shipped_email:
       dear_customer: "Cher Acheteur,"
@@ -270,6 +304,7 @@ fr_CA:
   no_pending_payments: "Aucun paiement en attente."
   invalid_payment_state: "Statut de paiement invalide : %{state}"
   filter_results: Filtrer les résultats
+  clear_filters: Annuler les filtres
   quantity: Quantité
   pick_up: Retrait
   copy: Copier
@@ -287,6 +322,8 @@ fr_CA:
   height: "Hauteur"
   width: "Largeur"
   depth: "Profondeur"
+  payment_could_not_process: "Le paiement n'a pas pu être traité"
+  payment_could_not_complete: "Le paiement n'a pas pu être finalisé"
   actions:
     create_and_add_another: "Créer et ajouter nouveau"
     create: "Créer"
@@ -302,8 +339,12 @@ fr_CA:
     destroy: "Détruire"
     rename: "Renommer"
   admin:
+    adjustments:
+      skipped_changing_canceled_order: "Vous ne pouvez pas modifier une commande annulée."
     begins_at: Commence à
     begins_on: Commence le
+    bill_address: "Adresse de facturation"
+    ship_address: "Adresse de livraison"
     customer: Acheteur
     date: Date
     email: Email
@@ -364,6 +405,17 @@ fr_CA:
       embedded_shopfront_settings: "Paramètres Boutiques Intégrées"
       enable_embedded_shopfronts: "Autoriser l'intégration des boutiques"
       embedded_shopfronts_whitelist: "Liste blanche des Domaines Externes"
+    terms_of_service_files:
+      create:
+        select_file: "Veuillez d'abord sélectionner un document."
+      show:
+        title: "fichiers de conditions de service"
+        no_files: "Aucun document n'a été mis en ligne pour l'instant."
+        using_default_terms_html: "Le site pointe actuellement sur l'ancien %{tos_link}"
+        current_terms_html: "Visualiser l'actuel %{tos_link}. Temps de chargement:%{datetime}."
+        terms_of_service: "Conditions Générales d'Utilisation"
+        delete: "Supprimer le fichier"
+        confirm_delete: "Etes-vous certain de vouloir supprimer les fichiers de conditions de service actuelles ?"
     number_localization:
       number_localization_settings: "Paramètres de localisation de numéro"
       enable_localized_number: "Utiliser le traitement international des séparateurs de milliers/centimes"
@@ -773,6 +825,11 @@ fr_CA:
           shopfront_category_ordering_note: "(de haut en bas)"
           open_date: "Date d'ouverture"
           close_date: "Date de fermeture"
+          display_ordering_in_shopfront: "Ordre d'affichage sur la boutique en ligne:"
+          shopfront_sort_by_category: "Par catégorie"
+          shopfront_sort_by_producer: "Par producteur"
+          shopfront_sort_by_category_placeholder: "Catégorie"
+          shopfront_sort_by_producer_placeholder: "Producteur"
         social:
           twitter_placeholder: "ex. @OpenFoodNet_fr"
           instagram_placeholder: "ex. @OpenFoodNet_fr"
@@ -893,7 +950,6 @@ fr_CA:
         cancel: "Annuler"
         back_to_list: "Retour à la liste"
       edit:
-        advanced_settings: "Paramétrages avancés"
         save: "Enregistrer"
         save_and_next: "Sauvegarder et suivant"
         next: "Suivant"
@@ -946,6 +1002,8 @@ fr_CA:
         preferred_product_selection_from_coordinator_inventory_only_here: Uniquement le catalogue boutique du coordinateur
         preferred_product_selection_from_coordinator_inventory_only_all: Tous les produits disponibles dans les catalogues producteurs
         save_reload: Sauvegarder et rafraichir la page
+      order_cycle_top_buttons:
+        advanced_settings: "Paramétrages avancés"
       coordinator_fees:
         add: Ajouter commission coordinateur
       filters:
@@ -1070,6 +1128,7 @@ fr_CA:
       index:
         title: "Abonnements"
         new: "Nouvel abonnement"
+      issue: "Editée"
       new:
         title: "Nouvel abonnement"
       edit:
@@ -1184,12 +1243,11 @@ fr_CA:
       link_text: "CGU & CGV"
     platform_terms_of_service:
       message_html: "J'accepte les %{tos_link}"
-      terms_of_service: "Conditions Générales d'Utilisation"
     all_terms_and_conditions:
       message_html: "J'accepte les %{terms_and_conditions_link} de la boutique et les %{tos_link} de Open Food Network."
       terms_and_conditions: "CGU & CGV"
-      terms_of_service: "Conditions Générales d'Utilisation"
     failed: "La validation du paiement a échoué. Contactez-nous afin de finaliser votre commande."
+    payment_cancelled_due_to_stock: "Paiement annulé : la commande n'a pas été finalisée car un ou plusieurs articles ne sont plus en stock."
   shops:
     hubs:
       show_closed_shops: "Afficher les boutiques fermées"
@@ -1228,7 +1286,6 @@ fr_CA:
       footer_join_body: "Créer un profil, une boutique ou un groupe sur Open Food Network."
       footer_join_cta: "Je veux en savoir plus!"
       footer_legal_call: "Lire nos"
-      footer_legal_tos: "Termes et conditions"
       footer_legal_visit: "Nous trouver sur"
       footer_legal_text_html: "Open Food Network est une plateforme logicielle open source, libre et gratuite. Nos données sont protégées sous licence %{content_license} et notre code sous %{code_license}."
       footer_data_text_with_privacy_policy_html: "Nous prenons soin de vos données. Voir notre et ."
@@ -1318,6 +1375,12 @@ fr_CA:
   address2: Adresse (suite)
   city: Ville
   city_placeholder: 'ex: Nantes'
+  latitude: Latitude
+  latitude_placeholder: par ex. -37.4713077
+  latitude_longitude_tip: La latitude et la longitude sont nécessaires pour afficher votre profil sur la carte.
+  longitude: Longitude
+  longitude_placeholder: par ex. 144.7851531
+  use_geocoder: Souhaitez-vous calculer automatiquement la latitude et la longitude depuis l'adresse ?
   postcode: Code postal
   postcode_placeholder: 'ex: 44000'
   suburb: Ville
@@ -1341,8 +1404,6 @@ fr_CA:
   label_producers: "Producteurs"
   label_groups: "Groupes"
   label_about: "A propos"
-  label_connect: "Se connecter"
-  label_learn: "Apprendre"
   label_blog: "Blog"
   label_support: "Soutien"
   label_shopping: "Achats"
@@ -1430,10 +1491,6 @@ fr_CA:
   brandstory_part4: "Elle fonctionne partout. Elle change tout."
   brandstory_part5_strong: "Cette plateforme s'appelle Open Food Network."
   brandstory_part6: "Nous aimons notre nourriture. Maintenant nous pouvons aussi aimer notre système alimentaire."
-  learn_body: "Explorer les modèles, les histoires et les ressources disponibles pour vous aider à développer votre propre initiative de commerce/organisation oeuvrant pour un système alimentaire équitable et juste. Trouver des outils pour vous former, des événements et autres opportunités d'apprendre de vos pairs."
-  learn_cta: "Découvrir "
-  connect_body: "Rechercher dans le répertoire des producteurs, hubs et groupes pour trouver des commerçants éthiques à côté de chez vous. Inscrivez votre commerce ou organisation sur OFN pour que les acheteurs puissent vous trouver. Rejoignez la communauté pour recevoir du soutien et résoudre ensemble les problèmes."
-  connect_cta: "Explorer"
   system_headline: "Faire mes courses - comment ça marche?"
   system_step1: "1. Recherche"
   system_step1_text: "Recherchez des produits locaux, de saison, parmi nos multiples boutiques indépendantes. Filtrez par localisation ou catégorie de produits, livraison en point retrait ou à domicile."
@@ -1472,6 +1529,40 @@ fr_CA:
   checkout_total_price: Total
   checkout_back_to_cart: "Retour au Panier"
   cost_currency: "Coût de la devise"
+  split_checkout:
+    step1:
+      your_details:
+        title: Vos informations
+        first_name:
+          label: Prénom
+        last_name:
+          label: Nom
+        email:
+          label: Email
+        phone:
+          label: Numéro de téléphone
+      billing_address:
+        title: Adresse de facturation
+        city:
+          label: Ville
+        state_id:
+          label: Département
+        zipcode:
+          label: Code postal
+        country_id:
+          label: Pays
+      delivery_address:
+        title: Adresse de livraison
+    step3:
+      your_details:
+        title: Vos informations
+      billing_address:
+        title: Adresse de facturation
+      terms_and_conditions:
+        message_html: "J'accepte les %{terms_and_conditions_link}"
+        link_text: "CGU & CGV"
+    errors:
+      invalid_email: "Veuillez entrer un email valide"
   order_paid: RÉGLÉ
   order_not_paid: NON RÉGLÉ
   order_total: Total commande
@@ -1526,6 +1617,7 @@ fr_CA:
   email_order_summary_includes_tax: "(dont Taxe)"
   email_payment_paid: RÉGLÉ
   email_payment_not_paid: NON RÉGLÉ
+  email_payment_description: Informations concernant le mode de paiement
   email_payment_summary: Résumé du paiement
   email_payment_method: "Payer via :"
   email_so_placement_intro_html: "Vous avez une nouvelle commande pour <strong>%{distributor}</strong>"
@@ -1871,6 +1963,11 @@ fr_CA:
         state_field_error: "Veuillez saisir une Région"
         country_field: "Pays :"
         country_field_error: "Veuillez saisir un Pays"
+        map_location: "Emplacement de la carte"
+        locate_address: "Localiser l'adresse sur la carte"
+        drag_pin: "Faites glisser et déposez le pointeur sur l'emplacement exact, s'il n'est pas correct."
+        confirm_address: "Je confirme que la position indiquée sur la carte est correcte. "
+        drag_map_marker: "En raison de nombreux producteurs opérant dans les zones rurales, la précision des cartes est toujours en cours d'amélioration. Aidez-nous à mieux comprendre où vous vous trouvez en interagissant avec la carte ci-dessus. Déplacez le pointeur en cliquant ou en appuyant dessus pour le maintenir, puis en le faisant glisser vers l'emplacement le plus précis d'après vos connaissances. "
       contact:
         title: "Contact"
         who_is_managing_enterprise: "Qui gère %{enterprise}?"
@@ -2132,7 +2229,6 @@ fr_CA:
   new_order: "Nouvelle commande"
   enterprise_tos_link: "Lien vers les Conditions Générales d'Utilisation"
   enterprise_tos_message: "Nous soutenons la mise en place d'un système alimentaire résilient et durable, et souhaitons œuvrer avec des entreprises qui partagent nos valeurs et notre vision. Ainsi, nous demandons aux entreprises s'enregistrant sur Open Food Network de valider nos "
-  enterprise_tos_link_text: "Conditions d'utilisation"
   enterprise_tos_agree: "J'adhère aux valeurs d'Open Food Network et valide les Conditions Générales d'Utilisation."
   tax_settings: "Paramètres taxe"
   products_require_tax_category: "vous devez choisir le type de taxe"
@@ -2618,6 +2714,7 @@ fr_CA:
           failed: "échec"
           paid: "payé"
           pending: "en attente"
+          requires_authorization: "authorisation requise"
           processing: "en traitement"
           void: "faire un avoir"
           invalid: "invalide"
@@ -2831,7 +2928,13 @@ fr_CA:
     reports:
       bulk_coop:
         filters:
+          bulk_coop_allocation: "Achats groupés Allocation"
+          bulk_coop_customer_payments: "Achats groupés - Paiement des acheteurs"
+          bulk_coop_packing_sheets: "Achats groupés - Feuilles de préparation des paniers"
+          bulk_coop_supplier_report: "Achats groupés - Totaux par Producteur"
+          date_range: "Plage de dates"
           generate_report: "Générer le rapport"
+          report_format_csv: "Format de rapport CSV"
       enterprise_fee_summaries:
         filters:
           date_range: "Période"
@@ -2894,6 +2997,7 @@ fr_CA:
   shipment_inc_vat: "Livraison incluant taxes"
   shipping_tax_rate: "Taux taxe livraison"
   category: "Catégorie"
+  import_date: "Date d'import"
   delivery: "Livraison"
   temperature_controlled: "Température contrôlée"
   new_product: "Nouveau Produit"
@@ -2911,12 +3015,53 @@ fr_CA:
   previous: "Précédent"
   last: "Fin"
   spree:
+    add_country: "Ajouter un pays"
+    add_state: "Ajouter un département"
+    adjustment: "Ajustement"
     all: "Tous"
+    associated_adjustment_closed: "L'ajustement associé est fermé"
+    back_to_adjustments_list: "Retour aux ajustements"
+    back_to_users_list: "Retour à la liste d'utilisateurs"
+    back_to_zones_list: "Retour à la liste de zones"
+    card_code: "Code de la carte"
+    card_number: "Numéro de carte"
     category: "Catégorie"
+    created_successfully: "Créé avec succès"
     credit: "Crédit"
+    editing_tax_category: "Modifier une catégorie de taxe"
+    editing_tax_rate: "Modifier un taux"
+    editing_zone: "Modifier une zone"
+    expiration: "Expiration"
+    invalid_payment_provider: "Fournisseur de paiement invalide"
+    items_cannot_be_shipped: "Les produits ne peuvent pas être envoyés"
+    gateway_config_unavailable: "Configuration de la passerelle indisponible"
+    gateway_error: "Le paiement a échoué"
     more: "Plus"
+    new_adjustment: "Nouvel ajustement"
+    new_order_completed: "Nouvelle commande finalisée"
+    new_tax_category: "Nouvelle catégorie de taxe"
+    new_taxon: "Nouvelle taxonomie"
+    new_user: "Nouvel utilisateur"
     no_pending_payments: "Aucun paiement en attente."
     none: "Aucun"
+    not_found: "Non trouvé"
+    notice_messages:
+      variant_deleted: "Variante supprimée"
+    or: "ou"
+    order_processed_successfully: "Commande traitée avec succès"
+    payment_method_not_supported: "Mode de paiement non pris en charge"
+    resend_authorization_email: "Renvoyer l'e-mail d'autorisation"
+    rma_credit: "Crédit ARM"
+    refund: "Remboursement"
+    server_error: "Erreur serveur"
+    shipping_method_names:
+      UPS Ground: "UPS Ground"
+    start_date: "Date de début"
+    successfully_removed: "Supprimé avec succès"
+    taxonomy_edit: "Modifier la taxonomie"
+    taxonomy_tree_error: "Erreur de l'arbre de toxonomie"
+    taxonomy_tree_instruction: "Consignes pour l'arbre de taxonomie"
+    tree: "Arbre"
     updating: "Mettre à jour"
     your_order_is_empty_add_product: "Votre commande est vide, veuillez ajouter des produits"
     add_product: "Ajouter un produit"
@@ -2945,6 +3090,7 @@ fr_CA:
     tracking_number: "Numéro de suivi"
     order_total: "Total Commande:"
     customer_details: "Informations acheteur"
+    customer_details_updated: "Détails de l'acheteur mis à jour"
     customer_search: "Recherche Acheteur"
     choose_a_customer: "Choisir un acheteur"
     account: "Compte"
@@ -2986,7 +3132,6 @@ fr_CA:
     default_meta_description: "Meta description par défaut"
     default_meta_keywords: "Meta mots clés par défaut"
     security_settings: "Paramètres de sécurité"
-    allow_ssl_in_development_and_test: "Autoriser l'utilisation SSL dans les environnements de développement et de test"
     allow_ssl_in_production: "Autoriser l'utilisation SSL dans l'environnement de production"
     allow_ssl_in_staging: "Autoriser l'utilisation SSL dans l'environnement de staging"
     currency_decimal_mark: "Symbole du séparateur de décimales"
@@ -3096,6 +3241,7 @@ fr_CA:
     payment_processing_failed: "Le paiement n'a pas pu être traité, veuillez vérifier les informations saisies"
     not_available: "N/A"
     sku: "Référence Produit"
+    there_are_no_items_for_this_order: "Il n'y a pas de produits pour cette commande."
     order_populator:
       out_of_stock: '%{item} est en rupture de stock.'
     actions:
@@ -3123,7 +3269,14 @@ fr_CA:
         login_nav:
           header:
             store: Vue acheteur
+    validation:
+      must_be_int: "doit être un entier"
     admin:
+      mail_methods:
+        send_testmail: "Envoyer un e-mail de test"
+        testmail:
+          delivery_success: "E-mail de test envoyé."
+          error: "Une erreur s'est produite lors de l'envoi de l'e-mail de test. "
       unit_price_tooltip: "Le prix unitaire permet aux acheteurs de comparer les prix entre les produits et/ou les conditionnements. Attention, le prix final observé par l'acheteur peut être différent si des marges et/ou commissions sont appliquées."
       subscriptions:
         number: "N° commande"
@@ -3239,6 +3392,10 @@ fr_CA:
       overview:
         enterprises_header:
           ofn_with_tip: Les Entreprises sont des Producteurs et/ou Hubs distributeurs, et sont donc les organisations de base qui utilisent Open Food Network.
+        enterprise_row:
+          has_no_enterprise_fees: "n'a pas de marge ou commission"
+          has_no_payment_methods: "n'a pas de méthode de paiement"
+          has_no_shipping_methods: "n'a pas de méthode de livraison"
         products:
           active_products:
             zero: "Vous n'avez aucun produit actif."
@@ -3451,6 +3608,8 @@ fr_CA:
           producer_name: "Producteur"
           unit: "Unité"
       shared:
+        configuration_menu:
+          terms_of_service: "Conditions Générales d'Utilisation"
         sortable_header:
           name: "Nom"
           number: "N° commande"
@@ -3513,6 +3672,7 @@ fr_CA:
       paid: payé
       pending: en attente
       processing: en traitement
+      requires_authorization: "authorisation requise"
       void: faire un avoir
       invalid: invalide
       authorise: autorise
@@ -3561,7 +3721,7 @@ fr_CA:
     shipment_mailer:
       shipped_email:
         dear_customer: "Cher Acheteur,"
-        instructions: "Votre commande a été expédiée"
+        instructions: "Votre commande de %{distributor} a été envoyéeonfirmation du mot de passe."
         shipment_summary: "Résumé de l'envoi"
         subject: "Notification d'expédition"
         thanks: "Merci pour votre commande."

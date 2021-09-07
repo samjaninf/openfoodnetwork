@@ -749,6 +749,8 @@ pl:
           shopfront_category_ordering: "Zamawianie kategorii sklepu"
           open_date: "Data otwarcia"
           close_date: "Data zamknięcia"
+          shopfront_sort_by_category_placeholder: "Kategoria"
+          shopfront_sort_by_producer_placeholder: "Producent"
         social:
           twitter_placeholder: "np. @profesor"
           instagram_placeholder: "np. @profesor"
@@ -869,7 +871,6 @@ pl:
         cancel: "Anuluj"
         back_to_list: "Powrót do listy"
       edit:
-        advanced_settings: "Zaawansowane ustawienia"
         save: "Zapisz"
         save_and_next: "Zapisz i Dalej"
         next: "Kolejny"
@@ -1193,7 +1194,6 @@ pl:
       footer_join_body: "Utwórz listę, sklep lub katalog grupy w Open Food Network."
       footer_join_cta: "Powiedz mi więcej!"
       footer_legal_call: "Przeczytaj nasze"
-      footer_legal_tos: "Regulamin"
       footer_legal_visit: "Znajdź nas na"
       footer_legal_text_html: "Open Food Network to bezpłatna platforma oprogramowania typu open source. Nasze treści są objęte licencją %{content_license}, a nasz kod - %{code_license}."
       footer_data_text_with_privacy_policy_html: "Dbamy o Twoje dane. Zobacz nasze %{privacy_policy} i %{cookies_policy}"
@@ -1303,8 +1303,6 @@ pl:
   label_producers: "Producenci"
   label_groups: "Grupy"
   label_about: "O nas"
-  label_connect: "Połącz się"
-  label_learn: "Dowiedz się"
   label_blog: "Blog"
   label_support: "Wsparcie"
   label_shopping: "Zakupy"
@@ -1392,10 +1390,6 @@ pl:
   brandstory_part4: "Działa wszędzie. Zmienia wszystko."
   brandstory_part5_strong: "Nazywamy to Open Food Network."
   brandstory_part6: "Wszyscy kochamy jeść. Teraz możemy również pokochać nasz system dostaw żywności."
-  learn_body: "Przeglądaj modele, historie i zasoby, które pomogą Ci rozwinąć Twój biznes lub organizację fair food. Znajdź szkolenia, wydarzenia i inne możliwości uczenia się od rówieśników."
-  learn_cta: "Zainspirować się"
-  connect_body: "Przeszukaj nasze pełne katalogi producentów, hubów, kooperatyw i grup, aby znaleźć uczciwych sprzedawców żywności w Twojej okolicy. Umieść swoją firmę lub organizację w OFN, aby kupujący mogli Cię znaleźć. Dołącz do społeczności, aby uzyskać porady i wspólnie rozwiązywać problemy."
-  connect_cta: "Idź eksplorować"
   system_headline: "Zakupy - tak to działa."
   system_step1: "1. Szukaj"
   system_step1_text: "Przeszukaj nasze różnorodne, niezależne sklepy z sezonową, lokalną żywnością. Szukaj według okolicy i kategorii żywności lub czy wolisz dostawę czy odbiór."
@@ -1434,6 +1428,14 @@ pl:
   checkout_total_price: Razem
   checkout_back_to_cart: "Powrót do koszyka"
   cost_currency: "Waluta kosztu"
+  split_checkout:
+    step1:
+      your_details:
+        email:
+          label: E-mail
+      billing_address:
+        state_id:
+          label: Status
   order_paid: OPŁACONY
   order_not_paid: NIEZAPŁACONE
   order_total: Całkowite zamówienie
@@ -2082,7 +2084,6 @@ pl:
   new_order: "Nowe zamówienie"
   enterprise_tos_link: "Link do warunków korzystania z usługi dla podmiotów"
   enterprise_tos_message: "Chcemy pracować z ludźmi, którzy podzielają nasze cele i wartości. W związku z tym prosimy nowe podmioty o wyrażenie zgody na nasze"
-  enterprise_tos_link_text: "Warunki usługi."
   enterprise_tos_agree: "Akceptuję powyższe Warunki korzystania z usługi"
   tax_settings: "Ustawienia podatkowe"
   products_require_tax_category: "produkty wymagają kategorii podatkowej"
@@ -2939,7 +2940,6 @@ pl:
     default_meta_description: "Domyślny opis meta"
     default_meta_keywords: "Domyślne słowa kluczowe meta"
     security_settings: "Ustawienia bezpieczeństwa"
-    allow_ssl_in_development_and_test: "Zezwalaj na używanie protokołu SSL w trybach development i test"
     allow_ssl_in_production: "Zezwalaj na używanie SSL w trybie production"
     allow_ssl_in_staging: "Zezwalaj na używanie protokołu SSL w trybie staging"
     currency_decimal_mark: "Znak dziesiętny waluty"
@@ -3459,7 +3459,6 @@ pl:
     shipment_mailer:
       shipped_email:
         dear_customer: "Drogi Kliencie,"
-        instructions: "Twoje zamówienie zostało wysłane"
         shipment_summary: "Podsumowanie przesyłki"
         subject: "Powiadomienie o wysyłce"
         thanks: "Dziękuję za Twoje zaangażowanie."

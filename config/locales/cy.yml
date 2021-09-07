@@ -2,6 +2,8 @@ cy:
   language_name: "Saesneg"
   activerecord:
     attributes:
+      spree/user:
+        password: "Cyfrinair"
       enterprise_fee:
         fee_type: Math o Ffi
       spree/order:
@@ -767,6 +769,8 @@ cy:
           shopfront_category_ordering_note: "(o&#39;r brig i&#39;r gwaelod)"
           open_date: "Dyddiad Agored"
           close_date: "Dyddiad Cau"
+          shopfront_sort_by_category_placeholder: "Categori"
+          shopfront_sort_by_producer_placeholder: "Cynhyrchydd"
         social:
           twitter_placeholder: "ee. @the_prof"
           instagram_placeholder: "ee. the_prof"
@@ -887,7 +891,6 @@ cy:
         cancel: "Canslo"
         back_to_list: "Yn ôl i&#39;r Rhestr"
       edit:
-        advanced_settings: "Lleoliadau uwch"
         save: "Arbedwch"
         save_and_next: "Arbed a Nesaf"
         next: "Nesaf"
@@ -940,6 +943,8 @@ cy:
         preferred_product_selection_from_coordinator_inventory_only_here: Rhestr y Cydlynydd yn Unig
         preferred_product_selection_from_coordinator_inventory_only_all: Yr holl Gynhyrchion sydd ar Gael
         save_reload: Cadw a Ail-lwytho Tudalen
+      order_cycle_top_buttons:
+        advanced_settings: "Lleoliadau uwch"
       coordinator_fees:
         add: Ychwanegu ffi cydlynydd
       filters:
@@ -1217,7 +1222,6 @@ cy:
       footer_join_body: "Creu cyfeirlyfr rhestru, siop neu grŵp ar y Rhwydwaith Bwyd Agored."
       footer_join_cta: "Dywedwch fwy wrthyf!"
       footer_legal_call: "Darllenwch ein"
-      footer_legal_tos: "Telerau ac Amodau"
       footer_legal_visit: "Dewch o hyd i ni ar"
       footer_legal_text_html: "Mae Open Food Network yn blatfform meddalwedd ffynhonnell agored am ddim. Mae ein cynnwys wedi&#39;i drwyddedu gydag %{content_license} a&#39;n cod gydag %{code_license}."
       footer_data_text_with_privacy_policy_html: "Rydym yn cymryd gofal da o&#39;ch data. Gweler ein %{privacy_policy} ac %{cookies_policy}"
@@ -1330,8 +1334,6 @@ cy:
   label_producers: "Cynhyrchwyr"
   label_groups: "Grwpiau"
   label_about: "Am"
-  label_connect: "Cysylltu"
-  label_learn: "Dysgu"
   label_blog: "Blog"
   label_support: "Cefnogaeth"
   label_shopping: "Siopa"
@@ -1419,10 +1421,6 @@ cy:
   brandstory_part4: "Mae&#39;n gweithio ym mhobman. Mae&#39;n newid popeth."
   brandstory_part5_strong: "Rydyn ni&#39;n ei alw&#39;n Open Food Network."
   brandstory_part6: "Rydyn ni i gyd yn caru bwyd. Nawr gallwn garu ein system fwyd hefyd."
-  learn_body: "Archwiliwch fodelau, straeon ac adnoddau i&#39;ch cefnogi chi i ddatblygu eich busnes neu sefydliad bwyd teg. Dewch o hyd i hyfforddiant, digwyddiadau a chyfleoedd eraill i ddysgu gan gyfoedion."
-  learn_cta: "Cael eich Ysbrydoli"
-  connect_body: "Chwiliwch ein cyfeirlyfrau llawn o gynhyrchwyr, hybiau a grwpiau i ddod o hyd i fasnachwyr bwyd teg yn eich ardal chi. Rhestrwch eich busnes neu sefydliad ar yr OFN fel y gall prynwyr ddod o hyd i chi. Ymunwch â&#39;r gymuned i gael cyngor a datrys problemau gyda&#39;ch gilydd."
-  connect_cta: "Ewch i Archwilio"
   system_headline: "Siopa - dyma sut mae&#39;n gweithio."
   system_step1: "1. Chwilio"
   system_step1_text: "Chwiliwch ein siopau amrywiol, annibynnol am fwyd lleol tymhorol. Chwilio yn ôl categori cymdogaeth a bwyd, neu a yw&#39;n well gennych ddanfon neu godi."
@@ -1461,6 +1459,40 @@ cy:
   checkout_total_price: Cyfanswm
   checkout_back_to_cart: "Yn ôl i&#39;r Cart"
   cost_currency: "Arian Cyfred Cost"
+  split_checkout:
+    step1:
+      your_details:
+        title: Eich manylion
+        first_name:
+          label: Enw cyntaf
+        last_name:
+          label: Enw olaf
+        email:
+          label: E-bost
+        phone:
+          label: Rhif ffôn
+      billing_address:
+        title: Cyfeiriad bilio
+        city:
+          label: Dinas
+        state_id:
+          label: Nodwch
+        zipcode:
+          label: Cod post
+        country_id:
+          label: Gwlad
+      delivery_address:
+        title: Cyfeiriad dosbarthu
+    step3:
+      your_details:
+        title: Eich manylion
+      billing_address:
+        title: Cyfeiriad bilio
+      terms_and_conditions:
+        message_html: "Rwy&#39;n cytuno i %{terms_and_conditions_link} y gwerthwr."
+        link_text: "Telerau ac Amodau"
+    errors:
+      invalid_email: "Rhowch gyfeiriad e-bost dilys"
   order_paid: DALU
   order_not_paid: NID TALU
   order_total: Cyfanswm archeb
@@ -2117,7 +2149,6 @@ cy:
   new_order: "Gorchymyn Newydd"
   enterprise_tos_link: "Dolen Telerau Gwasanaeth Menter"
   enterprise_tos_message: "Rydyn ni eisiau gweithio gyda phobl sy&#39;n rhannu ein nodau a&#39;n gwerthoedd. O&#39;r herwydd, gofynnwn i fentrau newydd gytuno â&#39;n"
-  enterprise_tos_link_text: "Telerau Gwasanaeth."
   enterprise_tos_agree: "Rwy&#39;n cytuno i&#39;r Telerau Gwasanaeth uchod"
   tax_settings: "Gosodiadau Treth"
   products_require_tax_category: "mae angen categori treth ar gynhyrchion"
@@ -2908,6 +2939,7 @@ cy:
   shipment_inc_vat: "Cludo gan gynnwys TAW"
   shipping_tax_rate: "Cyfradd Treth Llongau"
   category: "Categori"
+  import_date: "Dyddiad Mewnforio"
   delivery: "Dosbarthu"
   temperature_controlled: "Tymheredd a Reolir"
   new_product: "Cynnyrch Newydd"
@@ -2999,7 +3031,6 @@ cy:
     default_meta_description: "Disgrifiad Meta Rhagosodedig"
     default_meta_keywords: "Allweddeiriau Meta diofyn"
     security_settings: "Gosodiadau Diogelwch"
-    allow_ssl_in_development_and_test: "Caniatáu defnyddio SSL pan fydd mewn dulliau datblygu a phrofi"
     allow_ssl_in_production: "Caniatáu defnyddio SSL yn y modd cynhyrchu"
     allow_ssl_in_staging: "Caniatáu defnyddio SSL yn y modd llwyfannu"
     currency_decimal_mark: "Marc degol arian cyfred"
@@ -3545,7 +3576,6 @@ cy:
     shipment_mailer:
       shipped_email:
         dear_customer: "Annwyl Gwsmer,"
-        instructions: "Mae eich archeb wedi&#39;i gludo"
         shipment_summary: "Crynodeb Cludo"
         subject: "Hysbysiad Cludo"
         thanks: "Diolch am eich busnes."

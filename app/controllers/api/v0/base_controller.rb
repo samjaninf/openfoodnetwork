@@ -2,19 +2,19 @@
 
 # Base controller for OFN's API
 require "spree/api/controller_setup"
-require "spree/core/controller_helpers/ssl"
 
 module Api
   module V0
     class BaseController < ActionController::Metal
+      include Pagy::Backend
       include RawParams
       include ActionController::StrongParameters
       include ActionController::RespondWith
       include Spree::Api::ControllerSetup
-      include Spree::Core::ControllerHelpers::SSL
       include ::ActionController::Head
       include ::ActionController::ConditionalGet
       include ActionView::Layouts
+      include RequestTimeouts
 
       layout false
 
@@ -26,8 +26,6 @@ module Api
       rescue_from Exception, with: :error_during_processing
       rescue_from CanCan::AccessDenied, with: :unauthorized
       rescue_from ActiveRecord::RecordNotFound, with: :not_found
-
-      ssl_allowed
 
       # Include these because we inherit from ActionController::Metal
       #   rather than ActionController::Base and these are required for AMS
@@ -43,6 +41,10 @@ module Api
       end
 
       private
+
+      def spree_current_user
+        @spree_current_user ||= request.env['warden'].user
+      end
 
       # Use logged in user (spree_current_user) for API authentication (current_api_user)
       def authenticate_user

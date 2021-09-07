@@ -12,25 +12,47 @@ feature "As a consumer I want to check out my cart", js: true do
   let!(:zone) { create(:zone_with_member) }
   let(:distributor) { create(:distributor_enterprise, charges_sales_tax: true) }
   let(:supplier) { create(:supplier_enterprise) }
-  let!(:order_cycle) { create(:simple_order_cycle, suppliers: [supplier], distributors: [distributor], coordinator: create(:distributor_enterprise), variants: [variant]) }
-  let(:enterprise_fee) { create(:enterprise_fee, amount: 1.23, tax_category: product.tax_category) }
-  let(:product) { create(:taxed_product, supplier: supplier, price: 10, zone: zone, tax_rate_amount: 0.1) }
+  let!(:order_cycle) {
+    create(:simple_order_cycle, suppliers: [supplier], distributors: [distributor],
+                                coordinator: create(:distributor_enterprise), variants: [variant])
+  }
+  let(:enterprise_fee) { create(:enterprise_fee, amount: 1.23, tax_category: fee_tax_category) }
+  let(:fee_tax_rate) { create(:tax_rate, amount: 0.10, zone: zone, included_in_price: true) }
+  let(:fee_tax_category) { create(:tax_category, tax_rates: [fee_tax_rate]) }
+  let(:product) {
+    create(:taxed_product, supplier: supplier, price: 10, zone: zone, tax_rate_amount: 0.1)
+  }
   let(:variant) { product.variants.first }
-  let(:order) { create(:order, order_cycle: order_cycle, distributor: distributor, bill_address_id: nil, ship_address_id: nil) }
+  let(:order) {
+    create(:order, order_cycle: order_cycle, distributor: distributor, bill_address_id: nil,
+                   ship_address_id: nil)
+  }
   let(:shipping_tax_rate) { create(:tax_rate, amount: 0.25, zone: zone, included_in_price: true) }
   let(:shipping_tax_category) { create(:tax_category, tax_rates: [shipping_tax_rate]) }
 
-  let(:free_shipping) { create(:shipping_method, require_ship_address: true, name: "Frogs", description: "yellow", calculator: Calculator::FlatRate.new(preferred_amount: 0.00)) }
+  let(:free_shipping) {
+    create(:shipping_method, require_ship_address: true, name: "Frogs", description: "yellow",
+                             calculator: Calculator::FlatRate.new(preferred_amount: 0.00))
+  }
   let(:shipping_with_fee) {
     create(:shipping_method, require_ship_address: false, tax_category: shipping_tax_category,
                              name: "Donkeys", description: "blue",
                              calculator: Calculator::FlatRate.new(preferred_amount: 4.56))
   }
-  let(:tagged_shipping) { create(:shipping_method, require_ship_address: false, name: "Local", tag_list: "local") }
-  let!(:check_without_fee) { create(:payment_method, distributors: [distributor], name: "Roger rabbit", type: "Spree::PaymentMethod::Check") }
-  let!(:check_with_fee) { create(:payment_method, distributors: [distributor], calculator: Calculator::FlatRate.new(preferred_amount: 5.67)) }
+  let(:tagged_shipping) {
+    create(:shipping_method, require_ship_address: false, name: "Local", tag_list: "local")
+  }
+  let!(:check_without_fee) {
+    create(:payment_method, distributors: [distributor], name: "Roger rabbit",
+                            type: "Spree::PaymentMethod::Check")
+  }
+  let!(:check_with_fee) {
+    create(:payment_method, distributors: [distributor],
+                            calculator: Calculator::FlatRate.new(preferred_amount: 5.67))
+  }
   let!(:paypal) do
-    Spree::Gateway::PayPalExpress.create!(name: "Paypal", environment: 'test', distributor_ids: [distributor.id]).tap do |pm|
+    Spree::Gateway::PayPalExpress.create!(name: "Paypal", environment: 'test',
+                                          distributor_ids: [distributor.id]).tap do |pm|
       pm.preferred_login = 'devnull-facilitator_api1.rohanmitchell.com'
       pm.preferred_password = '1406163716'
       pm.preferred_signature = 'AFcWxV21C7fd0v3bYYYRCpSSRl31AaTntNJ-AjvUJkWf4dgJIvcLsf1V'
@@ -127,13 +149,18 @@ feature "As a consumer I want to check out my cart", js: true do
 
         expect(page).to have_no_link("Terms and Conditions")
 
-        expect(page).to have_no_link("Terms of Service")
+        # We always have this link in the footer.
+        within "#checkout_form" do
+          expect(page).to have_no_link("Terms of service")
+        end
       end
     end
 
     context "when distributor has T&Cs" do
       let(:fake_terms_and_conditions_path) { Rails.root.join("app/assets/images/logo-white.png") }
-      let(:terms_and_conditions_file) { Rack::Test::UploadedFile.new(fake_terms_and_conditions_path, "application/pdf") }
+      let(:terms_and_conditions_file) {
+        Rack::Test::UploadedFile.new(fake_terms_and_conditions_path, "application/pdf")
+      }
 
       before do
         order.distributor.terms_and_conditions = terms_and_conditions_file
@@ -143,7 +170,8 @@ feature "As a consumer I want to check out my cart", js: true do
       describe "when customer has not accepted T&Cs before" do
         it "shows a link to the T&Cs and disables checkout button until terms are accepted" do
           visit checkout_path
-          expect(page).to have_link("Terms and Conditions", href: order.distributor.terms_and_conditions.url)
+          expect(page).to have_link("Terms and Conditions",
+                                    href: order.distributor.terms_and_conditions.url)
 
           expect(page).to have_button("Place order now", disabled: true)
 
@@ -184,21 +212,52 @@ feature "As a consumer I want to check out my cart", js: true do
 
       it "shows the terms which need to be accepted" do
         visit checkout_path
-        expect(page).to have_link("Terms of Service", href: tos_url)
-        expect(find_link("Terms of Service")[:target]).to eq "_blank"
-        expect(page).to have_button("Place order now", disabled: true)
 
-        check "Terms of Service"
+        within "#checkout_form" do
+          expect(page).to have_link("Terms of service", href: tos_url)
+          expect(find_link("Terms of service")[:target]).to eq "_blank"
+          expect(page).to have_button("Place order now", disabled: true)
+        end
+
+        check "accept_terms"
         expect(page).to have_button("Place order now", disabled: false)
 
-        uncheck "Terms of Service"
+        uncheck "accept_terms"
         expect(page).to have_button("Place order now", disabled: true)
+      end
+
+      context "when the terms have been accepted in the past" do
+        before do
+          TermsOfServiceFile.create!(
+            attachment: File.open(Rails.root.join("public/Terms-of-service.pdf")),
+            updated_at: 1.day.ago,
+          )
+          customer = create(:customer, enterprise: order.distributor, user: user)
+          customer.update(terms_and_conditions_accepted_at: Time.zone.now)
+        end
+
+        it "remembers the acceptance" do
+          visit checkout_path
+
+          within "#checkout_form" do
+            expect(page).to have_link("Terms of service")
+            expect(page).to have_button("Place order now", disabled: false)
+          end
+
+          uncheck "accept_terms"
+          expect(page).to have_button("Place order now", disabled: true)
+
+          check "accept_terms"
+          expect(page).to have_button("Place order now", disabled: false)
+        end
       end
     end
 
     context "when the seller's terms and the platform's terms have to be accepted" do
       let(:fake_terms_and_conditions_path) { Rails.root.join("app/assets/images/logo-white.png") }
-      let(:terms_and_conditions_file) { Rack::Test::UploadedFile.new(fake_terms_and_conditions_path, "application/pdf") }
+      let(:terms_and_conditions_file) {
+        Rack::Test::UploadedFile.new(fake_terms_and_conditions_path, "application/pdf")
+      }
       let(:tos_url) { "https://example.org/tos" }
 
       before do
@@ -212,21 +271,27 @@ feature "As a consumer I want to check out my cart", js: true do
       it "shows links to both terms and all need accepting" do
         visit checkout_path
 
-        expect(page).to have_link("Terms and Conditions", href: order.distributor.terms_and_conditions.url)
-        expect(page).to have_link("Terms of Service", href: tos_url)
-        expect(page).to have_button("Place order now", disabled: true)
+        within "#checkout_form" do
+          expect(page).to have_link("Terms and Conditions",
+                                    href: order.distributor.terms_and_conditions.url)
+          expect(page).to have_link("Terms of service", href: tos_url)
+          expect(page).to have_button("Place order now", disabled: true)
+        end
 
         # Both Ts&Cs and TOS appear in the one label for the one checkbox.
-        check "Terms and Conditions"
+        check "accept_terms"
         expect(page).to have_button("Place order now", disabled: false)
 
-        uncheck "Terms of Service"
+        uncheck "accept_terms"
         expect(page).to have_button("Place order now", disabled: true)
       end
     end
 
     context "with previous orders" do
-      let!(:prev_order) { create(:completed_order_with_totals, order_cycle: order_cycle, distributor: distributor, user: order.user) }
+      let!(:prev_order) {
+        create(:completed_order_with_totals, order_cycle: order_cycle, distributor: distributor,
+                                             user: order.user)
+      }
 
       before do
         order.distributor.allow_order_changes = true
@@ -251,10 +316,14 @@ feature "As a consumer I want to check out my cart", js: true do
         choose shipping_with_fee.name
         choose check_without_fee.name
 
-        expect do
+        perform_enqueued_jobs do
           place_order
+
           expect(page).to have_content "Your order has been processed successfully"
-        end.to enqueue_job ConfirmOrderJob
+
+          expect(ActionMailer::Base.deliveries.first.subject).to match(/Order Confirmation/)
+          expect(ActionMailer::Base.deliveries.second.subject).to match(/Order Confirmation/)
+        end
 
         order = Spree::Order.complete.last
         expect(order.payment_state).to eq "balance_due"
@@ -390,7 +459,7 @@ feature "As a consumer I want to check out my cart", js: true do
         expect do
           place_order
           expect(page).to have_content "Your order has been processed successfully"
-        end.to enqueue_job ConfirmOrderJob
+        end.to have_enqueued_mail(Spree::OrderMailer, :confirm_email_for_customer)
 
         # And the order's special instructions should be set
         order = Spree::Order.complete.last
@@ -431,7 +500,8 @@ feature "As a consumer I want to check out my cart", js: true do
           expect(order.shipment_state).to eq "pending"
         end
 
-        it "takes us to the cart page with an error when a product becomes out of stock just before we purchase", js: true do
+        it "takes us to the cart page with an error when a product becomes out of stock just before we purchase",
+           js: true do
           variant.on_demand = false
           variant.on_hand = 0
           variant.save!
@@ -485,7 +555,10 @@ feature "As a consumer I want to check out my cart", js: true do
         describe "credit card payments" do
           ["Spree::Gateway::Bogus", "Spree::Gateway::BogusSimple"].each do |gateway_type|
             context "with a credit card payment method using #{gateway_type}" do
-              let!(:check_without_fee) { create(:payment_method, distributors: [distributor], name: "Roger rabbit", type: gateway_type) }
+              let!(:check_without_fee) {
+                create(:payment_method, distributors: [distributor], name: "Roger rabbit",
+                                        type: gateway_type)
+              }
 
               it "takes us to the order confirmation page when submitted with a valid credit card" do
                 fill_in 'Card Number', with: "4111111111111111"

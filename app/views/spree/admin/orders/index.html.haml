@@ -8,7 +8,7 @@
 = render partial: 'spree/admin/shared/order_sub_menu'
 
 - content_for :main_ng_app_name do
-  = "admin.orders"
+  = "ofn.admin"
 
 - content_for :main_ng_ctrl_name do
   = "ordersCtrl"
@@ -32,7 +32,7 @@
   %thead
     %tr
       %th
-        %input{type: 'checkbox', 'ng-click' => 'toggleAll()', 'ng-model' => 'select_all'}
+        %input{type: 'checkbox', 'ng-change' => 'toggleAll()', 'ng-model' => 'select_all'}
       %th
         = t(:products_distributor)
         %th

@@ -11,7 +11,7 @@ module Spree
       before_action :can_transition_to_payment
       # We ensure that items are in stock before all screens if the order is in the Payment state.
       # This way, we don't allow someone to enter credit card details for an order only to be told
-      # that it can't be processed. 
+      # that it can't be processed.
       before_action :ensure_sufficient_stock_lines
 
       respond_to :html
@@ -35,15 +35,16 @@ module Spree
             return
           end
 
-          authorize_stripe_sca_payment
-
           if @order.completed?
-            @payment.process!
+            authorize_stripe_sca_payment
+            @payment.process_offline!
             flash[:success] = flash_message_for(@payment, :successfully_created)
 
             redirect_to spree.admin_order_payments_path(@order)
           else
             OrderWorkflow.new(@order).complete!
+            authorize_stripe_sca_payment
+            @payment.process_offline!
 
             flash[:success] = Spree.t(:new_order_completed)
             redirect_to spree.edit_admin_order_url(@order)
@@ -150,7 +151,7 @@ module Spree
         return if !@order.payment? || @order.insufficient_stock_lines.blank?
 
         flash[:error] = I18n.t("spree.orders.line_item.insufficient_stock",
-          on_hand: "0 #{out_of_stock_item_names}")
+                               on_hand: "0 #{out_of_stock_item_names}")
         redirect_to spree.edit_admin_order_url(@order)
       end
 
@@ -171,13 +172,15 @@ module Spree
       end
 
       def authorize_stripe_sca_payment
-        return unless @payment.payment_method.class == Spree::Gateway::StripeSCA
+        return unless @payment.payment_method.instance_of?(Spree::Gateway::StripeSCA)
 
         @payment.authorize!(full_order_path(@payment.order))
 
-        raise Spree::Core::GatewayError, I18n.t('authorization_failure') unless @payment.pending?
+        unless @payment.pending? || @payment.requires_authorization?
+          raise Spree::Core::GatewayError, I18n.t('authorization_failure')
+        end
 
-        return unless @payment.authorization_action_required?
+        return unless @payment.requires_authorization?
 
         PaymentMailer.authorize_payment(@payment).deliver_later
         raise Spree::Core::GatewayError, I18n.t('action_required')

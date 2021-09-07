@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Admin
   class OrderCyclesController < Admin::ResourceController
     include OrderCyclesHelper
@@ -62,7 +64,7 @@ module Admin
       if @order_cycle_form.save
         respond_to do |format|
           flash[:notice] = I18n.t(:order_cycles_update_notice) if params[:reloading] == '1'
-          format.html { redirect_to main_app.edit_admin_order_cycle_path(@order_cycle) }
+          format.html { redirect_back(fallback_location: root_path) }
           format.json { render json: { success: true } }
         end
       else
@@ -156,8 +158,8 @@ module Admin
         orders_close_at_gt = raw_params[:q].andand.delete(:orders_close_at_gt) || 31.days.ago
         raw_params[:q] = {
           g: [raw_params.delete(:q) || {}, { m: 'or',
-                                         orders_close_at_gt: orders_close_at_gt,
-                                         orders_close_at_null: true }]
+                                             orders_close_at_gt: orders_close_at_gt,
+                                             orders_close_at_null: true }]
         }
         @collection = collection
       end

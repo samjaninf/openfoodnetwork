@@ -2,6 +2,8 @@ nb:
   language_name: "Norsk"
   activerecord:
     attributes:
+      spree/user:
+        password: "Passord"
       enterprise_fee:
         fee_type: Avfgiftstype
       spree/order:
@@ -398,6 +400,9 @@ nb:
       embedded_shopfront_settings: "Innstillinger Innebygd Nettbutikk"
       enable_embedded_shopfronts: "Aktiver Innebygd Nettbutikk"
       embedded_shopfronts_whitelist: "Hviteliste for Eksterne Domener"
+    terms_of_service_files:
+      show:
+        terms_of_service: "Vilkår for bruk"
     number_localization:
       number_localization_settings: "Innstillinger for nummerlokalisering"
       enable_localized_number: "Bruk internasjonale tusen- og desimalskilletegn"
@@ -805,6 +810,8 @@ nb:
           shopfront_category_ordering_note: "(topp til bunn)"
           open_date: "Åpningsdato"
           close_date: "Stengedato"
+          shopfront_sort_by_category_placeholder: "Kategori"
+          shopfront_sort_by_producer_placeholder: "Produsent"
         social:
           twitter_placeholder: "f.eks. @the_prof"
           instagram_placeholder: "f.eks. the_prof"
@@ -925,7 +932,6 @@ nb:
         cancel: "Avbryt"
         back_to_list: "Tilbake til Listen"
       edit:
-        advanced_settings: "Avanserte Innstillinger"
         save: "Lagre"
         save_and_next: "Lagre og Neste"
         next: "Neste"
@@ -978,6 +984,8 @@ nb:
         preferred_product_selection_from_coordinator_inventory_only_here: Kun Koordinators varelager
         preferred_product_selection_from_coordinator_inventory_only_all: Alle tilgjengelige produkter
         save_reload: Lagre og last siden på nytt
+      order_cycle_top_buttons:
+        advanced_settings: "Avanserte Innstillinger"
       coordinator_fees:
         add: Legg til koordinatoravgift
       filters:
@@ -1218,11 +1226,9 @@ nb:
       link_text: "Vilkår og Betingelser"
     platform_terms_of_service:
       message_html: "Jeg godtar plattformens %{tos_link}."
-      terms_of_service: "Vilkår for bruk"
     all_terms_and_conditions:
       message_html: "Jeg godtar selgerens %{terms_and_conditions_link} og plattformens %{tos_link}."
       terms_and_conditions: "Vilkår og Betingelser"
-      terms_of_service: "Vilkår for bruk"
     failed: "Utsjekk fra kassen mislyktes. Gi oss beskjed slik at vi kan behandle bestillingen din."
   shops:
     hubs:
@@ -1262,7 +1268,6 @@ nb:
       footer_join_body: "Opprette en profil, butikk eller gruppe på Open Food Network."
       footer_join_cta: "Fortell meg mer!"
       footer_legal_call: "Les våre"
-      footer_legal_tos: "Vilkår og betingelser"
       footer_legal_visit: "Finn oss på"
       footer_legal_text_html: "Open Food Network er en plattform med fri og åpen kildekode. Vårt innhold er lisensiert med %{content_license} og vår kode med %{code_license}."
       footer_data_text_with_privacy_policy_html: "Vi tar godt vare på dine data. Se vår %{privacy_policy} og %{cookies_policy}"
@@ -1375,8 +1380,6 @@ nb:
   label_producers: "Produsenter"
   label_groups: "Grupper"
   label_about: "Om"
-  label_connect: "Koble til"
-  label_learn: "Lære"
   label_blog: "Blogg"
   label_support: "Støtte"
   label_shopping: "Handle"
@@ -1464,10 +1467,6 @@ nb:
   brandstory_part4: "Det fungerer overalt. Det forandrer alt."
   brandstory_part5_strong: "Vi kaller det Open Food Network."
   brandstory_part6: "Alle er vi glad i mat. Nå kan vi elske vårt matsystem også."
-  learn_body: "Se på modeller, historier og ressurser for å støtte deg å utvikle en god mat bedrift eller organisasjon. Finne opplæring, arrangement og andre muligheter til å lære fra andre."
-  learn_cta: "Bli Inspirert"
-  connect_body: "Søk i vår katalog av produsenter, hubs og grupper for å finne god mat nær deg. Vise din bedrift eller organisasjon på OFN slik at kjøpere kan finne deg. Bli med i fellesskapet for å få råd og løse problemer sammen."
-  connect_cta: "Utforske"
   system_headline: "Shopping - slik virker det."
   system_step1: "1. Søk"
   system_step1_text: "Søk blant våre mangfoldige, uavhengige butikker for lokal mat i sesong. Søk i nabolag og matkategori, eller om du foretrekker levering eller å hente selv."
@@ -1506,6 +1505,40 @@ nb:
   checkout_total_price: Sum
   checkout_back_to_cart: "Tilbake til Handlekurv"
   cost_currency: "Kostnadsvaluta"
+  split_checkout:
+    step1:
+      your_details:
+        title: Dine detaljer
+        first_name:
+          label: Fornavn
+        last_name:
+          label: Etternavn
+        email:
+          label: Epost
+        phone:
+          label: Telefonnummer
+      billing_address:
+        title: Fakturaadresse
+        city:
+          label: By
+        state_id:
+          label: Tilstand
+        zipcode:
+          label: Postnummer
+        country_id:
+          label: Land
+      delivery_address:
+        title: Leveringsadresse
+    step3:
+      your_details:
+        title: Dine detaljer
+      billing_address:
+        title: Fakturaadresse
+      terms_and_conditions:
+        message_html: "Jeg godtar selgers %{terms_and_conditions_link}."
+        link_text: "Vilkår og Betingelser"
+    errors:
+      invalid_email: "Vennligst oppgi en gyldig epostadresse"
   order_paid: BETALT
   order_not_paid: IKKE BETALT
   order_total: Sum bestilling
@@ -2166,7 +2199,6 @@ nb:
   new_order: "Ny bestilling"
   enterprise_tos_link: "Lenke til Tjenestevilkår for Bedrifter"
   enterprise_tos_message: "Vi ønsker å jobbe med bedrifter som deler våre mål og verdier. Derfor ber vi nye bedrifter om å godta vår"
-  enterprise_tos_link_text: "Tjenestevilkår."
   enterprise_tos_agree: "Jeg godtar Tjenestevilkårene over"
   tax_settings: "Avgiftsinnstillinger"
   products_require_tax_category: "produkter krever avgiftskategori"
@@ -2920,6 +2952,7 @@ nb:
   shipment_inc_vat: "Levering inkludert MVA"
   shipping_tax_rate: "Rate Leveringsavgift"
   category: "Kategori"
+  import_date: "Importdato"
   delivery: "Levering"
   temperature_controlled: "Temperaturkontrollert"
   new_product: "Nytt produkt"
@@ -2974,6 +3007,7 @@ nb:
     payment_method_not_supported: "Betalingsmåte støttes ikke"
     resend_authorization_email: "Send autorisasjons-epost på nytt"
     rma_credit: "RMA-kreditt"
+    refund: "Refusjon"
     server_error: "Serverfeil"
     shipping_method_names:
       UPS Ground: "UPS Ground"
@@ -3053,7 +3087,6 @@ nb:
     default_meta_description: "Standard Meta Beskrivelse"
     default_meta_keywords: "Standard Meta Nøkkelord"
     security_settings: "Sikkerhetsinnstillinger"
-    allow_ssl_in_development_and_test: "Tillat at SSL brukes i utviklings- og testmodus"
     allow_ssl_in_production: "Tillat at SSL brukes i produksjonsmodus"
     allow_ssl_in_staging: "Tillat at SSL brukes i staging-modus"
     currency_decimal_mark: "Valuta desimaltegn"
@@ -3530,6 +3563,8 @@ nb:
           producer_name: "Produsent"
           unit: "Enhet"
       shared:
+        configuration_menu:
+          terms_of_service: "Vilkår for bruk"
         sortable_header:
           name: "Navn"
           number: "Antall"
@@ -3639,7 +3674,6 @@ nb:
     shipment_mailer:
       shipped_email:
         dear_customer: "Kjære Kunde,"
-        instructions: "Din bestilling har blitt sendt"
         shipment_summary: "Leveringssammendrag"
         subject: "Leveringsvarsling"
         thanks: "Takk for handelen."

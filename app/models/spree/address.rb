@@ -4,6 +4,9 @@ module Spree
   class Address < ApplicationRecord
     include AddressDisplay
 
+    searchable_attributes :firstname, :lastname
+    searchable_associations :country, :state
+
     belongs_to :country, class_name: "Spree::Country"
     belongs_to :state, class_name: "Spree::State"
 
@@ -12,7 +15,6 @@ module Spree
 
     validates :firstname, :lastname, :address1, :city, :country, presence: true
     validates :zipcode, presence: true, if: :require_zipcode?
-    validates :phone, presence: true, if: :require_phone?
 
     validate :state_validate
 
@@ -24,10 +26,10 @@ module Spree
 
     def self.default
       country = begin
-                  DefaultCountry.country
-                rescue StandardError
-                  Spree::Country.first
-                end
+        DefaultCountry.country
+      rescue StandardError
+        Spree::Country.first
+      end
       new(country: country)
     end
 
@@ -101,10 +103,6 @@ module Spree
 
     private
 
-    def require_phone?
-      true
-    end
-
     def require_zipcode?
       true
     end
@@ -128,16 +126,14 @@ module Spree
 
       # Ensure state_name belongs to country without states,
       #   or that it matches a predefined state name/abbr
-      if state_name.present?
-        if country.states.present?
-          states = country.states.find_all_by_name_or_abbr(state_name)
+      if state_name.present? && country.states.present?
+        states = country.states.find_all_by_name_or_abbr(state_name)
 
-          if states.size == 1
-            self.state = states.first
-            self.state_name = nil
-          else
-            errors.add(:state, :invalid)
-          end
+        if states.size == 1
+          self.state = states.first
+          self.state_name = nil
+        else
+          errors.add(:state, :invalid)
         end
       end
 

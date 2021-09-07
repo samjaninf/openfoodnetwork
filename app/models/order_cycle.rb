@@ -1,6 +1,12 @@
+# frozen_string_literal: true
+
 require 'open_food_network/scope_variant_to_hub'
 
 class OrderCycle < ApplicationRecord
+  searchable_attributes :orders_open_at, :orders_close_at, :coordinator_id
+  searchable_scopes :active, :inactive, :active_or_complete, :upcoming, :closed, :not_closed,
+                    :dated, :undated, :soonest_opening, :soonest_closing, :most_recently_closed
+
   belongs_to :coordinator, class_name: 'Enterprise'
 
   has_many :coordinator_fee_refs, class_name: 'CoordinatorFee'
@@ -257,7 +263,7 @@ class OrderCycle < ApplicationRecord
                                          distributor_id: distributor,
                                          order_cycle_id: self)
     scoper = OpenFoodNetwork::ScopeVariantToHub.new(distributor)
-    items = Spree::LineItem.joins(:order).merge(orders)
+    items = Spree::LineItem.includes(:variant).joins(:order).merge(orders).to_a
     items.each { |li| scoper.scope(li.variant) }
   end
 

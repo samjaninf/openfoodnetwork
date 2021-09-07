@@ -169,10 +169,13 @@ describe Spree::Order do
       expect(order.shipment_state).to eq 'ready'
     end
 
-    it "should send an order confirmation email" do
-      expect do
-        order.finalize!
-      end.to enqueue_job ConfirmOrderJob
+    it "sends confirmation emails to both the user and the shop owner" do
+      mailer = double(:mailer, deliver_later: true)
+
+      expect(Spree::OrderMailer).to receive(:confirm_email_for_customer).and_return(mailer)
+      expect(Spree::OrderMailer).to receive(:confirm_email_for_shop).and_return(mailer)
+
+      order.finalize!
     end
 
     it "should freeze all adjustments" do
@@ -455,26 +458,6 @@ describe Spree::Order do
     end
   end
 
-  describe "setting variant attributes" do
-    it "sets attributes on line items for variants" do
-      d = create(:distributor_enterprise)
-      p = create(:product)
-
-      subject.distributor = d
-      subject.save!
-
-      subject.add_variant(p.master, 1, 3)
-
-      li = Spree::LineItem.last
-      expect(li.max_quantity).to eq(3)
-    end
-
-    it "does nothing when the line item is not found" do
-      p = build_stubbed(:simple_product)
-      subject.set_variant_attributes(p.master, { 'max_quantity' => '3' }.with_indifferent_access)
-    end
-  end
-
   describe "applying enterprise fees" do
     subject { create(:order) }
     let(:fee_handler) { ::OrderFeesHandler.new(subject) }
@@ -622,12 +605,18 @@ describe Spree::Order do
 
   describe "getting the shipping tax" do
     let(:order) { create(:order) }
-    let(:shipping_tax_rate) { create(:tax_rate, amount: 0.25, included_in_price: true, zone: create(:zone_with_member)) }
+    let(:shipping_tax_rate) {
+      create(:tax_rate, amount: 0.25, included_in_price: true, zone: create(:zone_with_member))
+    }
     let(:shipping_tax_category) { create(:tax_category, tax_rates: [shipping_tax_rate]) }
-    let!(:shipping_method) { create(:shipping_method_with, :flat_rate, tax_category: shipping_tax_category) }
+    let!(:shipping_method) {
+      create(:shipping_method_with, :flat_rate, tax_category: shipping_tax_category)
+    }
 
     context "with a taxed shipment" do
-      let!(:shipment) { create(:shipment_with, :shipping_method, shipping_method: shipping_method, order: order) }
+      let!(:shipment) {
+        create(:shipment_with, :shipping_method, shipping_method: shipping_method, order: order)
+      }
 
       before do
         allow(order).to receive(:tax_zone) { shipping_tax_rate.zone }
@@ -647,38 +636,54 @@ describe Spree::Order do
     end
   end
 
-  describe "getting the enterprise fee tax" do
+  describe "#enterprise_fee_tax" do
     let!(:order) { create(:order) }
-    let(:enterprise_fee1) { create(:enterprise_fee) }
-    let(:enterprise_fee2) { create(:enterprise_fee) }
-    let!(:adjustment1) {
-      create(:adjustment, adjustable: order, originator: enterprise_fee1, label: "EF 1",
-             amount: 123, included_tax: 10.00, order: order)
+    let(:enterprise_fee) { create(:enterprise_fee) }
+    let!(:fee_adjustment) {
+      create(:adjustment, adjustable: order, originator: enterprise_fee,
+                          amount: 100, order: order, state: "closed")
     }
-    let!(:adjustment2) {
-      create(:adjustment, adjustable: order, originator: enterprise_fee2, label: "EF 2",
-             amount: 123, included_tax: 2.00, order: order)
+    let!(:fee_tax1) {
+      create(:adjustment, adjustable: fee_adjustment, originator_type: "Spree::TaxRate",
+                          amount: 12.3, order: order, state: "closed")
+    }
+    let!(:fee_tax2) {
+      create(:adjustment, adjustable: fee_adjustment, originator_type: "Spree::TaxRate",
+                          amount: 4.5, order: order, state: "closed")
+    }
+    let!(:admin_adjustment) {
+      create(:adjustment, adjustable: order, originator: nil,
+                          amount: 6.7, order: order, state: "closed")
     }
 
-    it "returns a sum of the tax included in all enterprise fees" do
-      expect(order.reload.enterprise_fee_tax).to eq(12)
+    it "returns a sum of all taxes on enterprise fees" do
+      expect(order.reload.enterprise_fee_tax).to eq(16.8)
     end
   end
 
   describe "getting the total tax" do
     let(:shipping_tax_rate) { create(:tax_rate, amount: 0.25) }
+    let(:fee_tax_rate) { create(:tax_rate, amount: 0.10) }
     let(:order) { create(:order) }
     let(:shipping_method) { create(:shipping_method_with, :flat_rate) }
     let!(:shipment) do
       create(:shipment_with, :shipping_method, shipping_method: shipping_method, order: order)
     end
     let(:enterprise_fee) { create(:enterprise_fee) }
-
-    before do
-      create(:adjustment, adjustable: order, originator: enterprise_fee, label: "EF", amount: 123,
-                          included_tax: 2, order: order)
+    let!(:fee) {
+      create(:adjustment, adjustable: order, originator: enterprise_fee, label: "EF", amount: 20,
+                          order: order)
+    }
+    let!(:fee_tax) {
+      create(:adjustment, adjustable: fee, originator: fee_tax_rate,
+                          amount: 2, order: order, state: "closed")
+    }
+    let!(:shipping_tax) {
       create(:adjustment, adjustable: shipment, originator: shipping_tax_rate,
                           amount: 10, order: order, state: "closed")
+    }
+
+    before do
       order.update_order!
     end
 
@@ -724,59 +729,6 @@ describe Spree::Order do
       subject.set_distributor! nil
 
       expect(subject.distributor).to be_nil
-    end
-  end
-
-  describe "removing an item from the order" do
-    let(:order) { create(:order) }
-    let(:v1)    { create(:variant) }
-    let(:v2)    { create(:variant) }
-    let(:v3)    { create(:variant) }
-
-    before do
-      order.add_variant v1
-      order.add_variant v2
-
-      order.recreate_all_fees!
-    end
-
-    it "removes the variant's line item" do
-      order.remove_variant v1
-      expect(order.line_items.reload.map(&:variant)).to eq([v2])
-    end
-
-    it "does nothing when there is no matching line item" do
-      expect do
-        order.remove_variant v3
-      end.to change(order.line_items.reload, :count).by(0)
-    end
-
-    context "when the item has an associated adjustment" do
-      let(:distributor) { create(:distributor_enterprise) }
-
-      let(:order_cycle) do
-        create(:order_cycle).tap do
-          create(:exchange, variants: [v1], incoming: true)
-          create(:exchange, variants: [v1], incoming: false, receiver: distributor)
-        end
-      end
-
-      let(:order) { create(:order, distributor: distributor, order_cycle: order_cycle) }
-
-      it "removes the variant's line item" do
-        order.remove_variant v1
-        expect(order.line_items.reload.map(&:variant)).to eq([v2])
-      end
-
-      it "removes the variant's adjustment" do
-        line_item = order.line_items.where(variant_id: v1.id).first
-        adjustment_scope = Spree::Adjustment.where(adjustable_type: "Spree::LineItem",
-                                                   adjustable_id: line_item.id)
-        expect(adjustment_scope.count).to eq(1)
-        adjustment = adjustment_scope.first
-        order.remove_variant v1
-        expect { adjustment.reload }.to raise_error
-      end
     end
   end
 
@@ -853,7 +805,8 @@ describe Spree::Order do
     let(:distributor) { create(:enterprise) }
 
     before do
-      subject.order_cycle = create(:simple_order_cycle, distributors: [distributor], variants: [variant1, variant2])
+      subject.order_cycle = create(:simple_order_cycle, distributors: [distributor],
+                                                        variants: [variant1, variant2])
       subject.distributor = distributor
 
       line_item1 = create(:line_item, order: subject, variant: variant1)
@@ -864,7 +817,8 @@ describe Spree::Order do
 
     it "allows the change when all variants in the order are provided by the new distributor in the new order cycle" do
       new_distributor = create(:enterprise)
-      new_order_cycle = create(:simple_order_cycle, distributors: [new_distributor], variants: [variant1, variant2])
+      new_order_cycle = create(:simple_order_cycle, distributors: [new_distributor],
+                                                    variants: [variant1, variant2])
 
       subject.distributor = new_distributor
       expect(subject).not_to be_valid
@@ -889,7 +843,8 @@ describe Spree::Order do
       end
 
       it "finds only orders not in specified state" do
-        o = FactoryBot.create(:completed_order_with_totals, distributor: create(:distributor_enterprise))
+        o = FactoryBot.create(:completed_order_with_totals,
+                              distributor: create(:distributor_enterprise))
         o.cancel!
         expect(Spree::Order.not_state(:canceled)).not_to include o
       end
@@ -901,17 +856,20 @@ describe Spree::Order do
     let!(:order) { create(:order, distributor: distributor) }
 
     it "sends confirmation emails" do
-      expect do
-        order.deliver_order_confirmation_email
-      end.to enqueue_job ConfirmOrderJob
+      mailer = double(:mailer, deliver_later: true)
+      expect(Spree::OrderMailer).to receive(:confirm_email_for_customer).and_return(mailer)
+      expect(Spree::OrderMailer).to receive(:confirm_email_for_shop).and_return(mailer)
+
+      order.deliver_order_confirmation_email
     end
 
     it "does not send confirmation emails when the order belongs to a subscription" do
       create(:proxy_order, order: order)
 
-      expect do
-        order.deliver_order_confirmation_email
-      end.to_not enqueue_job ConfirmOrderJob
+      expect(Spree::OrderMailer).not_to receive(:confirm_email_for_customer)
+      expect(Spree::OrderMailer).not_to receive(:confirm_email_for_shop)
+
+      order.deliver_order_confirmation_email
     end
   end
 
@@ -999,7 +957,9 @@ describe Spree::Order do
       end
 
       context "and a customer for order.distributor and order.user.email does not alread exist" do
-        let!(:customer) { create(:customer, enterprise: distributor, email: 'some-other-email@email.com') }
+        let!(:customer) {
+          create(:customer, enterprise: distributor, email: 'some-other-email@email.com')
+        }
 
         it "does not set the customer and returns nil" do
           result = order.send(:associate_customer)
@@ -1037,7 +997,9 @@ describe Spree::Order do
 
     context "when a customer not been linked to the order" do
       context "but one matching order#email_for_customer already exists" do
-        let!(:customer) { create(:customer, enterprise: distributor, email: 'some-other-email@email.com') }
+        let!(:customer) {
+          create(:customer, enterprise: distributor, email: 'some-other-email@email.com')
+        }
         before { allow(order).to receive(:email_for_customer) { 'some-other-email@email.com' } }
 
         it "links the customer customer to the order" do
@@ -1097,7 +1059,7 @@ describe Spree::Order do
 
     it "returns a validation error" do
       expect{ order.next }.to change(order.errors, :count).from(0).to(1)
-      expect(order.errors.messages[:base]).to eq [I18n.t('devise.failure.already_registered')]
+      expect(order.errors.messages[:email]).to eq [I18n.t('devise.failure.already_registered')]
       expect(order.state).to eq 'cart'
     end
   end
@@ -1160,10 +1122,13 @@ describe Spree::Order do
     end
 
     context "changing the shipping method to one without fees" do
-      let(:shipping_method) { create(:shipping_method, calculator: Calculator::FlatRate.new(preferred_amount: 0)) }
+      let(:shipping_method) {
+        create(:shipping_method, calculator: Calculator::FlatRate.new(preferred_amount: 0))
+      }
 
       it "updates shipping fees" do
-        order.shipments = [create(:shipment_with, :shipping_method, shipping_method: shipping_method)]
+        order.shipments = [create(:shipment_with, :shipping_method,
+                                  shipping_method: shipping_method)]
         order.save
 
         expect(order.adjustment_total).to eq expected_fees - (item_num * shipping_fee)
@@ -1173,7 +1138,9 @@ describe Spree::Order do
     end
 
     context "changing the payment method to one without fees" do
-      let(:payment_method) { create(:payment_method, calculator: Calculator::FlatRate.new(preferred_amount: 0)) }
+      let(:payment_method) {
+        create(:payment_method, calculator: Calculator::FlatRate.new(preferred_amount: 0))
+      }
 
       it "removes transaction fees" do
         # Change the payment method
@@ -1199,20 +1166,33 @@ describe Spree::Order do
     context "when no order has been finalised in this order cycle" do
       let(:product) { create(:product) }
 
+      before do
+        order.contents.update_or_create(product.variants.first, { quantity: 1, max_quantity: 3 })
+      end
+
       it "returns no items even though the cart contains items" do
-        order.add_variant(product.master, 1, 3)
         expect(order.finalised_line_items).to eq []
       end
     end
 
     context "when an order has been finalised in this order cycle" do
-      let!(:prev_order) { create(:completed_order_with_totals, distributor: distributor, order_cycle: order_cycle, user: order.user) }
-      let!(:prev_order2) { create(:completed_order_with_totals, distributor: distributor, order_cycle: order_cycle, user: order.user) }
+      let!(:prev_order) {
+        create(:completed_order_with_totals, distributor: distributor, order_cycle: order_cycle,
+                                             user: order.user)
+      }
+      let!(:prev_order2) {
+        create(:completed_order_with_totals, distributor: distributor, order_cycle: order_cycle,
+                                             user: order.user)
+      }
       let(:product) { create(:product) }
 
-      it "returns previous items" do
-        prev_order.add_variant(product.master, 1, 3)
+      before do
+        prev_order.contents.update_or_create(product.variants.first,
+                                             { quantity: 1, max_quantity: 3 })
         prev_order2.reload # to get the right response from line_items
+      end
+
+      it "returns previous items" do
         expect(order.finalised_line_items.length).to eq 11
         expect(order.finalised_line_items).to match_array(prev_order.line_items + prev_order2.line_items)
       end
@@ -1222,7 +1202,9 @@ describe Spree::Order do
   describe "determining checkout steps for an order" do
     let!(:enterprise) { create(:enterprise) }
     let!(:order) { create(:order, distributor: enterprise) }
-    let!(:payment_method) { create(:stripe_connect_payment_method, distributor_ids: [enterprise.id]) }
+    let!(:payment_method) {
+      create(:stripe_connect_payment_method, distributor_ids: [enterprise.id])
+    }
     let!(:payment) { create(:payment, order: order, payment_method: payment_method) }
 
     it "does not include the :confirm step" do
@@ -1377,6 +1359,38 @@ describe Spree::Order do
           expect(failed_payment.reload.amount).to eq 100
           expect(pending_payment.reload.amount).to eq 120
         end
+      end
+    end
+  end
+
+  describe "#ensure_updated_shipments" do
+    before { Spree::Shipment.create!(order: order) }
+
+    context "when the order is not completed" do
+      it "destroys current shipments" do
+        order.ensure_updated_shipments
+        expect(order.shipments).to be_empty
+      end
+
+      it "puts order back in address state" do
+        order.ensure_updated_shipments
+        expect(order.state).to eq "address"
+      end
+    end
+
+    context "when the order is completed" do
+      before do
+        allow(order).to receive(:completed?) { true }
+      end
+
+      it "does not change the shipments" do
+        expect {
+          order.ensure_updated_shipments
+        }.not_to change { order.shipments }
+
+        expect {
+          order.ensure_updated_shipments
+        }.not_to change { order.state }
       end
     end
   end

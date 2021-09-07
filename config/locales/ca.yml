@@ -2,6 +2,9 @@ ca:
   language_name: "Català"
   activerecord:
     attributes:
+      spree/user:
+        password: "Contrasenya"
+        password_confirmation: "confirmació de la contrasenya"
       enterprise_fee:
         fee_type: Tipus de comissió
       spree/order:
@@ -300,6 +303,7 @@ ca:
   no_pending_payments: "No hi ha pagaments pendents"
   invalid_payment_state: "Estat de pagament invàlid: %{state}"
   filter_results: Aplicar filtre
+  clear_filters: Esborra els filtres
   quantity: Quantitat
   pick_up: Recollida
   copy: Còpia
@@ -400,6 +404,17 @@ ca:
       embedded_shopfront_settings: "Configuració de botiga incrustada"
       enable_embedded_shopfronts: "Habilita les botigues incrustades"
       embedded_shopfronts_whitelist: "Llista blanca de dominis externs"
+    terms_of_service_files:
+      create:
+        select_file: "Seleccioneu primer un fitxer."
+      show:
+        title: "Fitxers de Condicions del servei"
+        no_files: "Encara no s’han penjat termes de serveis."
+        using_default_terms_html: "El lloc actualment enllaça amb el vostre antic %{tos_link}."
+        current_terms_html: "Vegeu l’actual %{tos_link}. Temps de càrrega: %{datetime}."
+        terms_of_service: "Termes del servei"
+        delete: "Eliminar arxiu"
+        confirm_delete: "Esteu segur que voleu suprimir el fitxer de condicions del servei actual?"
     number_localization:
       number_localization_settings: "Configuració de localització numèrica"
       enable_localized_number: "Utilitzeu l'estàndard internacional per separar milers/decimals"
@@ -810,6 +825,11 @@ ca:
           shopfront_category_ordering_note: "(de dalt a baix)"
           open_date: "Data d'obertura"
           close_date: "Data de tancament"
+          display_ordering_in_shopfront: "Mostra les comandes a la botiga:"
+          shopfront_sort_by_category: "Per categoria"
+          shopfront_sort_by_producer: "Per productora"
+          shopfront_sort_by_category_placeholder: "Categoria"
+          shopfront_sort_by_producer_placeholder: "Productora"
         social:
           twitter_placeholder: "p. ex: @horta_josepribes"
           instagram_placeholder: "p. ex: horta_josepribes"
@@ -930,7 +950,6 @@ ca:
         cancel: "Cancel·lar"
         back_to_list: "Tornar a la llista"
       edit:
-        advanced_settings: "Configuració avançada"
         save: "Desa"
         save_and_next: "Desa i següent"
         next: "Següent"
@@ -983,6 +1002,8 @@ ca:
         preferred_product_selection_from_coordinator_inventory_only_here: Només inventari del coordinador
         preferred_product_selection_from_coordinator_inventory_only_all: Tots els productes disponibles
         save_reload: Desa i recarrega la pàgina
+      order_cycle_top_buttons:
+        advanced_settings: "Configuració avançada"
       coordinator_fees:
         add: Afegeix una comissió del coordinador
       filters:
@@ -1006,6 +1027,7 @@ ca:
         schedule: Programació
         schedules: Programacions
         new_schedule: Nova programació
+        new_schedule_tooltip: Freqüència amb què es fa una comanda de subscripció
       name_and_timing_form:
         name: Nom
         orders_open: Les comandes s'obren a
@@ -1223,12 +1245,11 @@ ca:
       link_text: "Termes i condicions"
     platform_terms_of_service:
       message_html: "Accepto els %{tos_link} de la plataforma."
-      terms_of_service: "Termes del servei"
     all_terms_and_conditions:
       message_html: "Accepto el %{terms_and_conditions_link} del venedor i la plataforma %{tos_link}."
       terms_and_conditions: "Termes i condicions"
-      terms_of_service: "Termes del servei"
     failed: "La comanda ha fallat. Informeu-nos perquè puguem processar la vostra comanda."
+    payment_cancelled_due_to_stock: "Pagament cancel·lat: el pagament no s’ha pogut completar a causa de problemes d’estoc."
   shops:
     hubs:
       show_closed_shops: "Mostra les botigues tancades"
@@ -1267,7 +1288,6 @@ ca:
       footer_join_body: "Crea un directori de botigues a grups a Open Food Network."
       footer_join_cta: "Vull saber-ne més!"
       footer_legal_call: "Llegiu el nostre"
-      footer_legal_tos: "Termes i condicions"
       footer_legal_visit: "Troba'ns a"
       footer_legal_text_html: "Open Food Network és una plataforma de programari lliure i de codi obert. El nostre contingut està llicenciat amb %{content_license} i el nostre codi amb %{code_license}."
       footer_data_text_with_privacy_policy_html: "Tenim cura de les vostres dades. Vegeu les nostres %{privacy_policy} i %{cookies_policy}"
@@ -1386,8 +1406,6 @@ ca:
   label_producers: "Productors"
   label_groups: "Xarxes/Grups"
   label_about: "Sobre"
-  label_connect: "Connecta"
-  label_learn: "Aprèn"
   label_blog: "Blog"
   label_support: "Suport"
   label_shopping: "Compres"
@@ -1475,10 +1493,6 @@ ca:
   brandstory_part4: "Funciona a tot arreu. Ho canvia tot."
   brandstory_part5_strong: "L'anomenem Open Food Network."
   brandstory_part6: "A totes ens agrada menjar. Ara també podem estimar el nostre sistema alimentari."
-  learn_body: "Explora models, històries i recursos per ajudar-te a desenvolupar el teu negoci o organització de menjar just. Troba coneixements, esdeveniments i altres oportunitats d'aprendre dels companys."
-  learn_cta: "Inspira't"
-  connect_body: "Busca els nostres directoris complets de productores, organitzacions o xarxes per trobar menjar de proximitat i just a prop teu. Indica i llista la teva empresa o organització a l'OFN perquè les consumidores et trobin. Uneix-te a la comunitat per obtenir consells i resoldre problemes juntes."
-  connect_cta: "Explorar"
   system_headline: "Compres - aquí t'expliquem com funcionen."
   system_step1: "1. Cerca"
   system_step1_text: "Cerca a les nostres botigues diverses i independents per menjar producte local de temporada. Cerca per població i categoria d'aliments, o bé si prefereixes lliurament o recollida."
@@ -1517,6 +1531,40 @@ ca:
   checkout_total_price: Total
   checkout_back_to_cart: "Tornar a la cistella"
   cost_currency: "Moneda del cost"
+  split_checkout:
+    step1:
+      your_details:
+        title: Els teus detalls
+        first_name:
+          label: Nom
+        last_name:
+          label: Cognoms
+        email:
+          label: Correu electrònic
+        phone:
+          label: 'Número de telèfon '
+      billing_address:
+        title: Adreça de facturació
+        city:
+          label: Municipi
+        state_id:
+          label: Estat
+        zipcode:
+          label: Codi postal
+        country_id:
+          label: País
+      delivery_address:
+        title: Adreça de lliurament
+    step3:
+      your_details:
+        title: Els teus detalls
+      billing_address:
+        title: Adreça de facturació
+      terms_and_conditions:
+        message_html: "Accepto el %{terms_and_conditions_link} del venedor."
+        link_text: "Termes i condicions"
+    errors:
+      invalid_email: "siusplau, introduïu una adreça de correu electrònic vàlida"
   order_paid: PAGAT
   order_not_paid: NO PAGAT
   order_total: Total de la comanda
@@ -2102,6 +2150,7 @@ ca:
   price_sack: "Preu sac"
   new_order_cycles: "Nou cicle de comanda"
   new_order_cycle: "Nou cicle de comanda"
+  new_order_cycle_tooltip: "Obriu la botiga durant un període de temps determinat"
   select_a_coordinator_for_your_order_cycle: "Selecciona una coordinadora per al vostre cicle de comanda"
   notify_producers: 'Notifica les productores'
   edit_order_cycle: "Edita el cicle de comanda"
@@ -2183,7 +2232,6 @@ ca:
   new_order: "Nova comanda"
   enterprise_tos_link: "Enllaç a les condicions d'ús de l'organització"
   enterprise_tos_message: "Volem treballar amb persones que comparteixen els nostres objectius i valors. Com a tal, demanem a les noves organitzacions que acceptin la nostra"
-  enterprise_tos_link_text: "Termes del servei."
   enterprise_tos_agree: "Accepto els Termes i condicions anteriors"
   tax_settings: "Configuració fiscal"
   products_require_tax_category: "els productes requereixen una categoria fiscal"
@@ -2662,6 +2710,7 @@ ca:
           failed: "error"
           paid: "pagat"
           pending: "pendents"
+          requires_authorization: "cal autorització"
           processing: "processant"
           void: "pendent"
           invalid: "invàlid"
@@ -2941,6 +2990,7 @@ ca:
   shipment_inc_vat: "Enviament incloent VAT"
   shipping_tax_rate: "Taxa d'impostos d'enviament"
   category: "Categoria"
+  import_date: "Data d'importació"
   delivery: "Lliurament "
   temperature_controlled: "Control de temperatura"
   new_product: "Nou producte"
@@ -2995,6 +3045,7 @@ ca:
     payment_method_not_supported: "No s'admet la forma de pagament"
     resend_authorization_email: "Torneu a enviar el correu electrònic d’autorització"
     rma_credit: "credit RMA"
+    refund: "Reembossament"
     server_error: "Error del servidor"
     shipping_method_names:
       UPS Ground: "UPS Ground"
@@ -3074,7 +3125,6 @@ ca:
     default_meta_description: "Descripció Meta predeterminada"
     default_meta_keywords: "Paraules clau meta predeterminades"
     security_settings: "Configuració de seguretat"
-    allow_ssl_in_development_and_test: "Permet que s'utilitzi SSL quan s'utilitzi el desenvolupament i els modes de prova"
     allow_ssl_in_production: "Permet que SSL s'utilitzi en mode de producció"
     allow_ssl_in_staging: "Permet que SSL s'utilitzi en mode de staging"
     currency_decimal_mark: "Separador decimal de moneda"
@@ -3551,6 +3601,8 @@ ca:
           producer_name: "Productor"
           unit: "Unitat"
       shared:
+        configuration_menu:
+          terms_of_service: "Termes del servei"
         sortable_header:
           name: "Nom"
           number: "Número"
@@ -3613,6 +3665,7 @@ ca:
       paid: pagat
       pending: pendents
       processing: processant
+      requires_authorization: "cal autorització"
       void: pendent
       invalid: invàlid
       authorise: autoritzar
@@ -3660,7 +3713,7 @@ ca:
     shipment_mailer:
       shipped_email:
         dear_customer: "Benvolguda consumidora:"
-        instructions: "La vostra comanda s'ha enviat"
+        instructions: "La vostra comanda de %{distributor} s'ha enviat"
         shipment_summary: "Resum de l'enviament"
         subject: "Notificació d'enviament"
         thanks: "Gràcies per la teva compra."

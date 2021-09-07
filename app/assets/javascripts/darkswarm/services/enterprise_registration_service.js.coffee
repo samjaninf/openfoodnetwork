@@ -1,4 +1,4 @@
-Darkswarm.factory "EnterpriseRegistrationService", ($http, RegistrationService, EnterpriseImageService, CurrentUser, spreeApiKey, Loading, availableCountries, enterpriseAttributes) ->
+angular.module('Darkswarm').factory "EnterpriseRegistrationService", ($http, RegistrationService, EnterpriseImageService, CurrentUser, spreeApiKey, Loading, availableCountries, enterpriseAttributes) ->
   new class EnterpriseRegistrationService
     enterprise:
       user_ids: [CurrentUser.id]
@@ -24,15 +24,15 @@ Darkswarm.factory "EnterpriseRegistrationService", ($http, RegistrationService, 
           use_geocoder: @useGeocoder()
         params:
           token: spreeApiKey
-      ).success((data) =>
+      ).then((response) =>
         Loading.clear()
-        @enterprise.id = data
+        @enterprise.id = response.data
         EnterpriseImageService.configure(@enterprise)
         RegistrationService.select('about')
-      ).error((data) =>
+      ).catch((response) =>
         Loading.clear()
-        if data?.errors?
-          errors = ("#{k.capitalize()} #{v[0]}" for k, v of data.errors when v.length > 0)
+        if response.data?.errors?
+          errors = ("#{k.capitalize()} #{v[0]}" for k, v of response.data.errors when v.length > 0)
           alert t('failed_to_create_enterprise') + "\n" + errors.join('\n')
         else
           alert(t('failed_to_create_enterprise_unknown'))
@@ -49,10 +49,10 @@ Darkswarm.factory "EnterpriseRegistrationService", ($http, RegistrationService, 
           use_geocoder: @useGeocoder()
         params:
           token: spreeApiKey
-      ).success((data) ->
+      ).then((response) ->
         Loading.clear()
         RegistrationService.select(step)
-      ).error((data) ->
+      ).catch((response) ->
         Loading.clear()
         alert(t('failed_to_update_enterprise_unknown'))
       )

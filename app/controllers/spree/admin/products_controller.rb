@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'open_food_network/spree_api_key_loader'
 require 'open_food_network/referer_parser'
 require 'open_food_network/permissions'
@@ -125,28 +127,7 @@ module Spree
       end
 
       def collection
-        return @collection if @collection.present?
-
-        params[:q] ||= {}
-        params[:q][:deleted_at_null] ||= "1"
-
-        params[:q][:s] ||= "name asc"
-        @collection = Spree::Product
-        @collection = @collection.with_deleted if params[:q].delete(:deleted_at_null).blank?
-        # @search needs to be defined as this is passed to search_form_for
-        @search = @collection.ransack(params[:q])
-        @collection = @search.result.
-          managed_by(spree_current_user).
-          group_by_products_id.
-          includes(product_includes).
-          page(params[:page]).
-          per(Spree::Config[:admin_products_per_page])
-
-        if params[:q][:s].include?("master_default_price_amount")
-          # PostgreSQL compatibility
-          @collection = @collection.group("spree_prices.amount")
-        end
-        @collection
+        nil
       end
 
       def product_includes
@@ -161,7 +142,9 @@ module Spree
       private
 
       def product_set_from_params
-        collection_hash = Hash[products_bulk_params[:products].each_with_index.map { |p, i| [i, p] }]
+        collection_hash = Hash[products_bulk_params[:products].each_with_index.map { |p, i|
+                                 [i, p]
+                               } ]
         Sets::ProductSet.new(collection_attributes: collection_hash)
       end
 

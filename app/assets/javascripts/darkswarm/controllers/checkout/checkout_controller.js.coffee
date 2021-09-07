@@ -1,4 +1,4 @@
-Darkswarm.controller "CheckoutCtrl", ($scope, localStorageService, Checkout, CurrentUser, CurrentHub, AuthenticationService, SpreeUser, $http) ->
+angular.module('Darkswarm').controller "CheckoutCtrl", ($scope, localStorageService, Checkout, CurrentUser, CurrentHub, AuthenticationService, SpreeUser, $http) ->
   $scope.Checkout = Checkout
   $scope.submitted = false
 
@@ -35,8 +35,8 @@ Darkswarm.controller "CheckoutCtrl", ($scope, localStorageService, Checkout, Cur
       $scope.$broadcast 'purchaseFormInvalid', $scope.formdata
 
   $scope.ensureUserIsGuest = (callback = null) ->
-    $http.post("/user/registered_email", {email: $scope.order.email}).success (data)->
-      if data.registered == true
+    $http.post("/user/registered_email", {email: $scope.order.email}).then (response)->
+      if response.data.registered == true
         $scope.promptLogin()
       else
         $scope.validateForm() if $scope.submitted

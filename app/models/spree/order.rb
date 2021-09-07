@@ -4,14 +4,17 @@ require 'spree/order/checkout'
 require 'open_food_network/enterprise_fee_calculator'
 require 'open_food_network/feature_toggle'
 require 'open_food_network/tag_rule_applicator'
-require 'concerns/order_shipment'
 
 module Spree
   class Order < ApplicationRecord
-    prepend OrderShipment
-
+    include OrderShipment
     include Checkout
     include Balance
+
+    searchable_attributes :number, :state, :shipment_state, :payment_state, :distributor_id,
+                          :order_cycle_id, :email
+    searchable_associations :shipping_method, :bill_address
+    searchable_scopes :complete, :incomplete
 
     checkout_flow do
       go_to_state :address
@@ -20,22 +23,30 @@ module Spree
         order.update_totals
         order.payment_required?
       }
+      go_to_state :confirmation, if: ->(order) {
+        Flipper.enabled? :split_checkout
+      }
       go_to_state :complete
     end
+
+    attr_accessor :use_billing
+    attr_accessor :checkout_processing
 
     token_resource
 
     belongs_to :user, class_name: Spree.user_class.to_s
     belongs_to :created_by, class_name: Spree.user_class.to_s
 
-    belongs_to :bill_address, foreign_key: :bill_address_id, class_name: 'Spree::Address'
+    belongs_to :bill_address, class_name: 'Spree::Address'
     alias_attribute :billing_address, :bill_address
 
-    belongs_to :ship_address, foreign_key: :ship_address_id, class_name: 'Spree::Address'
+    belongs_to :ship_address, class_name: 'Spree::Address'
     alias_attribute :shipping_address, :ship_address
 
     has_many :state_changes, as: :stateful
-    has_many :line_items, -> { order('created_at ASC') }, dependent: :destroy
+    has_many :line_items, -> {
+                            order('created_at ASC')
+                          }, class_name: "Spree::LineItem", dependent: :destroy
     has_many :payments, dependent: :destroy
     has_many :return_authorizations, dependent: :destroy, inverse_of: :order
     has_many :adjustments, -> { order "#{Spree::Adjustment.table_name}.created_at ASC" },
@@ -76,19 +87,16 @@ module Spree
     before_validation :associate_customer, unless: :customer_id?
     before_validation :ensure_customer, unless: :customer_is_valid?
 
+    before_create :link_by_email
+    after_create :create_tax_charge!
+
     validates :customer, presence: true, if: :require_customer?
     validate :products_available_from_new_distribution, if: lambda {
       distributor_id_changed? || order_cycle_id_changed?
     }
     validate :disallow_guest_order
-
-    attr_accessor :use_billing
-
-    before_create :link_by_email
-    after_create :create_tax_charge!
-
     validates :email, presence: true,
-                      format: /\A([\w\.%\+\-']+)@([\w\-]+\.)+([\w]{2,})\z/i,
+                      format: /\A([\w.%+\-']+)@([\w\-]+\.)+(\w{2,})\z/i,
                       if: :require_email
 
     make_permalink field: :number
@@ -134,6 +142,13 @@ module Spree
     scope :incomplete, -> { where(completed_at: nil) }
     scope :by_state, lambda { |state| where(state: state) }
     scope :not_state, lambda { |state| where.not(state: state) }
+
+    def initialize(*_args)
+      @checkout_processing = nil
+      @manual_shipping_selection = nil
+
+      super
+    end
 
     # For compatiblity with Calculator::PriceSack
     def amount
@@ -243,61 +258,9 @@ module Spree
       return_authorizations.any?(&:authorized?)
     end
 
-    # This is currently used when adding a variant to an order in the BackOffice.
-    # Spree::OrderContents#add is equivalent but slightly different from add_variant below.
+    # OrderContents should always be used when modifying an order's line items
     def contents
       @contents ||= Spree::OrderContents.new(self)
-    end
-
-    # This is currently used when adding a variant to an order in the FrontOffice.
-    # This add_variant is equivalent but slightly different from Spree::OrderContents#add above.
-    # Spree::OrderContents#add is the more modern version in Spree history
-    #   but this add_variant has been customized for OFN FrontOffice.
-    def add_variant(variant, quantity = 1, max_quantity = nil, currency = nil)
-      line_items.reload
-      current_item = find_line_item_by_variant(variant)
-
-      # Notify bugsnag if we get line items with a quantity of zero
-      if quantity == 0
-        Bugsnag.notify(RuntimeError.new("Zero Quantity Line Item"),
-                       current_item: current_item.as_json,
-                       line_items: line_items.map(&:id),
-                       variant: variant.as_json)
-      end
-
-      if current_item
-        current_item.quantity = quantity
-        current_item.max_quantity = max_quantity
-
-        current_item.currency = currency unless currency.nil?
-        current_item.save
-      else
-        current_item = Spree::LineItem.new(quantity: quantity, max_quantity: max_quantity)
-        current_item.variant = variant
-        if currency
-          current_item.currency = currency unless currency.nil?
-          current_item.price    = variant.price_in(currency).amount
-        else
-          current_item.price    = variant.price
-        end
-        line_items << current_item
-      end
-
-      reload
-      current_item
-    end
-
-    def set_variant_attributes(variant, attributes)
-      line_item = find_line_item_by_variant(variant)
-
-      return unless line_item
-
-      if attributes.key?(:max_quantity) && attributes[:max_quantity].to_i < line_item.quantity
-        attributes[:max_quantity] = line_item.quantity
-      end
-
-      line_item.assign_attributes(attributes)
-      line_item.save!
     end
 
     # Associates the specified user with the order.
@@ -345,7 +308,11 @@ module Spree
     # Creates new tax charges if there are any applicable rates. If prices already
     # include taxes then price adjustments are created instead.
     def create_tax_charge!
-      Spree::TaxRate.adjust(self)
+      clear_legacy_taxes!
+
+      Spree::TaxRate.adjust(self, line_items)
+      Spree::TaxRate.adjust(self, shipments) if shipments.any?
+      fee_handler.tax_enterprise_fees!
     end
 
     def name
@@ -395,7 +362,8 @@ module Spree
     def deliver_order_confirmation_email
       return if subscription.present?
 
-      ConfirmOrderJob.perform_later(id)
+      Spree::OrderMailer.confirm_email_for_customer(id).deliver_later(wait: 10.seconds)
+      Spree::OrderMailer.confirm_email_for_shop(id).deliver_later(wait: 10.seconds)
     end
 
     # Helper methods for checkout steps
@@ -411,6 +379,7 @@ module Spree
     # These are both valid states to process the payment
     def pending_payments
       (payments.select(&:pending?) +
+        payments.select(&:requires_authorization?) +
         payments.select(&:processing?) +
         payments.select(&:checkout?)).uniq
     end
@@ -517,6 +486,16 @@ module Spree
       shipments
     end
 
+    # Clear shipments and move order back to address state unless compete. This is relevant where
+    # an order is part-way through checkout and the user changes items in the cart; in that case
+    # we need to reset the checkout flow to ensure the order is processed correctly.
+    def ensure_updated_shipments
+      if !completed? && shipments.any?
+        shipments.destroy_all
+        restart_checkout_flow
+      end
+    end
+
     def refresh_shipment_rates
       shipments.map(&:refresh_rates)
     end
@@ -532,7 +511,7 @@ module Spree
     def disallow_guest_order
       return unless using_guest_checkout? && registered_email?
 
-      errors.add(:base, I18n.t('devise.failure.already_registered'))
+      errors.add(:email, I18n.t('devise.failure.already_registered'))
     end
 
     # After changing line items of a completed order
@@ -580,12 +559,6 @@ module Spree
       save!
     end
 
-    def remove_variant(variant)
-      line_items.reload
-      current_item = find_line_item_by_variant(variant)
-      current_item.andand.destroy
-    end
-
     def cap_quantity_at_stock!
       line_items.includes(variant: :stock_items).find_each(&:cap_quantity_at_stock!)
     end
@@ -611,7 +584,7 @@ module Spree
     end
 
     def enterprise_fee_tax
-      all_adjustments.reload.enterprise_fee.sum(:included_tax)
+      all_adjustments.tax.where(adjustable: all_adjustments.enterprise_fee).sum(:amount)
     end
 
     def total_tax
@@ -638,6 +611,13 @@ module Spree
       @fee_handler ||= OrderFeesHandler.new(self)
     end
 
+    def clear_legacy_taxes!
+      # For instances that use additional taxes, old orders can have taxes recorded in
+      # lump-sum amounts per-order. We clear them here before re-applying the order's taxes,
+      # which will now be applied per-item.
+      adjustments.legacy_tax.delete_all
+    end
+
     def process_each_payment
       raise Core::GatewayError, Spree.t(:no_pending_payments) if pending_payments.empty?
 
@@ -658,7 +638,7 @@ module Spree
 
     # Determine if email is required (we don't want validation errors before we hit the checkout)
     def require_email
-      return true unless new_record? || (state == 'cart')
+      return true unless (new_record? || cart?) && !checkout_processing
     end
 
     def ensure_line_items_present
@@ -710,6 +690,7 @@ module Spree
 
     def require_customer?
       return false if new_record? || state == 'cart'
+
       true
     end
 
@@ -749,7 +730,7 @@ module Spree
       return if adjustment.finalized?
 
       adjustment.update_adjustment!(force: true)
-      update_order!
+      updater.update_totals_and_states
     end
 
     # object_params sets the payment amount to the order total, but it does this

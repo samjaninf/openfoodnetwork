@@ -1,12 +1,14 @@
 angular.module("admin.enterprises")
-  .controller "enterpriseCtrl", ($scope, $http, $window, NavigationCheck, enterprise, Enterprises, EnterprisePaymentMethods, EnterpriseShippingMethods, SideMenu, StatusMessage) ->
+  .controller "enterpriseCtrl", ($scope, $http, $window, NavigationCheck, enterprise, Enterprises, EnterprisePaymentMethods, EnterpriseShippingMethods, SideMenu, StatusMessage, RequestMonitor) ->
     $scope.Enterprise = enterprise
+    $scope.Enterprises = Enterprises
     $scope.PaymentMethods = EnterprisePaymentMethods.paymentMethods
     $scope.ShippingMethods = EnterpriseShippingMethods.shippingMethods
     $scope.navClear = NavigationCheck.clear
     $scope.menu = SideMenu
     $scope.newManager = { id: null, email: (t('add_manager')) }
     $scope.StatusMessage = StatusMessage
+    $scope.RequestMonitor = RequestMonitor
 
     $scope.$watch 'enterprise_form.$dirty', (newValue) ->
       StatusMessage.display 'notice', t('admin.unsaved_changes') if newValue
@@ -59,11 +61,11 @@ angular.module("admin.enterprises")
       $scope.invite_errors = $scope.invite_success = null
       email = $scope.newUser
 
-      $http.post("/admin/manager_invitations", {email: email, enterprise_id: $scope.Enterprise.id}).success (data)->
-          $scope.addManager({id: data.user, email: email})
+      $http.post("/admin/manager_invitations", {email: email, enterprise_id: $scope.Enterprise.id}).then (response)->
+          $scope.addManager({id: response.data.user, email: email})
           $scope.invite_success = t('user_invited', email: email)
-        .error (data) ->
-          $scope.invite_errors = data.errors
+        .catch (response) ->
+          $scope.invite_errors = response.data.errors
 
     $scope.resetModal = ->
       $scope.newUser = $scope.invite_errors = $scope.invite_success = null
@@ -90,3 +92,6 @@ angular.module("admin.enterprises")
 
     $scope.translation = (key) ->
       t('js.admin.enterprises.form.images.' + key)
+
+    $scope.loadSuppliers = ->
+      RequestMonitor.load $scope.suppliers = Enterprises.index(action: "visible", ams_prefix: "basic", "q[is_primary_producer_eq]": "true")

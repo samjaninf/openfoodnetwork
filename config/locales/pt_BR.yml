@@ -2,6 +2,9 @@ pt_BR:
   language_name: "Português do Brasil"
   activerecord:
     attributes:
+      spree/user:
+        password: "Senha"
+        password_confirmation: "Confirmação de senha"
       enterprise_fee:
         fee_type: Tipo de taxa
       spree/order:
@@ -307,6 +310,8 @@ pt_BR:
   height: "Altura"
   width: "Largura"
   depth: "Profundidade"
+  payment_could_not_process: "O pagamento não pôde ser processado"
+  payment_could_not_complete: "O pagamento não pôde ser completado"
   actions:
     create_and_add_another: "Criar e adicionar outro"
     create: "Criar"
@@ -388,6 +393,17 @@ pt_BR:
       embedded_shopfront_settings: "Configurações incorporadas à loja virtual"
       enable_embedded_shopfronts: "Ativar lojas virtuais incorporadas"
       embedded_shopfronts_whitelist: "Lista de permissões de domínios externos"
+    terms_of_service_files:
+      create:
+        select_file: "Favor selecionar um arquivo antes."
+      show:
+        title: "Arquivos de Termos de Serviço"
+        no_files: "Nenhum termo de serviço foi adicionado ainda. "
+        using_default_terms_html: "No momento o site está redirecionando para o seu antigo %{tos_link}."
+        current_terms_html: "Ver o atual%{tos_link}. Tempo de upload: %{datetime}."
+        terms_of_service: "Termos de serviço"
+        delete: "Deletar arquivo"
+        confirm_delete: "Tem certeza que quer deletar o atual arquivo dos Termos de Serviço?"
     number_localization:
       number_localization_settings: "Configurações de localização de número"
       enable_localized_number: "Usar a lógica internacional de separação de casas decimais e milhares"
@@ -794,6 +810,8 @@ pt_BR:
           shopfront_category_ordering_note: "(de cima para baixo)"
           open_date: "Dia de abertura"
           close_date: "Dia de fechamento"
+          shopfront_sort_by_category_placeholder: "Categoria"
+          shopfront_sort_by_producer_placeholder: "Produtor"
         social:
           twitter_placeholder: "ex:  @o_prof"
           instagram_placeholder: "ex. the_prof"
@@ -914,7 +932,6 @@ pt_BR:
         cancel: "Cancelar"
         back_to_list: "Voltar Para a Lista"
       edit:
-        advanced_settings: "Configurações avançadas"
         save: "Salvar"
         save_and_next: "Salvar e Seguir"
         next: "Próximo"
@@ -967,6 +984,8 @@ pt_BR:
         preferred_product_selection_from_coordinator_inventory_only_here: Apenas inventário do coordenador
         preferred_product_selection_from_coordinator_inventory_only_all: Todos os produtos disponíveis
         save_reload: Salvar e atualizar página
+      order_cycle_top_buttons:
+        advanced_settings: "Configurações avançadas"
       coordinator_fees:
         add: Adicionar taxa de coordenador
       filters:
@@ -1206,11 +1225,9 @@ pt_BR:
       link_text: "Termos e Condições"
     platform_terms_of_service:
       message_html: "Eu concordo com os %{tos_link}da plataforma"
-      terms_of_service: "Termos de serviço"
     all_terms_and_conditions:
       message_html: "Eu concordo com os%{terms_and_conditions_link}do vendedor e os%{tos_link}da plataforma"
       terms_and_conditions: "Termos e Condições"
-      terms_of_service: "Termos de serviço"
     failed: "O checkout falhou. Informe-nos para que possamos processar seu pedido."
   shops:
     hubs:
@@ -1250,7 +1267,6 @@ pt_BR:
       footer_join_body: "Crie uma lista de ofertas, loja ou cooperativa na Open Food Brasil."
       footer_join_cta: "Quero saber mais!"
       footer_legal_call: "Leia nosso"
-      footer_legal_tos: "Termos e condições"
       footer_legal_visit: "Nos encontre em "
       footer_legal_text_html: "A Open Food Brasil é uma plataforma grátis e open-source. Nosso conteúdo está sob licença de %{content_license} e nosso código de %{code_license}."
       footer_data_text_with_privacy_policy_html: "Nós cuidamos bem dos seus dados. Veja nossos %{privacy_policy} e %{cookies_policy}"
@@ -1369,8 +1385,6 @@ pt_BR:
   label_producers: "Produtores"
   label_groups: "Grupos"
   label_about: "Sobre"
-  label_connect: "Conectar"
-  label_learn: "Aprender"
   label_blog: "Blog"
   label_support: "Suporte"
   label_shopping: "Compras"
@@ -1458,10 +1472,6 @@ pt_BR:
   brandstory_part4: "Colabore com essa (des)construção!"
   brandstory_part5_strong: "Open Food Brasil"
   brandstory_part6: "–"
-  learn_body: "Explore modelos, histórias e recursos para te dar suporte para desenvolver seu próprio negócio ou organização justa de alimentos. Encontre treinamento, eventos e outras oportunidades para aprender com quem faz parte do seu setor. "
-  learn_cta: "Inspire-se"
-  connect_body: "Procure em nossa lista de produtores, distribuidores e cooperativas para encontrar um comércio justo perto de você. Registre seu negócio ou organização na Open Food Brasil para que os compradores possam te encontrar. Junte-se à comunidade para trocar experiências e resolver problemas."
-  connect_cta: "Explore"
   system_headline: "Como comprar:"
   system_step1: "1. Busca"
   system_step1_text: "Dentre os diversos mercados independentes, escolha o de sua preferência. Procure por região, tipo de alimentos, alimentos locais e sazonais e escolha o método de recebimento que pode ser receber em casa ou retirar no local. "
@@ -1500,6 +1510,40 @@ pt_BR:
   checkout_total_price: Total
   checkout_back_to_cart: "De volta para o Carrinho"
   cost_currency: "Custo"
+  split_checkout:
+    step1:
+      your_details:
+        title: Seus detalhes
+        first_name:
+          label: Nome
+        last_name:
+          label: Sobrenome
+        email:
+          label: E-mail
+        phone:
+          label: n
+      billing_address:
+        title: Endereço de fatura
+        city:
+          label: Cidade
+        state_id:
+          label: Estado
+        zipcode:
+          label: CEP
+        country_id:
+          label: País
+      delivery_address:
+        title: Endereço para entrega
+    step3:
+      your_details:
+        title: Seus detalhes
+      billing_address:
+        title: Endereço de fatura
+      terms_and_conditions:
+        message_html: "Eu concordo com os%{terms_and_conditions_link}do vendedor"
+        link_text: "Termos e Condições"
+    errors:
+      invalid_email: "Por favor use um endereço de e-mail válido"
   order_paid: PAGO
   order_not_paid: NÃO PAGO
   order_total: Total do pedido
@@ -2166,7 +2210,6 @@ pt_BR:
   new_order: "Novo Pedido"
   enterprise_tos_link: "Link de Termos de Serviço da iniciativa"
   enterprise_tos_message: "Queremos trabalhar com pessoas que compartilham nossos objetivos e valores. Como tal, pedimos às novas iniciativas que concordem com nossos"
-  enterprise_tos_link_text: "Termos de Serviço."
   enterprise_tos_agree: "Aceito os Termos de Serviço acima"
   tax_settings: "Configurações de Taxas"
   products_require_tax_category: "produtos necessitam uma categoria de taxa"
@@ -2858,7 +2901,9 @@ pt_BR:
     reports:
       bulk_coop:
         filters:
+          date_range: "Período"
           generate_report: "Gerar Relatório"
+          report_format_csv: "Relatório formato CSV"
       enterprise_fee_summaries:
         filters:
           date_range: "Período"
@@ -2921,6 +2966,7 @@ pt_BR:
   shipment_inc_vat: "Envio incluindo IVA"
   shipping_tax_rate: "Taxa do frete"
   category: "Categoria"
+  import_date: "Data de importação"
   delivery: "Entrega"
   temperature_controlled: "Temperatura Controlada"
   new_product: "Novo produto"
@@ -2974,10 +3020,14 @@ pt_BR:
     order_processed_successfully: "Pedido processado com sucesso"
     payment_method_not_supported: "Este método de pagamento não é aceito"
     resend_authorization_email: "Reenviar email de autorização"
+    refund: "Estorno"
     server_error: "Erro de servidor"
     start_date: "Data de início"
     successfully_removed: "Removido com Sucesso"
     taxonomy_edit: "Editar Taxonomia"
+    taxonomy_tree_error: "Erro na árvore taxonômica"
+    taxonomy_tree_instruction: "Guia para a árvore taxonômica"
+    tree: "Árvore"
     updating: "Atualizando"
     your_order_is_empty_add_product: "Seu pedido está vazio, pesquise e adicione um produto acima"
     add_product: "Adicionar produto"
@@ -3048,7 +3098,6 @@ pt_BR:
     default_meta_description: "Meta padrão Descrição"
     default_meta_keywords: "Meta Palavras-chave Padrão"
     security_settings: "Configurações de segurança"
-    allow_ssl_in_development_and_test: "Permitir que o SSL seja usado nos modos de desenvolvimento e teste"
     allow_ssl_in_production: "Permitir que o SSL seja usado no modo de produção"
     allow_ssl_in_staging: "Permitir que o SSL seja usado no modo de preparação"
     currency_decimal_mark: "Marca decimal da moeda"
@@ -3525,6 +3574,8 @@ pt_BR:
           producer_name: "Produtor"
           unit: "Unidade"
       shared:
+        configuration_menu:
+          terms_of_service: "Termos de serviço"
         sortable_header:
           name: "Nome"
           number: "Número"
@@ -3634,7 +3685,6 @@ pt_BR:
     shipment_mailer:
       shipped_email:
         dear_customer: "Estimado cliente,"
-        instructions: "Seu pedido foi enviado"
         shipment_summary: "Resumo de Envio"
         subject: "Notificação de envio"
         thanks: "Agradeço pelos seus serviços."

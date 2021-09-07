@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OrderWorkflow
   attr_reader :order
 
@@ -6,7 +8,7 @@ class OrderWorkflow
   end
 
   def complete
-    advance_order(advance_order_options)
+    advance_to_state("complete", advance_order_options)
   end
 
   def complete!
@@ -21,19 +23,31 @@ class OrderWorkflow
     result
   end
 
+  def advance_to_payment
+    advance_to_state("payment", advance_order_options)
+  end
+
+  def advance_checkout(options = {})
+    advance_to = order.state.in?(["cart", "address", "delivery"]) ? "payment" : "confirmation"
+
+    advance_to_state(advance_to, advance_order_options.merge(options))
+  end
+
   private
 
   def advance_order_options
     shipping_method_id = order.shipping_method.id if order.shipping_method.present?
-    { shipping_method_id: shipping_method_id }
+    { "shipping_method_id" => shipping_method_id }
   end
 
-  def advance_order(options)
-    until order.state == "complete"
+  def advance_to_state(target_state, options = {})
+    until order.state == target_state
       break unless order.next
 
       after_transition_hook(options)
     end
+
+    order.state == target_state
   end
 
   def advance_order!(options)
@@ -53,7 +67,7 @@ class OrderWorkflow
 
   def after_transition_hook(options)
     if order.state == "delivery"
-      order.select_shipping_method(options[:shipping_method_id]) if options[:shipping_method_id]
+      order.select_shipping_method(options["shipping_method_id"])
     end
 
     persist_all_payments if order.state == "payment"

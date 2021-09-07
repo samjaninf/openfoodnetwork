@@ -2,6 +2,9 @@ es:
   language_name: "Castellano"
   activerecord:
     attributes:
+      spree/user:
+        password: "Contraseña"
+        password_confirmation: "confirmación de contraseña"
       enterprise_fee:
         fee_type: Tipo de Comisión
       spree/order:
@@ -300,6 +303,7 @@ es:
   no_pending_payments: "No tiene pagos pendientes"
   invalid_payment_state: "Estado de pago inválido: %{state}"
   filter_results: Filtrar resultados
+  clear_filters: Borrar filtros
   quantity: Cantidad
   pick_up: Recogida
   copy: Copia
@@ -400,6 +404,17 @@ es:
       embedded_shopfront_settings: "Configuración de la tienda integrada"
       enable_embedded_shopfronts: "Habilitar tiendas integradas"
       embedded_shopfronts_whitelist: "Lista de dominios externos permitidos"
+    terms_of_service_files:
+      create:
+        select_file: "Primero seleccione un archivo."
+      show:
+        title: "Archivos de condiciones de servicio"
+        no_files: "Aún no se han subido los términos de servicio."
+        using_default_terms_html: "El sitio está actualmente vinculado a su antiguo %{tos_link}."
+        current_terms_html: "Ver el archivo %{tos_link} actual. Tiempo de carga: %{datetime}."
+        terms_of_service: "Términos de servicio"
+        delete: "Eliminar archivo"
+        confirm_delete: "¿Está seguro de que desea eliminar el archivo de Condiciones de servicio actual?"
     number_localization:
       number_localization_settings: "Number Localization Settings"
       enable_localized_number: "Usar la logica internacional separador miles/decimales"
@@ -809,6 +824,11 @@ es:
           shopfront_category_ordering_note: "(de arriba hacia abajo)"
           open_date: "Fecha de Inicio"
           close_date: "Fecha de Finalización"
+          display_ordering_in_shopfront: "Mostrar pedidos en la tienda:"
+          shopfront_sort_by_category: "Por categoria"
+          shopfront_sort_by_producer: "Por productora"
+          shopfront_sort_by_category_placeholder: "Categoría"
+          shopfront_sort_by_producer_placeholder: "Productora"
         social:
           twitter_placeholder: "ej: the_prof"
           instagram_placeholder: "p.ej. @mi_huerta"
@@ -929,7 +949,6 @@ es:
         cancel: "Cancelar"
         back_to_list: "Regresar a la lista"
       edit:
-        advanced_settings: "Configuración Avanzada"
         save: "Guardar"
         save_and_next: "Salvar y continuar"
         next: "Siguiente"
@@ -982,6 +1001,8 @@ es:
         preferred_product_selection_from_coordinator_inventory_only_here: Solo el Inventario de la Coordinadora
         preferred_product_selection_from_coordinator_inventory_only_all: Todos los productos disponibles
         save_reload: Guardar y recargar la página
+      order_cycle_top_buttons:
+        advanced_settings: "Configuración Avanzada"
       coordinator_fees:
         add: Añadir comisión para el coordinador
       filters:
@@ -1005,6 +1026,7 @@ es:
         schedule: Programación
         schedules: Programación
         new_schedule: Nueva programación
+        new_schedule_tooltip: La frecuencia con la que se realiza un pedido de suscripción.
       name_and_timing_form:
         name: Nombre
         orders_open: Pedidos abiertos a
@@ -1222,12 +1244,11 @@ es:
       link_text: "Términos y Condiciones"
     platform_terms_of_service:
       message_html: "Acepto los %{tos_link} de la plataforma."
-      terms_of_service: "Términos de servicio"
     all_terms_and_conditions:
       message_html: "Acepto el %{terms_and_conditions_link} del vendedor y la plataforma %{tos_link}."
       terms_and_conditions: "Términos y Condiciones"
-      terms_of_service: "Términos de servicio"
     failed: "La finalización de compra falló, por favor comunicate con nosotros para procesar la orden."
+    payment_cancelled_due_to_stock: "Pago cancelado: no se pudo completar el pago debido a problemas de stock."
   shops:
     hubs:
       show_closed_shops: "Mostrar tiendas cerradas"
@@ -1266,7 +1287,6 @@ es:
       footer_join_body: "Crea un listado, una tienda o un directorio en Open Food Network."
       footer_join_cta: "Cuentame más!"
       footer_legal_call: "Leer nuestros"
-      footer_legal_tos: "Terminos y condiciones"
       footer_legal_visit: "Encuéntrenos en"
       footer_legal_text_html: "Open Food Network es una plataforma libre y de código abierto. Nuestro contenido tiene una licencia %{content_license} y nuestro código %{code_license}."
       footer_data_text_with_privacy_policy_html: "Cuidamos bien tus datos. Consulta nuestra %{privacy_policy} y %{cookies_policy}"
@@ -1385,8 +1405,6 @@ es:
   label_producers: "Productoras"
   label_groups: "Redes"
   label_about: "Acerca de"
-  label_connect: "Conectar"
-  label_learn: "Aprender"
   label_blog: "Blog"
   label_support: "Soporte"
   label_shopping: "Tienda"
@@ -1474,10 +1492,6 @@ es:
   brandstory_part4: "Funciona en cualquier lugar. Lo cambia todo."
   brandstory_part5_strong: "Le llamamos Open Food Network."
   brandstory_part6: "Todos amamos la comida. Ahora podemos amar nuestro sistema de comida también."
-  learn_body: "Explora modelos, historias y recursos para ayudarte a desarrollar tu organización. Encuentra formación, eventos y otras oportunidades para aprender de tus compañeros."
-  learn_cta: "Inspírate"
-  connect_body: "Busca en nuestros directorios de productoras, grupos u otras organizaciones. Haz una lista de tu organización en  OFN para que los consumidores puedan encontrarte. Únete a la comunidad para obtener consejos y resolver problemas juntos."
-  connect_cta: "Explorar"
   system_headline: "Compras - cómo funcionan."
   system_step1: "1. Buscar"
   system_step1_text: "Busca comida local y de temporada en nuestras tiendas diversas e independientes. Busca por municipio y participa en un grupo de consumo."
@@ -1516,6 +1530,40 @@ es:
   checkout_total_price: Total
   checkout_back_to_cart: "De vuelta al carrito"
   cost_currency: "Moneda"
+  split_checkout:
+    step1:
+      your_details:
+        title: Sus detalles
+        first_name:
+          label: Nombre
+        last_name:
+          label: Apellido
+        email:
+          label: Email
+        phone:
+          label: Número de teléfono
+      billing_address:
+        title: Dirección de cobro
+        city:
+          label: Ciudad
+        state_id:
+          label: Estado
+        zipcode:
+          label: Código Postal
+        country_id:
+          label: País
+      delivery_address:
+        title: Dirección de entrega
+    step3:
+      your_details:
+        title: Sus detalles
+      billing_address:
+        title: Dirección de cobro
+      terms_and_conditions:
+        message_html: "Acepto el %{terms_and_conditions_link} del vendedor."
+        link_text: "Términos y Condiciones"
+    errors:
+      invalid_email: "Introduce un email válido"
   order_paid: PAGADO
   order_not_paid: NO PAGADO
   order_total: Pedido total
@@ -2101,6 +2149,7 @@ es:
   price_sack: "Precio saco"
   new_order_cycles: "Nuevos Ciclos de Pedidos"
   new_order_cycle: "Nuevo Ciclo de Pedido"
+  new_order_cycle_tooltip: "Tienda abierta durante un período de tiempo determinado"
   select_a_coordinator_for_your_order_cycle: "Selecciona un coordinador para vuestro ciclo de pedido"
   notify_producers: 'Notificar a las productoras'
   edit_order_cycle: "Editar Ciclo de Pedido"
@@ -2182,7 +2231,6 @@ es:
   new_order: "Nuevo pedido"
   enterprise_tos_link: "Enlace a los Términos del Servicio de la Organización"
   enterprise_tos_message: "Queremos trabajar con personas que compartan nuestros objetivos y valores. Por ello, pedimos a las nuevas organizaciones que acepten"
-  enterprise_tos_link_text: "Términos del Servicio."
   enterprise_tos_agree: "Estoy de acuerdo con los Términos del Servicio"
   tax_settings: "Configuración de Impuestos"
   products_require_tax_category: "Los productos requieren categoría de impuesto"
@@ -2662,6 +2710,7 @@ es:
           failed: "fallido"
           paid: "pagado"
           pending: "pendiente"
+          requires_authorization: "Autorización requerida"
           processing: "procesando"
           void: "pendiente"
           invalid: "inválido"
@@ -2941,6 +2990,7 @@ es:
   shipment_inc_vat: "Envío incluido VAT"
   shipping_tax_rate: "Impuestos de envío"
   category: "Categoría"
+  import_date: "Fecha de importación"
   delivery: "Entrega"
   temperature_controlled: "Control de temperatura"
   new_product: "Nuevo producto"
@@ -2995,6 +3045,7 @@ es:
     payment_method_not_supported: "Método de pago no admitido"
     resend_authorization_email: "Reenviar correo electrónico de autorización"
     rma_credit: "Crédito RMA"
+    refund: "Reembolso"
     server_error: "Error del Servidor"
     shipping_method_names:
       UPS Ground: "UPS Ground"
@@ -3074,7 +3125,6 @@ es:
     default_meta_description: "Meta Descripción predeterminada"
     default_meta_keywords: "Palabras clave Meta predeterminadas"
     security_settings: "Configuraciones de seguridad"
-    allow_ssl_in_development_and_test: "Permitir el uso de SSL en los modos de desarrollo y prueba"
     allow_ssl_in_production: "Permitir que SSL se utilice en modo de producción"
     allow_ssl_in_staging: "Permitir que SSL se utilice en modo de staging"
     currency_decimal_mark: "Marca decimal de la moneda"
@@ -3551,6 +3601,8 @@ es:
           producer_name: "Productora"
           unit: "Unidad"
       shared:
+        configuration_menu:
+          terms_of_service: "Términos de servicio"
         sortable_header:
           name: "Nombre"
           number: "Número"
@@ -3613,6 +3665,7 @@ es:
       paid: pagado
       pending: pendiente
       processing: procesando
+      requires_authorization: "Autorización requerida"
       void: pendiente
       invalid: inválido
       authorise: autorizar
@@ -3660,7 +3713,7 @@ es:
     shipment_mailer:
       shipped_email:
         dear_customer: "Estimada consumidora,"
-        instructions: "Tu pedido ha sido enviado"
+        instructions: "Su pedido de %{distributor} ha sido enviado"
         shipment_summary: "Resumen de envío"
         subject: "Notificación de envío"
         thanks: "Gracias por hacer negocios."

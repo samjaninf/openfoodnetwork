@@ -10,8 +10,6 @@ class CheckoutController < ::BaseController
   helper 'terms_and_conditions'
   helper 'checkout'
 
-  ssl_required
-
   # We need pessimistic locking to avoid race conditions.
   # Otherwise we fail on duplicate indexes or end up with negative stock.
   prepend_around_action CurrentOrderLocker, only: [:edit, :update]
@@ -39,7 +37,7 @@ class CheckoutController < ::BaseController
     # This is only required because of spree_paypal_express. If we implement
     # a version of paypal that uses this controller, and more specifically
     # the #action_failed method, then we can remove this call
-    OrderCheckoutRestart.new(@order).call
+    reset_order_to_cart
   rescue Spree::Core::GatewayError => e
     rescue_from_spree_gateway_error(e)
   end
@@ -84,7 +82,7 @@ class CheckoutController < ::BaseController
     @order = current_order
 
     redirect_to(main_app.shop_path) && return if redirect_to_shop?
-    redirect_to_cart_path && return unless valid_order_line_items?
+    handle_invalid_stock && return unless valid_order_line_items?
 
     before_address
     setup_for_current_state
@@ -102,7 +100,10 @@ class CheckoutController < ::BaseController
         distributes_order_variants?(@order)
   end
 
-  def redirect_to_cart_path
+  def handle_invalid_stock
+    cancel_incomplete_payments if valid_payment_intent_provided?
+    reset_order_to_cart
+
     respond_to do |format|
       format.html do
         redirect_to main_app.cart_path
@@ -112,6 +113,20 @@ class CheckoutController < ::BaseController
         render json: { path: main_app.cart_path }, status: :bad_request
       end
     end
+  end
+
+  def cancel_incomplete_payments
+    # The checkout could not complete due to stock running out. We void any pending (incomplete)
+    # Stripe payments here as the order will need to be changed and resubmitted (or abandoned).
+    @order.payments.incomplete.each do |payment|
+      payment.void_transaction!
+      payment.adjustment&.update_columns(eligible: false, state: "finalized")
+    end
+    flash[:notice] = I18n.t("checkout.payment_cancelled_due_to_stock")
+  end
+
+  def reset_order_to_cart
+    OrderCheckoutRestart.new(@order).call
   end
 
   def setup_for_current_state
@@ -137,11 +152,13 @@ class CheckoutController < ::BaseController
 
     last_payment = OrderPaymentFinder.new(@order).last_payment
     @order.state == "payment" &&
-      last_payment&.state == "pending" &&
+      last_payment&.state == "requires_authorization" &&
       last_payment&.response_code == params["payment_intent"]
   end
 
   def handle_redirect_from_stripe
+    return checkout_failed unless @order.process_payments!
+
     if OrderWorkflow.new(@order).next && order_complete?
       checkout_succeeded
       redirect_to(order_path(@order)) && return
@@ -154,9 +171,11 @@ class CheckoutController < ::BaseController
     while @order.state != "complete"
       if @order.state == "payment"
         return if redirect_to_payment_gateway
+
+        return action_failed unless @order.process_payments!
       end
 
-      next if OrderWorkflow.new(@order).next({ shipping_method_id: shipping_method_id })
+      next if OrderWorkflow.new(@order).next({ "shipping_method_id" => shipping_method_id })
 
       return action_failed
     end

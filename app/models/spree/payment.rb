@@ -46,21 +46,24 @@ module Spree
     scope :from_credit_card, -> { where(source_type: 'Spree::CreditCard') }
     scope :with_state, ->(s) { where(state: s.to_s) }
     scope :completed, -> { with_state('completed') }
+    scope :incomplete, -> { where(state: %w(checkout pending requires_authorization)) }
     scope :pending, -> { with_state('pending') }
     scope :failed, -> { with_state('failed') }
-    scope :valid, -> { where('state NOT IN (?)', %w(failed invalid)) }
+    scope :valid, -> { where.not(state: %w(failed invalid)) }
     scope :authorization_action_required, -> { where.not(cvv_response_message: nil) }
+    scope :requires_authorization, -> { with_state("requires_authorization") }
     scope :with_payment_intent, ->(code) { where(response_code: code) }
 
     # order state machine (see http://github.com/pluginaweek/state_machine/tree/master for details)
     state_machine initial: :checkout do
       # With card payments, happens before purchase or authorization happens
       event :started_processing do
-        transition from: [:checkout, :pending, :completed, :processing], to: :processing
+        transition from: [:checkout, :pending, :completed, :processing, :requires_authorization],
+                   to: :processing
       end
       # When processing during checkout fails
       event :failure do
-        transition from: [:pending, :processing], to: :failed
+        transition from: [:pending, :processing, :requires_authorization], to: :failed
       end
       # With card payments this represents authorizing the payment
       event :pend do
@@ -68,14 +71,23 @@ module Spree
       end
       # With card payments this represents completing a purchase or capture transaction
       event :complete do
-        transition from: [:processing, :pending, :checkout], to: :completed
+        transition from: [:processing, :pending, :checkout, :requires_authorization], to: :completed
       end
       event :void do
-        transition from: [:pending, :completed, :checkout], to: :void
+        transition from: [:pending, :completed, :requires_authorization, :checkout], to: :void
       end
       # when the card brand isnt supported
       event :invalidate do
         transition from: [:checkout], to: :invalid
+      end
+      event :require_authorization do
+        transition from: [:checkout, :processing], to: :requires_authorization
+      end
+      event :fail_authorization do
+        transition from: [:requires_authorization], to: :failed
+      end
+      event :complete_authorization do
+        transition from: [:requires_authorization], to: :completed
       end
     end
 
@@ -108,16 +120,14 @@ module Spree
     def actions
       return [] unless payment_source&.respond_to?(:actions)
 
-      actions = payment_source.actions.select do |action|
+      payment_source.actions.select do |action|
         !payment_source.respond_to?("can_#{action}?") ||
           payment_source.__send__("can_#{action}?", self)
       end
-
-      actions
     end
 
     def resend_authorization_email!
-      return unless authorization_action_required?
+      return unless requires_authorization?
 
       PaymentMailer.authorize_payment(self).deliver_later
     end
@@ -135,7 +145,7 @@ module Spree
         adjustment.originator = payment_method
         adjustment.label = adjustment_label
         adjustment.save
-      else
+      elsif payment_method.present?
         payment_method.create_adjustment(adjustment_label, self, true)
         adjustment.reload
       end
@@ -145,7 +155,7 @@ module Spree
       I18n.t('payment_method_fee')
     end
 
-    def mark_as_processed
+    def clear_authorization_url
       update_attribute(:cvv_response_message, nil)
     end
 

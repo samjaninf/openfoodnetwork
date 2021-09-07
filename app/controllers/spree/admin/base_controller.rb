@@ -1,8 +1,8 @@
+# frozen_string_literal: true
+
 module Spree
   module Admin
     class BaseController < ApplicationController
-      ssl_required
-
       helper 'shared'
       helper 'spree/admin/navigation'
       helper 'spree/admin/orders'
@@ -12,7 +12,7 @@ module Spree
       helper 'enterprise_fees'
       helper 'angular_form'
 
-      layout '/spree/layouts/admin'
+      layout 'spree/layouts/admin'
 
       include I18nHelper
 

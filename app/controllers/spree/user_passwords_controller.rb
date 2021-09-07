@@ -3,7 +3,6 @@
 require "spree/core/controller_helpers/auth"
 require "spree/core/controller_helpers/common"
 require "spree/core/controller_helpers/order"
-require "spree/core/controller_helpers/ssl"
 
 module Spree
   class UserPasswordsController < Devise::PasswordsController
@@ -13,9 +12,9 @@ module Spree
     include Spree::Core::ControllerHelpers::Auth
     include Spree::Core::ControllerHelpers::Common
     include Spree::Core::ControllerHelpers::Order
-    include Spree::Core::ControllerHelpers::SSL
 
-    ssl_required
+    include I18nHelper
+    before_action :set_locale
 
     # Overridden due to bug in Devise.
     #   respond_with resource, :location => new_session_path(resource_name)
