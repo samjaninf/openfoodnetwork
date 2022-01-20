@@ -19,11 +19,13 @@ class SearchOrders
       includes(:payments, :subscription, :shipments, :bill_address, :distributor, :order_cycle).
       ransack(params[:q])
 
-    @search.result(distinct: true)
+    @search.result(distinct: true).joins(:bill_address)
   end
 
   def search_query
-    base_query = ::Permissions::Order.new(current_user).editable_orders
+    base_query = ::Permissions::Order.new(current_user).editable_orders.not_empty
+      .or(::Permissions::Order.new(current_user).editable_orders.finalized)
+
     return base_query unless params[:shipping_method_id]
 
     base_query

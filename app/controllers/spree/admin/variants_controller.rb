@@ -82,7 +82,7 @@ module Spree
 
       def create_before
         option_values = params[:new_variant]
-        option_values.andand.each_value { |id| @object.option_values << OptionValue.find(id) }
+        option_values&.each_value { |id| @object.option_values << OptionValue.find(id) }
         @object.save
       end
 
@@ -114,7 +114,8 @@ module Spree
 
       def variant_search_params
         params.permit(
-          :q, :distributor_id, :order_cycle_id, :schedule_id, :eligible_for_subscriptions
+          :q, :distributor_id, :order_cycle_id, :schedule_id, :eligible_for_subscriptions,
+          :include_out_of_stock
         ).to_h.with_indifferent_access
       end
     end

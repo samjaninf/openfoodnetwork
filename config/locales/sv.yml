@@ -317,6 +317,8 @@ sv:
           acn_placeholder: ex 123 456 789
           display_invoice_logo: Visa logotyp i fakturor
           invoice_text: Lägg till anpassad text i slutet av faktura
+        business_address:
+          address2: Adress (fortgående)
         contact:
           name: Namn
           name_placeholder: ex. Gustav Persson
@@ -620,8 +622,24 @@ sv:
       xero_invoices:
         name: Xero-fakturor
         description: Fakturor för import till Xero
+      summary_row:
+        total: "SUMMA"
+      table:
+        headings:
+          hub: "Hub"
+          customer_code: "Kod"
+          first_name: "Förnamn"
+          last_name: "Efternamn"
+          supplier: "Leverantör"
+          product: "Produkt"
+          variant: "Variant"
+          quantity: "Antal"
+          is_temperature_controlled: "Temperaturkontrollerad?"
+          temp_controlled: "Temperaturkontrollerad?"
       packing:
-        name: Förpackningsrapporter
+        name: "Förpackningsrapporter"
+        customer_report: "Packas av kund"
+        supplier_report: "Packas av leverantör"
     subscriptions:
       autocomplete:
         quantity: "Antal"
@@ -824,6 +842,7 @@ sv:
   checkout_total_price: 'Summa '
   checkout_back_to_cart: "Tillbaka till Varukorg"
   split_checkout:
+    your_details_without_number: Dina detaljer
     step1:
       your_details:
         title: Dina detaljer
@@ -837,6 +856,7 @@ sv:
           label: Telefonnummer
       billing_address:
         title: 'Faktureringsadress '
+      address:
         city:
           label: Ort
         state_id:
@@ -2152,10 +2172,13 @@ sv:
           shipment_state: "Leveransstatus"
           email: "E-post"
           total: "Summa"
+          bill_address_lastname: "Namn"
       general_settings:
         edit:
           enterprises_require_tos: "Företag måste acceptera servicevillkoren"
           footer_tos_url: "Användarvillkor URL"
+    date_picker:
+      close: "Stängd"
     orders:
       bought:
         item: "Redan beställd i denna beställningsomgång"

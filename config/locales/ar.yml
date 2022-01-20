@@ -5,6 +5,7 @@ ar:
       spree/user:
         password: "كلمه السر"
         password_confirmation: "تأكيد كلمة المرور"
+        reset_password_token: إعادة تعيين رمز كلمة المرور
       enterprise_fee:
         fee_type: نوع الرسوم
       spree/order:
@@ -683,6 +684,8 @@ ar:
           terms_and_conditions: "الأحكام والشروط"
           remove_terms_and_conditions: "إزالة الملف"
           uploaded_on: "تم الرفع في"
+        business_address:
+          address2: العنوان (تابع)
         contact:
           name: اسم
           name_placeholder: على سبيل المثال. برقوق غوستاف
@@ -1084,11 +1087,28 @@ ar:
       xero_invoices:
         name: فواتير زيروكس
         description: فواتير للاستيراد إلى زيروكس
-      packing:
-        name: تقارير التعبئة
       enterprise_fee_summary:
         name: "ملخص رسوم الشركات"
         description: "ملخص رسوم الشركات التي تم جمعها"
+      summary_row:
+        total: "مجموع"
+      table:
+        select_and_search: "حدد المرشحات وانقر على %{option} للوصول إلى البيانات الخاصة بك."
+        headings:
+          hub: "مركز بيع"
+          customer_code: "الشفرة"
+          first_name: "الاسم الاول"
+          last_name: "الكنية"
+          supplier: "المورد"
+          product: "المنتج"
+          variant: "النوع"
+          quantity: "الكمية"
+          is_temperature_controlled: "التحكم المؤقت؟"
+          temp_controlled: "التحكم المؤقت؟"
+      packing:
+        name: "تقارير التعبئة"
+        customer_report: "تم التعبئة من العملاء"
+        supplier_report: "تم التعبئة من  المورد"
     subscriptions:
       index:
         title: "الاشتراكات"
@@ -1494,6 +1514,7 @@ ar:
   checkout_back_to_cart: "العودة إلى السلة"
   cost_currency: "تكلفة العملة"
   split_checkout:
+    your_details_without_number: تفاصيلك
     step1:
       your_details:
         title: تفاصيلك
@@ -1507,6 +1528,7 @@ ar:
           label: رقم الهاتف
       billing_address:
         title: عنوان وصول الفواتير
+      address:
         city:
           label: مدينة
         state_id:
@@ -1517,6 +1539,12 @@ ar:
           label: بلد
       delivery_address:
         title: عنوان التسليم
+    step2:
+      form:
+        card_month:
+          label: شهر
+        card_year:
+          label: عام
     step3:
       your_details:
         title: تفاصيلك
@@ -2476,7 +2504,6 @@ ar:
     resolve_errors: يرجى حل الأخطاء التالية
     more_items: "+ %{count} ايضا"
     default_card_updated: تم تحديث البطاقة الافتراضية
-    default_card_voids_auth: سيؤدي تغيير بطاقتك الافتراضية إلى إزالة تفويضات المتاجر الحالية لشحنها. يمكنك إعادة تفويض المحلات التجارية بعد تحديث البطاقة الافتراضية. هل ترغب في تغيير البطاقة الافتراضية؟"
     cart:
       add_to_cart_failed: >
           حدثت مشكلة أثناء إضافة هذا المنتج إلى عربة التسوق. ربما أصبح غير متوفر أو
@@ -3624,6 +3651,7 @@ ar:
           shipment_state: "حالة الشحن"
           email: "البريد الإلكتروني"
           total: "المجموع"
+          bill_address_lastname: "الاسم"
       general_settings:
         edit:
           legal_settings: "الإعدادات القانونية"
@@ -3652,6 +3680,7 @@ ar:
       flatpickr_datetime_format: "Y-m-d H:i"
       today: "Today"
       now: "الآن"
+      close: "إغلاق"
     orders:
       error_flash_for_unavailable_items: "عنصر في سلة التسوق الخاصة بك أصبح غير متوفر. يرجى تحديث الكميات المحددة."
       edit:

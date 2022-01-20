@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_17_203927) do
+ActiveRecord::Schema.define(version: 2022_01_14_110920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -209,6 +209,8 @@ ActiveRecord::Schema.define(version: 2021_06_17_203927) do
     t.string "terms_and_conditions_content_type", limit: 255
     t.integer "terms_and_conditions_file_size"
     t.datetime "terms_and_conditions_updated_at"
+    t.integer "business_address_id"
+    t.boolean "show_customer_names_to_suppliers", default: false, null: false
     t.index ["address_id"], name: "index_enterprises_on_address_id"
     t.index ["is_primary_producer", "sells"], name: "index_enterprises_on_is_primary_producer_and_sells"
     t.index ["name"], name: "index_enterprises_on_name", unique: true
@@ -291,6 +293,9 @@ ActiveRecord::Schema.define(version: 2021_06_17_203927) do
     t.integer "coordinator_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "processed_at"
+    t.boolean "automatic_notifications", default: false
+    t.boolean "mails_sent", default: false
   end
 
   create_table "producer_properties", force: :cascade do |t|
@@ -372,10 +377,8 @@ ActiveRecord::Schema.define(version: 2021_06_17_203927) do
   end
 
   create_table "spree_adjustments", force: :cascade do |t|
-    t.integer "source_id"
     t.decimal "amount", precision: 10, scale: 2
     t.string "label", limit: 255
-    t.string "source_type", limit: 255
     t.integer "adjustable_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -597,6 +600,7 @@ ActiveRecord::Schema.define(version: 2021_06_17_203927) do
     t.string "identifier", limit: 255
     t.string "cvv_response_code", limit: 255
     t.text "cvv_response_message"
+    t.datetime "captured_at"
     t.index ["order_id"], name: "index_spree_payments_on_order_id"
   end
 

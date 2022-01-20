@@ -16,7 +16,7 @@ module Spree
       alias_action :new_action, to: :create
       alias_action :show, to: :read
 
-      user ||= Spree.user_class.new
+      user ||= Spree::User.new
 
       if user.respond_to?(:has_spree_role?) && user.has_spree_role?('admin')
         can :manage, :all
@@ -34,8 +34,8 @@ module Spree
         can [:index, :read], Product
         can [:index, :read], ProductProperty
         can [:index, :read], Property
-        can :create, Spree.user_class
-        can [:read, :update, :destroy], Spree.user_class, id: user.id
+        can :create, Spree::User
+        can [:read, :update, :destroy], Spree::User, id: user.id
         can [:index, :read], State
         can [:index, :read], StockItem
         can [:index, :read], StockLocation
@@ -197,7 +197,7 @@ module Spree
       end
 
       can [:admin, :index, :read, :update, :bulk_update, :bulk_reset], VariantOverride do |vo|
-        next false unless vo.hub.present? && vo.variant.andand.product.andand.supplier.present?
+        next false unless vo.hub.present? && vo.variant&.product&.supplier.present?
 
         hub_auth = OpenFoodNetwork::Permissions.new(user).
           variant_override_hubs.
@@ -212,7 +212,7 @@ module Spree
 
       can [:admin, :create, :update], InventoryItem do |ii|
         next false unless ii.enterprise.present? &&
-                          ii.variant.andand.product.andand.supplier.present?
+                          ii.variant&.product&.supplier.present?
 
         hub_auth = OpenFoodNetwork::Permissions.new(user).
           variant_override_hubs.
@@ -239,6 +239,7 @@ module Spree
       can [:admin, :index, :customers, :orders_and_distributors, :group_buys, :payments,
            :orders_and_fulfillment, :products_and_inventory, :order_cycle_management, :packing],
           Spree::Admin::ReportsController
+      can [:admin, :show, :packing], :report
       add_bulk_coop_abilities
       add_enterprise_fee_summary_abilities
     end
@@ -267,7 +268,7 @@ module Spree
           # Enterprise User can access orders that they are a distributor for
           user.enterprises.include?(order.distributor) ||
           # Enterprise User can access orders that are placed inside a OC they coordinate
-          order.order_cycle.andand.coordinated_by?(user)
+          order.order_cycle&.coordinated_by?(user)
       end
       can [:admin, :bulk_management, :managed], Spree::Order do
         user.admin? || user.enterprises.any?(&:is_distributor)
@@ -280,7 +281,7 @@ module Spree
         order = item.order
         user.admin? ||
           user.enterprises.include?(order.distributor) ||
-          order.order_cycle.andand.coordinated_by?(user)
+          order.order_cycle&.coordinated_by?(user)
       end
 
       can [:admin, :index, :read, :create, :edit, :update, :fire], Spree::Payment
@@ -293,7 +294,7 @@ module Spree
         else
           order = adjustment.order
           user.enterprises.include?(order.distributor) ||
-            order.order_cycle.andand.coordinated_by?(user)
+            order.order_cycle&.coordinated_by?(user)
         end
       end
 
@@ -341,7 +342,8 @@ module Spree
     def add_relationship_management_abilities(user)
       can [:admin, :index, :create], EnterpriseRelationship
       can [:destroy], EnterpriseRelationship do |enterprise_relationship|
-        user.enterprises.include? enterprise_relationship.parent
+        user.enterprises.include?(enterprise_relationship.parent) ||
+          user.enterprises.include?(enterprise_relationship.child)
       end
     end
 

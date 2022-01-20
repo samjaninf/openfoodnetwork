@@ -4,6 +4,8 @@ es_CO:
     attributes:
       spree/user:
         password: "Contraseña"
+        password_confirmation: "confirmación de contraseña"
+        reset_password_token: Token de restablecimiento de contraseña
       enterprise_fee:
         fee_type: Tipo de Comisión
       spree/order:
@@ -12,7 +14,7 @@ es_CO:
         completed_at: Completado en
         number: Número
         state: Provincia
-        email: Correo electrónico del cliente
+        email: Correo electrónico de la consumidora
       spree/payment:
         amount: Cantidad
         state: Provincia
@@ -26,6 +28,9 @@ es_CO:
       spree/credit_card:
         base: "Tarjeta de crédito"
         number: "Número"
+        month: "Mes"
+        verification_value: "Valor de verificación"
+        year: "Año"
       order_cycle:
         orders_close_at: Fecha de cierre
       variant_override:
@@ -36,6 +41,8 @@ es_CO:
           attributes:
             email:
               taken: "Ya existe una cuenta con este correo electrónico. Inicie sesión o restablezca tu contraseña."
+            reset_password_token:
+              invalid: inválido
         spree/order:
           no_card: No hay tarjetas de crédito autorizadas disponibles para realizar el cobro
         spree/credit_card:
@@ -51,6 +58,18 @@ es_CO:
             using_producer_stock_settings_but_count_on_hand_set: "debe estar en blanco porque está usando la configuración de inventario del productor"
             on_demand_but_count_on_hand_set: "debe estar en blanco si es bajo demanda"
             limited_stock_but_no_count_on_hand: "debe estar especificado porque se ha definido un inventario limitado"
+  stripe:
+    error_code:
+      incorrect_number: "El numero de tarjeta es incorrecto "
+      invalid_number: "El numero de tarjeta es invalido"
+      invalid_expiry_month: "El mes de vencimiento es invalido"
+      invalid_expiry_year: "El año de vencimiento de la tarjeta no es válido."
+      invalid_cvc: "El código de Seguridad de la tarjeta en invalido"
+      expired_card: "La tarjeta a Expirado"
+      incorrect_cvc: "El código de Seguridad de la tarjeta en incorrecto"
+      incorrect_zip: "El código postal de la tarjeta falló en la validación. "
+      card_declined: "La tarjeta fue rechazada. "
+      missing: "El consumidor al que se le está cobrando no tiene tarjeta."
   activemodel:
     attributes:
       order_management/reports/enterprise_fee_summary/parameters:
@@ -641,6 +660,8 @@ es_CO:
           acn_placeholder: ej. 123 456 789
           display_invoice_logo: Mostrar logo en facturas
           invoice_text: Añadir texto personalizado al final de las facturas
+        business_address:
+          address2: Dirección (continuación)
         contact:
           name: Nombre
           name_placeholder: ej. Gustav Plum
@@ -1044,11 +1065,28 @@ es_CO:
       xero_invoices:
         name: Facturas Xero
         description: Facturas para la importación en Xero
-      packing:
-        name: Reportes de empaquetado
       enterprise_fee_summary:
         name: "Resumen de las comisiones de la organización"
         description: "Resumen de las comisiones de la organización recolectadas"
+      summary_row:
+        total: "TOTAL"
+      table:
+        select_and_search: "Seleccione filtros y haga clic en %{option} para acceder a sus datos."
+        headings:
+          hub: "Nodo"
+          customer_code: "Código"
+          first_name: "Nombre"
+          last_name: "Apellidos"
+          supplier: "Proveedora"
+          product: "Producto"
+          variant: "Variante"
+          quantity: "Cantidad"
+          is_temperature_controlled: "¿Control de Temperatura?"
+          temp_controlled: "¿Control de Temperatura?"
+      packing:
+        name: "Reportes de empaquetado"
+        customer_report: "Paquete por cliente"
+        supplier_report: "Pack por proveedor"
     subscriptions:
       index:
         title: "Suscripciones"
@@ -1437,6 +1475,7 @@ es_CO:
   checkout_back_to_cart: "De vuelta al carrito"
   cost_currency: "Moneda"
   split_checkout:
+    your_details_without_number: Sus detalles
     step1:
       your_details:
         title: Sus detalles
@@ -1450,6 +1489,7 @@ es_CO:
           label: Número de teléfono
       billing_address:
         title: Dirección de cobro
+      address:
         city:
           label: Ciudad
         state_id:
@@ -1460,6 +1500,12 @@ es_CO:
           label: País
       delivery_address:
         title: Dirección de entrega
+    step2:
+      form:
+        card_month:
+          label: Mes
+        card_year:
+          label: Año
     step3:
       your_details:
         title: Sus detalles
@@ -3388,6 +3434,7 @@ es_CO:
           shipment_state: "Estado del envío"
           email: "Correo electrónico"
           total: "Total"
+          bill_address_lastname: "Nombre"
       general_settings:
         edit:
           legal_settings: "Configuraciones legales"
@@ -3410,6 +3457,8 @@ es_CO:
           used_saved_card: "Usa una tarjeta guardada:"
           or_enter_new_card: "O introduce los detalles de una nueva tarjeta:"
           remember_this_card: ¿Recordar esta tarjeta?
+    date_picker:
+      close: "Cerrar"
     orders:
       error_flash_for_unavailable_items: "Un artículo de tu carrito ya no está disponible. Actualiza las cantidades seleccionadas."
       edit:

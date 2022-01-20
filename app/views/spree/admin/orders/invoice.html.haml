@@ -1,4 +1,4 @@
-= wicked_pdf_stylesheet_link_tag "mail/all"
+= wicked_pdf_stylesheet_pack_tag "mail"
 
 %table{:width => "100%"}
   %tbody
@@ -15,15 +15,21 @@
       %td{width: "10%" }
         &nbsp;
       %td{ :align => "right" }
-        %h4= @order.order_cycle.andand.name
+        %h4= @order.order_cycle&.name
     %tr{ valign: "top" }
       %td{ align: "left", colspan: 3 }
-        %strong= "#{t('.from')}: #{@order.distributor.name}"
+        - if @order.distributor.business_address.blank?
+          %strong= "#{t('.from')}: #{@order.distributor.name}"
+        - else 
+          %strong= "#{t('.from')}: #{@order.distributor.business_address.company}"
         - if @order.distributor.abn.present?
           %br
           = "#{t(:abn)} #{@order.distributor.abn}"
         %br
-        = @order.distributor.address.full_address
+        - if @order.distributor.business_address.blank?
+          = @order.distributor.address.full_address
+        - else
+          = @order.distributor.business_address.full_address
         %br
         = @order.distributor.contact.email
     %tr{ valign: "top" }
@@ -35,14 +41,14 @@
         %br
         - if @order.bill_address
           = @order.bill_address.full_name
-        - if @order.andand.customer.andand.code.present?
+        - if @order&.customer&.code.present?
           %br
           = "#{t('.code')}: #{@order.customer.code}"
         %br
         - if @order.bill_address
           = @order.bill_address.full_address
         %br
-        - if @order.andand.customer.andand.email.present?
+        - if @order&.customer&.email.present?
           = "#{@order.customer.email},"
         - if @order.bill_address
           = "#{@order.bill_address.phone}"

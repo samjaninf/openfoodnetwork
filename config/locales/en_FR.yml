@@ -5,6 +5,7 @@ en_FR:
       spree/user:
         password: "Password"
         password_confirmation: "Password confirmation"
+        reset_password_token: Reset password token
       enterprise_fee:
         fee_type: Fee Type
       spree/order:
@@ -40,6 +41,8 @@ en_FR:
           attributes:
             email:
               taken: "There's already an account for this email. Please login or reset your password."
+            reset_password_token:
+              invalid: is invalid
         spree/order:
           no_card: There are no authorised credit cards available to charge
         spree/credit_card:
@@ -55,6 +58,58 @@ en_FR:
             using_producer_stock_settings_but_count_on_hand_set: "must be blank because using producer stock settings"
             on_demand_but_count_on_hand_set: "must be blank if on demand"
             limited_stock_but_no_count_on_hand: "must be specified because forcing limited stock"
+  stripe:
+    error_code:
+      incorrect_number: "The card number is incorrect."
+      invalid_number: "The card number is not a valid credit card number."
+      invalid_expiry_month: "The card's expiration month is invalid."
+      invalid_expiry_year: "The card's expiration year is invalid."
+      invalid_cvc: "The card's security code is invalid."
+      expired_card: "The card has expired."
+      incorrect_cvc: "The card's security code is incorrect."
+      incorrect_zip: "The card's zip code failed validation."
+      card_declined: "The card was declined."
+      missing: "There is no card on a customer that is being charged."
+      processing_error: "An error occurred while processing the card."
+      rate_limit: "An error occurred due to requests hitting the API too quickly. Please let us know if you're consistently running into this error."
+      authentication_required: "The card was declined as the transaction requires authentication."
+      approve_with_id: "The payment cannot be authorized."
+      call_issuer: "The card has been declined for an unknown reason."
+      card_not_supported: "The card does not support this type of purchase."
+      card_velocity_exceeded: "The customer has exceeded the balance or credit limit available on their card."
+      currency_not_supported: "The card does not support the specified currency."
+      do_not_honor: "The card has been declined for an unknown reason."
+      do_not_try_again: "The card has been declined for an unknown reason."
+      duplicate_transaction: "A transaction with identical amount and credit card information was submitted very recently."
+      fraudulent: "The payment has been declined as Stripe suspects it is fraudulent."
+      generic_decline: "The card has been declined for an unknown reason."
+      incorrect_pin: "The PIN entered is incorrect. This decline code only applies to payments made with a card reader."
+      insufficient_funds: "The card has insufficient funds to complete the purchase."
+      invalid_account: "The card, or account the card is connected to, is invalid."
+      invalid_amount: "The payment amount is invalid, or exceeds the amount that is allowed."
+      invalid_pin: "The PIN entered is incorrect. This decline code only applies to payments made with a card reader."
+      issuer_not_available: "The card issuer could not be reached, so the payment could not be authorized."
+      lost_card: "The payment has been declined because the card is reported lost."
+      merchant_blacklist: "The payment has been declined because it matches a value on the Stripe user’s block list."
+      new_account_information_available: "The card, or account the card is connected to, is invalid."
+      no_action_taken: "The card has been declined for an unknown reason."
+      not_permitted: "The payment is not permitted."
+      offline_pin_required: "The card has been declined as it requires a PIN."
+      online_or_offline_pin_required: "The card has been declined as it requires a PIN."
+      pickup_card: "The card cannot be used to make this payment (it is possible it has been reported lost or stolen)."
+      pin_try_exceeded: "The allowable number of PIN tries has been exceeded."
+      reenter_transaction: "The payment could not be processed by the issuer for an unknown reason."
+      restricted_card: "The card cannot be used to make this payment (it is possible it has been reported lost or stolen)."
+      revocation_of_all_authorizations: "The card has been declined for an unknown reason."
+      revocation_of_authorization: "The card has been declined for an unknown reason."
+      security_violation: "The card has been declined for an unknown reason."
+      service_not_allowed: "The card has been declined for an unknown reason."
+      stolen_card: "The payment has been declined because the card is reported stolen."
+      stop_payment_order: "The card has been declined for an unknown reason."
+      testmode_decline: "A Stripe test card number was used."
+      transaction_not_allowed: "The card has been declined for an unknown reason."
+      try_again_later: "The card has been declined for an unknown reason."
+      withdrawal_count_limit_exceeded: "The customer has exceeded the balance or credit limit available on their card."
   activemodel:
     attributes:
       order_management/reports/enterprise_fee_summary/parameters:
@@ -94,6 +149,9 @@ en_FR:
   community_forum_url: "Community forum URL"
   customer_instructions: "Customer instructions"
   devise:
+    passwords:
+      spree_user:
+        cannot_be_blank: "User password cannot be blank. Please enter a password."
     confirmations:
       send_instructions: "You will receive an email with instructions about how to confirm your account in a few minutes."
       failed_to_send: "An error occurred whilst sending your confirmation email."
@@ -117,6 +175,9 @@ en_FR:
       already_registered: "This email address is already registered. Please log in to continue, or go back and use another email address."
     success:
       logged_in_succesfully: "Logged in successfully"
+    sessions:
+      signed_out: "Signed out successfully."
+      already_signed_out: "Signed out successfully."
     user_passwords:
       spree_user:
         updated_not_active: "Your password has been reset, but your email has not been confirmed yet."
@@ -232,6 +293,7 @@ en_FR:
   search_by_name: Search by name or suburb...
   producers_join: Producers are now welcome to join the Open Food Network.
   charges_sales_tax: Charges GST?
+  business_address: "Business Address"
   print_invoice: "Print Invoice"
   print_ticket: "Print Ticket"
   select_ticket_printer: "Select printer for tickets"
@@ -711,6 +773,15 @@ en_FR:
           terms_and_conditions: "Terms and Conditions"
           remove_terms_and_conditions: "Remove File"
           uploaded_on: "uploaded on"
+          reset_form: "Reset Form"
+        business_address:
+          company_legal_name: Company Legal Name
+          company_placeholder: Example Inc.
+          address1: Legal address
+          address1_placeholder: 123 High St.
+          address2: Address (contd.)
+          legal_phone_number: Legal phone number
+          phone_placeholder: "98 123 4565"
         contact:
           name: Name
           name_placeholder: eg. Gustav Plum
@@ -954,6 +1025,8 @@ en_FR:
         back_to_list: "Back To List"
         save_and_back_to_list: "Save and Back to List"
         choose_products_from: "Choose Products From:"
+        re_notify_producers: Re notify producers
+        notify_producers_tip: This will send an email to each producer with the list of their orders.
       incoming:
         incoming: "Incoming"
         supplier: "Supplier"
@@ -994,6 +1067,8 @@ en_FR:
         add_supplier: 'Add supplier'
         add_distributor: 'Add distributor'
       advanced_settings:
+        automatic_notifications: Automatic notifications
+        automatic_notifications_tip: Automatically notify producers with their orders via emails when order cycles close
         title: Advanced Settings
         choose_product_tip: You can restrict products incoming and outgoing to only %{inventory}'s inventory.
         preferred_product_selection_from_coordinator_inventory_only_here: Coordinator's Inventory Only
@@ -1117,11 +1192,40 @@ en_FR:
       xero_invoices:
         name: Xero Invoices
         description: Invoices for import into Xero
-      packing:
-        name: Packing Reports
       enterprise_fee_summary:
         name: "Enterprise Fee Summary"
         description: "Summary of Enterprise Fees collected"
+      errors:
+        no_report_type: "Please specify a report type"
+        report_not_found: "Report not found"
+        missing_ransack_params: "Please supply Ransack search params in the request"
+      hidden_field: "< Hidden >"
+      summary_row:
+        total: "TOTAL"
+      table:
+        select_and_search: "Select filters and click on %{option} to access your data."
+        headings:
+          hub: "Hub"
+          customer_code: "Code"
+          first_name: "First Name"
+          last_name: "Last Name"
+          supplier: "Supplier"
+          product: "Product"
+          variant: "Variant"
+          quantity: "Quantity"
+          is_temperature_controlled: "TempControlled?"
+          temp_controlled: "TempControlled?"
+      rendering_options:
+        generate_report: "Generate report:"
+        on_screen: "On screen"
+        csv_spreadsheet: "CSV Spreadsheet"
+        excel_spreadsheet: "Excel Spreadsheet"
+        openoffice_spreadsheet: "OpenOffice Spreadsheet"
+        hide_summary_rows: "Hide summary Rows"
+      packing:
+        name: "Packing Reports"
+        customer_report: "Pack By Customer"
+        supplier_report: "Pack By Supplier"
     subscriptions:
       index:
         title: "Subscriptions"
@@ -1247,6 +1351,7 @@ en_FR:
       terms_and_conditions: "Terms and Conditions"
     failed: "The checkout failed. Please let us know so that we can process your order."
     payment_cancelled_due_to_stock: "Payment cancelled: the checkout could not be completed due to stock issues."
+    order_not_loaded: "No valid order found for checkout processing"
   shops:
     hubs:
       show_closed_shops: "Show closed shops"
@@ -1529,9 +1634,9 @@ en_FR:
   checkout_back_to_cart: "Back to Cart"
   cost_currency: "Cost Currency"
   split_checkout:
-    your_details: 1 - Your details
-    payment_method: 2 - Payment method
-    order_summary: 3 - Order summary
+    your_details_without_number: Your details
+    payment_method_without_number: Payment method
+    order_summary_without_number: Order summary
     step1:
       your_details:
         title: Your details
@@ -1549,6 +1654,7 @@ en_FR:
           placeholder: e.g. 0798765432
       billing_address:
         title: Billing address
+      address:
         address1:
           label: Address (Street + House Number)
           placeholder: e.g. 17 rue de la chèvre
@@ -1572,6 +1678,21 @@ en_FR:
     step2:
       payment_method:
         title: Payment method
+      form:
+        card_number:
+          label: Card number
+          placeholder: e.g. 4242 4242 4242 4242
+        card_verification_value:
+          label: CVC
+        card_month:
+          label: Month
+        card_year:
+          label: Year
+        stripe:
+          use_saved_card: Use saved card
+          use_new_card: Enter your card identifiers
+          save_card: Save card for future use
+          create_new_card: or enter new card details below
       explaination: You can review and confirm your order in the next step.
       submit: Next - Order summary
       cancel: Back to Your details
@@ -1581,6 +1702,8 @@ en_FR:
         edit: Edit your details
       billing_address:
         title: Billing address
+      shipping_address:
+        title: Shipping address
       delivery_info:
         title: Delivery info
       payment_method:
@@ -1591,13 +1714,17 @@ en_FR:
       terms_and_conditions:
         message_html: "I agree to the seller's %{terms_and_conditions_link}."
         link_text: "Terms and Conditions"
-      agree: By clickin 'Complete order' you agree to your order being processed.
+      agree: By clicking 'Complete order' you agree to your order being processed.
       submit: Complete order
       cancel: Back to Payment method
     errors:
+      global: "Saving failed, please update the highlighted fields."
+      terms_not_accepted: Please accept Terms and Conditions
       required: Field cannot be blank
       invalid_number: "Please enter a valid phone number"
       invalid_email: "Please enter a valid email address"
+      select_a_shipping_method: Select a shipping method
+      select_a_payment_method: Select a payment method
   order_paid: PAID
   order_not_paid: NOT PAID
   order_total: Total order
@@ -1697,6 +1824,7 @@ en_FR:
   producer_mail_order_text: "Here is a summary of the orders for your products:"
   producer_mail_delivery_instructions: "Stock pickup/delivery instructions:"
   producer_mail_signoff: "Thanks and best wishes"
+  producer_mail_order_customer_text: "Here is a summary of the orders grouped by customers"
   shopping_oc_closed: Orders are closed
   shopping_oc_closed_description: "Please wait until the next cycle opens (or contact us directly to see if we can accept any late orders)"
   shopping_oc_last_closed: "The last cycle closed %{distance_of_time} ago"
@@ -2178,6 +2306,7 @@ en_FR:
   calculator_values: "Calculator values"
   calculator_settings_warning: "If you are changing the calculator type, you must save first before you can edit the calculator settings"
   calculator_preferred_unit_error: "must be kg or lb"
+  calculator_preferred_value_error: "Invalid input. Please use only numbers. For example: 10, 5.5, -20"
   flat_percent_per_item: "Flat Percent (per item)"
   flat_rate_per_item: "Flat Rate (per item)"
   flat_rate_per_order: "Flat Rate (per order)"
@@ -2591,6 +2720,8 @@ en_FR:
           title: "Uploading Terms and Conditions"
           message_1: "All your buyers will have to agree to them once at checkout. If you update the file, all your buyers will have to agree to them again at checkout."
           message_2: "For buyers with subscriptions, you need to email them the Terms and Conditions (or the changes to them) for now, nothing will notify them about these new Terms and Conditions."
+        business_address_info:
+          message: "Company Legal Name, Legal Address and Legal Phone number are used for businesses that invoice from a legal entity registered with different details to their public trading information. These details will ONLY be used on invoices. If these details are blank your public Name, Address and Phone Number will be used on invoices."
       panels:
         save: SAVE
         saved: SAVED
@@ -3076,7 +3207,6 @@ en_FR:
     notice_messages:
       variant_deleted: "Variant deleted"
     or: "Or"
-    order_processed_successfully: "Order processed successfully"
     payment_method_not_supported: "Payment method not supported"
     resend_authorization_email: "Resend authorization email"
     rma_credit: "RMA credit"
@@ -3378,6 +3508,7 @@ en_FR:
       orders:
         add_product:
           cannot_add_item_to_canceled_order: "Cannot add item to canceled order"
+          include_out_of_stock_variants: "Include variants with no available stock"
         index:
           listing_orders: "Listing Orders"
           new_order: "New Order"
@@ -3534,6 +3665,7 @@ en_FR:
             no_payment_via_admin_backend: Paypal payments cannot be captured in the Backoffice
       products:
         image_upload_error: "The product image was not recognised. Please upload an image in PNG or JPG format."
+        paperclip_image_error: "Paperclip returned errors for file '%{attachment_file_name}' - check ImageMagick installation or image source file."
         new:
           title: "New Product"
           new_product: "New Product"
@@ -3646,6 +3778,7 @@ en_FR:
           shipment_state: "Shipment State"
           email: "Email"
           total: "Total"
+          bill_address_lastname: "Name"
       general_settings:
         edit:
           legal_settings: "Legal Settings"
@@ -3674,6 +3807,7 @@ en_FR:
       flatpickr_datetime_format: "Y-m-d H:i"
       today: "Today"
       now: "Now"
+      close: "Close"
     orders:
       error_flash_for_unavailable_items: "An item in your cart has become unavailable. Please update the selected quantities."
       edit:

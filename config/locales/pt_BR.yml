@@ -5,6 +5,7 @@ pt_BR:
       spree/user:
         password: "Senha"
         password_confirmation: "Confirmação de senha"
+        reset_password_token: Redefinir chave de senha
       enterprise_fee:
         fee_type: Tipo de taxa
       spree/order:
@@ -700,6 +701,8 @@ pt_BR:
           terms_and_conditions: "Termos e Condições"
           remove_terms_and_conditions: "Remover Arquivo"
           uploaded_on: "upload feito em"
+        business_address:
+          address2: Complemento
         contact:
           name: Nome
           name_placeholder: 'ex: Gustavo Pereira'
@@ -1101,11 +1104,27 @@ pt_BR:
       xero_invoices:
         name: Faturas Xero
         description: Faturas para importar em Xero
-      packing:
-        name: Relatórios de pacotes
       enterprise_fee_summary:
         name: "Resumo das taxas da empresa"
         description: "Resumo das taxas corporativas coletadas"
+      summary_row:
+        total: "TOTAL"
+      table:
+        headings:
+          hub: "Central"
+          customer_code: "Código"
+          first_name: "Nome"
+          last_name: "Sobrenome"
+          supplier: "Fornecedor"
+          product: "Produto"
+          variant: "Variante"
+          quantity: "Quantidade"
+          is_temperature_controlled: "Temperatura controlada?"
+          temp_controlled: "Temperatura controlada?"
+      packing:
+        name: "Relatórios de pacotes"
+        customer_report: "Pacote por cliente"
+        supplier_report: "Pacote por fornecedor"
     subscriptions:
       index:
         title: "Assinaturas"
@@ -1511,6 +1530,7 @@ pt_BR:
   checkout_back_to_cart: "De volta para o Carrinho"
   cost_currency: "Custo"
   split_checkout:
+    your_details_without_number: Seus detalhes
     step1:
       your_details:
         title: Seus detalhes
@@ -1524,6 +1544,7 @@ pt_BR:
           label: n
       billing_address:
         title: Endereço de fatura
+      address:
         city:
           label: Cidade
         state_id:
@@ -1534,6 +1555,14 @@ pt_BR:
           label: País
       delivery_address:
         title: Endereço para entrega
+    step2:
+      form:
+        card_number:
+          label: Número do cartão
+        card_month:
+          label: Mês
+        card_year:
+          label: Ano
     step3:
       your_details:
         title: Seus detalhes
@@ -2495,7 +2524,6 @@ pt_BR:
     resolve_errors: Por favor resolva os seguintes erros
     more_items: "+ %{count} Mais"
     default_card_updated: Cartão padrão atualizado
-    default_card_voids_auth: Ao atualizar seu cartão, você automaticamente remove as autorizações existentes para que uma loja possa cobrá-lo. Você conceder novamente as autorizações após atualizar o cartão. Você deseja atualizar o seu cartão?
     cart:
       add_to_cart_failed: >
           Houve um problema ao adicionar este produto ao carrinho. Talvez ele tenha
@@ -3584,6 +3612,7 @@ pt_BR:
           shipment_state: "Situação do Envio"
           email: "E-mail"
           total: "Total"
+          bill_address_lastname: "Nome"
       general_settings:
         edit:
           legal_settings: "Configurações de Legislação"
@@ -3612,6 +3641,7 @@ pt_BR:
       flatpickr_datetime_format: "d-m-Y H:i"
       today: "Hoje"
       now: "Agora"
+      close: "Fechado"
     orders:
       error_flash_for_unavailable_items: "Um item no seu carrinho ficou indisponível. Por favor atualize as quantidades selecionadas. "
       edit:

@@ -28,6 +28,7 @@ end
 
 Capybara.javascript_driver = :chrome
 Capybara.default_max_wait_time = 30
+Capybara.disable_animation = true
 
 RSpec.configure do |config|
   # DatabaseCleaner
@@ -53,6 +54,12 @@ RSpec.configure do |config|
 
   config.after(:each, js: true) do
     Capybara.reset_sessions!
+  end
+
+  # Precompile Webpacker assets (once) when starting the suite. The default setup can result
+  # in the assets getting compiled many times throughout the build, slowing it down.
+  config.before :suite do
+    Webpacker.compile
   end
 
   # Fix encoding issue in Rails 5.0; allows passing empty arrays or hashes as params.

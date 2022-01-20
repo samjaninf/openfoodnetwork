@@ -9,30 +9,36 @@
     "storybook": "start-storybook"
   },
   "jest": {
-    "testRegex": [
-      "spec/javascripts/.*_test\\.js"
-    ]
+    "testRegex": ["spec/javascripts/.*_test\\.js"],
+    "transformIgnorePatterns": ["/node_modules/(?!(stimulus)/)"]
   },
   "devDependencies": {
-    "@storybook/addon-controls": "^6.3.8",
-    "@storybook/addon-docs": "^6.3.8",
-    "@storybook/server": "^6.3.8",
+    "@storybook/addon-controls": "^6.4.13",
+    "@storybook/addon-docs": "^6.4.13",
+    "@storybook/server": "^6.4.13",
     "jasmine-core": "~2.4.1",
-    "jest": "^27.1.0",
-    "karma": "~6.3.4",
+    "jest": "^27.4.7",
+    "karma": "~6.3.11",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coffee-preprocessor": "~1.0.1",
     "karma-jasmine": "~0.3.8",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "~3"
   },
   "license": "AGPL-3.0",
   "dependencies": {
-    "@rails/webpacker": "5.4.2",
+    "@hotwired/turbo": "^7.1.0",
+    "@rails/webpacker": "5.4.3",
+    "babel-loader": "^8.2.3",
+    "cable_ready": "^5.0.0-pre2",
     "flatpickr": "^4.6.9",
+    "foundation-sites": "^5.5.2",
+    "jquery-ui": "1.13.0",
     "moment": "^2.29.1",
-    "shortcut-buttons-flatpickr": "^0.3.1",
-    "stimulus": "^2.0.0",
-    "webpack": "^4.46.0",
-    "webpack-cli": "^3.3.12"
+    "mrujs": "^0.7.4",
+    "select2": "^4.0.13",
+    "shortcut-buttons-flatpickr": "^0.4.0",
+    "stimulus": "^3.0.1",
+    "webpack": "~4",
+    "webpack-cli": "~3"
   }
 }

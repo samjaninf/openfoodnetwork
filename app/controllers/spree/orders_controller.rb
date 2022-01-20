@@ -7,13 +7,12 @@ module Spree
 
     layout 'darkswarm'
 
-    before_action :check_authorization
     rescue_from ActiveRecord::RecordNotFound, with: :render_404
     helper 'spree/products', 'spree/orders'
 
-    respond_to :html
-    respond_to :json
+    respond_to :html, :json
 
+    before_action :check_authorization
     before_action :set_current_order, only: :update
     before_action :filter_order_params, only: :update
     before_action :enable_embedded_shopfront
@@ -26,8 +25,6 @@ module Spree
 
     def show
       @order = Spree::Order.find_by!(number: params[:id])
-
-      handle_stripe_response
     end
 
     def empty
@@ -113,7 +110,7 @@ module Spree
     end
 
     def check_authorization
-      session[:access_token] ||= params[:token]
+      session[:access_token] ||= params[:order_token]
       order = Spree::Order.find_by(number: params[:id]) || current_order
 
       if order
@@ -121,19 +118,6 @@ module Spree
       else
         authorize! :create, Spree::Order
       end
-    end
-
-    # Stripe can redirect here after a payment is processed in the backoffice.
-    # We verify if it was successful here and persist the changes.
-    def handle_stripe_response
-      return unless params.key?("payment_intent")
-
-      result = ProcessPaymentIntent.new(params["payment_intent"], @order).call!
-
-      unless result.ok?
-        flash.now[:error] = "#{I18n.t('payment_could_not_process')}. #{result.error}"
-      end
-      @order.reload
     end
 
     def filter_order_params
@@ -154,7 +138,7 @@ module Spree
     end
 
     def require_order_authentication
-      return if session[:access_token] || params[:token] || spree_current_user
+      return if session[:access_token] || params[:order_token] || spree_current_user
 
       flash[:error] = I18n.t("spree.orders.edit.login_to_view_order")
       redirect_to main_app.root_path(anchor: "login?after_login=#{request.env['PATH_INFO']}")
@@ -171,16 +155,16 @@ module Spree
     # changes are allowed and the user has access. Return nil if not.
     def changeable_order_from_number
       order = Spree::Order.complete.find_by(number: params[:id])
-      return nil unless order.andand.changes_allowed? && can?(:update, order)
+      return nil unless order&.changes_allowed? && can?(:update, order)
 
       order
     end
 
     def check_at_least_one_line_item
-      return unless order_to_update.andand.complete?
+      return unless order_to_update&.complete?
 
       items = params[:order][:line_items_attributes]
-        .andand.select{ |_k, attrs| attrs["quantity"].to_i > 0 }
+        &.select{ |_k, attrs| attrs["quantity"].to_i > 0 }
 
       if items.empty?
         flash[:error] = I18n.t(:orders_cannot_remove_the_final_item)

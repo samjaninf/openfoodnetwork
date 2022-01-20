@@ -89,6 +89,8 @@ module Spree
       event :complete_authorization do
         transition from: [:requires_authorization], to: :completed
       end
+
+      after_transition to: :completed, do: :set_captured_at
     end
 
     def money
@@ -110,7 +112,7 @@ module Spree
 
     def build_source
       return if source_attributes.nil?
-      return unless payment_method.andand.payment_source_class
+      return unless payment_method&.payment_source_class
 
       self.source = payment_method.payment_source_class.new(source_attributes)
       source.payment_method_id = payment_method.id
@@ -138,7 +140,7 @@ module Spree
     end
 
     def ensure_correct_adjustment
-      revoke_adjustment_eligibility if ['failed', 'invalid'].include?(state)
+      revoke_adjustment_eligibility if ['failed', 'invalid', 'void'].include?(state)
       return if adjustment.try(:finalized?)
 
       if adjustment
@@ -217,6 +219,10 @@ module Spree
 
     def update_order
       OrderManagement::Order::Updater.new(order).after_payment_update(self)
+    end
+
+    def set_captured_at
+      update_column(:captured_at, Time.zone.now)
     end
 
     # Necessary because some payment gateways will refuse payments with

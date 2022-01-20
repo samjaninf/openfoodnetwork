@@ -4,6 +4,7 @@ en_NZ:
     attributes:
       spree/user:
         password: "Password"
+        reset_password_token: Reset password token
       enterprise_fee:
         fee_type: Fee Type
       spree/order:
@@ -663,6 +664,8 @@ en_NZ:
           terms_and_conditions: "Terms and Conditions"
           remove_terms_and_conditions: "Remove File"
           uploaded_on: "uploaded on"
+        business_address:
+          address2: Address (contd.)
         contact:
           name: Name
           name_placeholder: eg. Gustav Plum
@@ -1065,11 +1068,28 @@ en_NZ:
       xero_invoices:
         name: Xero Invoices
         description: Invoices for import into Xero
-      packing:
-        name: Packing Reports
       enterprise_fee_summary:
         name: "Enterprise Fee Summary"
         description: "Summary of Enterprise Fees collected"
+      summary_row:
+        total: "TOTAL"
+      table:
+        select_and_search: "Select filters and click on %{option} to access your data."
+        headings:
+          hub: "Hub"
+          customer_code: "Code"
+          first_name: "First Name"
+          last_name: "Last Name"
+          supplier: "Supplier"
+          product: "Product"
+          variant: "Variant"
+          quantity: "Quantity"
+          is_temperature_controlled: "TempControlled?"
+          temp_controlled: "TempControlled?"
+      packing:
+        name: "Packing Reports"
+        customer_report: "Pack By Customer"
+        supplier_report: "Pack By Supplier"
     subscriptions:
       index:
         title: "Subscriptions"
@@ -1469,6 +1489,7 @@ en_NZ:
   checkout_back_to_cart: "Back to Cart"
   cost_currency: "Cost Currency"
   split_checkout:
+    your_details_without_number: Your details
     step1:
       your_details:
         title: Your details
@@ -1482,6 +1503,7 @@ en_NZ:
           label: Phone number
       billing_address:
         title: Billing address
+      address:
         city:
           label: City
         state_id:
@@ -1492,6 +1514,12 @@ en_NZ:
           label: Country
       delivery_address:
         title: Delivery address
+    step2:
+      form:
+        card_month:
+          label: Month
+        card_year:
+          label: Year
     step3:
       your_details:
         title: Your details
@@ -2446,7 +2474,6 @@ en_NZ:
     resolve_errors: Please resolve the following errors
     more_items: "+ %{count} More"
     default_card_updated: Default Card Updated
-    default_card_voids_auth: Changing your default card will remove shops' existing authorizations to charge it. You can re-authorize shops after updating the default card. Do you wish to change the default card?"
     cart:
       add_to_cart_failed: >
           There was a problem adding this product to the cart. Perhaps it has become
@@ -3474,6 +3501,7 @@ en_NZ:
           shipment_state: "Shipment State"
           email: "Email"
           total: "Total"
+          bill_address_lastname: "Name"
       general_settings:
         edit:
           legal_settings: "Legal Settings"
@@ -3502,6 +3530,7 @@ en_NZ:
       flatpickr_datetime_format: "Y-m-d H:i"
       today: "Today"
       now: "Now"
+      close: "Close"
     orders:
       error_flash_for_unavailable_items: "An item in your cart has become unavailable. Please update the selected quantities."
       edit:

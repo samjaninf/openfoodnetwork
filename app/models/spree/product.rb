@@ -159,7 +159,8 @@ module Spree
         joins('
           LEFT OUTER JOIN inventory_items AS o_inventory_items
             ON (o_spree_variants.id = o_inventory_items.variant_id)').
-        where('o_inventory_items.enterprise_id = (?) AND visible = (?)', enterprise, true)
+        where('o_inventory_items.enterprise_id = (?) AND visible = (?)', enterprise, true).
+        distinct
     }
 
     # -- Scopes
@@ -430,7 +431,7 @@ module Spree
     end
 
     def update_units
-      return unless saved_change_to_variant_unit?
+      return unless saved_change_to_variant_unit? || saved_change_to_variant_unit_name?
 
       option_types.delete self.class.all_variant_unit_option_types
       option_types << variant_unit_option_type if variant_unit.present?

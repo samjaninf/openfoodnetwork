@@ -26,12 +26,12 @@ describe Spree::OrdersController, type: :controller do
       let(:current_user) { nil }
 
       it "loads page" do
-        get :show, params: { id: order.number, token: order.token }
+        get :show, params: { id: order.number, order_token: order.token }
         expect(response.status).to eq 200
       end
 
       it "stores order token in session as 'access_token'" do
-        get :show, params: { id: order.number, token: order.token }
+        get :show, params: { id: order.number, order_token: order.token }
         expect(session[:access_token]).to eq(order.token)
       end
     end
@@ -79,126 +79,6 @@ describe Spree::OrdersController, type: :controller do
         get :show, params: { id: order.number }
         expect(response).to redirect_to(root_path(anchor: "login?after_login=#{order_path(order)}"))
         expect(flash[:error]).to eq("Please log in to view your order.")
-      end
-    end
-  end
-
-  describe "confirming a payment intent" do
-    let(:customer) { create(:customer) }
-    let(:order) {
-      create(:order_with_totals, customer: customer, distributor: customer.enterprise,
-                                 state: "payment")
-    }
-    let(:payment_method) { create(:stripe_sca_payment_method) }
-    let!(:payment) {
-      create(
-        :payment,
-        payment_method: payment_method,
-        cvv_response_message: "https://stripe.com/redirect",
-        response_code: "pi_123",
-        order: order,
-        state: "requires_authorization"
-      )
-    }
-
-    before do
-      allow(controller).to receive(:spree_current_user) { current_user }
-    end
-
-    context "after returning from Stripe to authorize a payment" do
-      let(:current_user) { order.user }
-
-      context "with a valid payment intent" do
-        let(:payment_intent) { "pi_123" }
-        let(:payment_intent_response) { double(id: "pi_123", status: "requires_capture") }
-
-        before do
-          allow_any_instance_of(Stripe::PaymentIntentValidator)
-            .to receive(:call)
-            .with(payment_intent, kind_of(String))
-            .and_return(payment_intent_response)
-
-          allow(Spree::Order).to receive(:find_by!) { order }
-        end
-
-        context "when the order is in payment state" do
-          it "completes the payment" do
-            expect(order).to receive(:process_payments!) do
-              payment.complete!
-            end
-
-            get :show, params: { id: order.number, payment_intent: payment_intent }
-
-            expect(response.status).to eq 200
-            payment.reload
-            expect(payment.state).to eq("completed")
-            expect(payment.cvv_response_message).to be nil
-          end
-        end
-
-        context "when the order is already completed" do
-          before do
-            order.update_columns(state: "complete")
-          end
-
-          it "should still process the payment" do
-            expect(order).to receive(:process_payments!) do
-              payment.complete!
-            end
-
-            get :show, params: { id: order.number, payment_intent: payment_intent }
-            expect(response.status).to eq 200
-            payment.reload
-            expect(payment.state).to eq("completed")
-            expect(payment.cvv_response_message).to be nil
-          end
-        end
-      end
-
-      context "when the payment intent response has errors" do
-        let(:payment_intent) { "pi_123" }
-
-        before do
-          allow_any_instance_of(Stripe::PaymentIntentValidator)
-            .to receive(:call)
-            .with(payment_intent, kind_of(String))
-            .and_raise(Stripe::StripeError, "error message")
-        end
-
-        it "does not complete the payment" do
-          get :show, params: { id: order.number, payment_intent: payment_intent }
-
-          expect(response.status).to eq 200
-          expect(flash[:error]).to eq("#{I18n.t('payment_could_not_process')}. error message")
-          payment.reload
-          expect(payment.cvv_response_message).to be nil
-          expect(payment.state).to eq("failed")
-        end
-      end
-
-      context "with an invalid last payment" do
-        let(:payment_intent) { "valid" }
-        let(:finder) { instance_double(OrderPaymentFinder, last_payment: payment) }
-
-        before do
-          allow(payment).to receive(:response_code).and_return("invalid")
-          allow(OrderPaymentFinder).to receive(:new).with(order).and_return(finder)
-          allow_any_instance_of(Stripe::PaymentIntentValidator)
-            .to receive(:call)
-            .with(payment_intent, kind_of(String))
-            .and_return(payment_intent)
-          stub_payment_intent_get_request(payment_intent_id: "valid")
-        end
-
-        it "does not complete the payment" do
-          get :show, params: { id: order.number, payment_intent: payment_intent }
-
-          expect(response.status).to eq 200
-          expect(flash[:error]).to eq("#{I18n.t('payment_could_not_process')}. ")
-          payment.reload
-          expect(payment.cvv_response_message).to eq("https://stripe.com/redirect")
-          expect(payment.state).to eq("requires_authorization")
-        end
       end
     end
   end
@@ -604,6 +484,6 @@ describe Spree::OrdersController, type: :controller do
   private
 
   def num_items_in_cart
-    Spree::Order.last.andand.line_items.andand.count || 0
+    Spree::Order.last&.line_items&.count || 0
   end
 end

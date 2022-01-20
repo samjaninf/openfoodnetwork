@@ -10,9 +10,10 @@ module Spree
     include OrderShipment
     include Checkout
     include Balance
+    include SetUnusedAddressFields
 
     searchable_attributes :number, :state, :shipment_state, :payment_state, :distributor_id,
-                          :order_cycle_id, :email
+                          :order_cycle_id, :email, :total
     searchable_associations :shipping_method, :bill_address
     searchable_scopes :complete, :incomplete
 
@@ -23,19 +24,18 @@ module Spree
         order.update_totals
         order.payment_required?
       }
-      go_to_state :confirmation, if: ->(order) {
+      go_to_state :confirmation, if: ->(_order) {
         Flipper.enabled? :split_checkout
       }
       go_to_state :complete
     end
 
-    attr_accessor :use_billing
-    attr_accessor :checkout_processing
+    attr_accessor :use_billing, :checkout_processing, :save_bill_address, :save_ship_address
 
     token_resource
 
-    belongs_to :user, class_name: Spree.user_class.to_s
-    belongs_to :created_by, class_name: Spree.user_class.to_s
+    belongs_to :user, class_name: "Spree::User"
+    belongs_to :created_by, class_name: "Spree::User"
 
     belongs_to :bill_address, class_name: 'Spree::Address'
     alias_attribute :billing_address, :bill_address
@@ -104,7 +104,13 @@ module Spree
     before_save :update_shipping_fees!, if: :complete?
     before_save :update_payment_fees!, if: :complete?
 
+    after_save_commit DefaultAddressUpdater
+
     # -- Scopes
+    scope :not_empty, -> {
+      left_outer_joins(:line_items).where.not(spree_line_items: { id: nil })
+    }
+
     scope :managed_by, lambda { |user|
       if user.has_spree_role?('admin')
         where(nil)
@@ -188,7 +194,7 @@ module Spree
     end
 
     def changes_allowed?
-      complete? && distributor.andand.allow_order_changes? && order_cycle.andand.open?
+      complete? && distributor&.allow_order_changes? && order_cycle&.open?
     end
 
     # Is this a free order in which case the payment step should be skipped
@@ -197,10 +203,6 @@ module Spree
     #   be completed to draw from stock levels and trigger emails.
     def payment_required?
       total.to_f > 0.0 && !skip_payment_for_subscription?
-    end
-
-    def backordered?
-      shipments.any?(&:backordered?)
     end
 
     # Returns the relevant zone (if any) to be used for taxation purposes.
@@ -565,7 +567,7 @@ module Spree
 
     def set_distributor!(distributor)
       self.distributor = distributor
-      self.order_cycle = nil unless order_cycle.andand.has_distributor? distributor
+      self.order_cycle = nil unless order_cycle&.has_distributor? distributor
       save!
     end
 
@@ -673,11 +675,11 @@ module Spree
     end
 
     def using_guest_checkout?
-      require_email && !user.andand.id
+      require_email && !user&.id
     end
 
     def registered_email?
-      Spree.user_class.exists?(email: email)
+      Spree::User.exists?(email: email)
     end
 
     def adjustments_fetcher
@@ -685,7 +687,7 @@ module Spree
     end
 
     def skip_payment_for_subscription?
-      subscription.present? && order_cycle.orders_close_at.andand > Time.zone.now
+      subscription.present? && order_cycle.orders_close_at&.>(Time.zone.now)
     end
 
     def require_customer?
@@ -701,7 +703,7 @@ module Spree
     end
 
     def email_for_customer
-      (user.andand.email || email).andand.downcase
+      (user&.email || email)&.downcase
     end
 
     def associate_customer
@@ -717,9 +719,9 @@ module Spree
         enterprise: distributor,
         email: email_for_customer,
         user: user,
-        name: bill_address.andand.full_name,
-        bill_address: bill_address.andand.clone,
-        ship_address: ship_address.andand.clone
+        name: bill_address&.full_name,
+        bill_address: bill_address&.clone,
+        ship_address: ship_address&.clone
       )
       customer.save
 

@@ -10,15 +10,23 @@ require 'active_merchant/billing/gateways/stripe'
 module Spree
   class Gateway
     class StripeSCA < Gateway
-      include FullUrlHelper
-
       VOIDABLE_STATES = [
         "requires_payment_method", "requires_capture", "requires_confirmation", "requires_action"
-      ]
+      ].freeze
 
       preference :enterprise_id, :integer
 
       validate :ensure_enterprise_selected
+
+      def external_gateway?
+        true
+      end
+
+      def external_payment_url(options)
+        return if options[:order].blank?
+
+        Checkout::StripeRedirect.new(self, options[:order]).path
+      end
 
       def method_type
         'stripe_sca'
@@ -33,7 +41,7 @@ module Spree
       end
 
       def stripe_account_id
-        StripeAccount.find_by(enterprise_id: preferred_enterprise_id).andand.stripe_user_id
+        StripeAccount.find_by(enterprise_id: preferred_enterprise_id)&.stripe_user_id
       end
 
       # NOTE: the name of this method is determined by Spree::Payment::Processing
@@ -87,7 +95,8 @@ module Spree
         if voidable?(payment_intent_response)
           provider.void(response_code, gateway_options)
         else
-          provider.refund(refundable_amount(payment_intent_response), response_code, gateway_options)
+          provider.refund(refundable_amount(payment_intent_response), response_code,
+                          gateway_options)
         end
       end
 
@@ -132,7 +141,7 @@ module Spree
 
       def options_for_authorize(money, creditcard, gateway_options)
         options = basic_options(gateway_options)
-        options[:return_url] = gateway_options[:return_url] || full_checkout_path
+        options[:return_url] = gateway_options[:return_url] || payment_gateways_confirm_stripe_url
 
         customer_id, payment_method_id =
           Stripe::CreditCardCloner.new(creditcard, stripe_account_id).find_or_clone
@@ -144,8 +153,7 @@ module Spree
         payment = fetch_payment(creditcard, gateway_options)
         raise Stripe::StripeError, I18n.t(:no_pending_payments) unless payment&.response_code
 
-        payment_intent_response = Stripe::PaymentIntentValidator.new.
-          call(payment.response_code, stripe_account_id)
+        payment_intent_response = Stripe::PaymentIntentValidator.new(payment).call
 
         raise_if_not_in_capture_state(payment_intent_response)
 
@@ -170,7 +178,7 @@ module Spree
       end
 
       def ensure_enterprise_selected
-        return if preferred_enterprise_id.andand.positive?
+        return if preferred_enterprise_id&.positive?
 
         errors.add(:stripe_account_owner, I18n.t(:error_required))
       end

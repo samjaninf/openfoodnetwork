@@ -4,6 +4,7 @@ fil_PH:
     attributes:
       spree/user:
         password: "Password"
+        reset_password_token: i-reset ang password token
       enterprise_fee:
         fee_type: Uri ng Bayarin
       spree/order:
@@ -631,6 +632,8 @@ fil_PH:
           acn_placeholder: hal. 123 456 789
           display_invoice_logo: ipakita ang Logo sa mga invoice
           invoice_text: magdagdag ng sariling mensahe sa dulo ng mga invoice
+        business_address:
+          address2: address (pinagpatuloy)
         contact:
           name: pangalan
           name_placeholder: hal. Gustav Plum
@@ -1030,11 +1033,28 @@ fil_PH:
       xero_invoices:
         name: mga invoice ng Xero
         description: mga invoice na ililipat sa Xero
-      packing:
-        name: ulat sa pagbabalot
       enterprise_fee_summary:
         name: "buod ng bayad sa enterprise"
         description: "buod ng mga nakolektang fees para sa enterprise"
+      summary_row:
+        total: "KABUUAN"
+      table:
+        select_and_search: "pumili ng mga filter at pindutin ang%{option} para ma-access ang inyong data."
+        headings:
+          hub: "Hub"
+          customer_code: "Code"
+          first_name: "Pangalan"
+          last_name: "Apelyido"
+          supplier: "Supplier"
+          product: "Produkto"
+          variant: "Uri"
+          quantity: "Dami"
+          is_temperature_controlled: "TempControlled?"
+          temp_controlled: "TempControlled?"
+      packing:
+        name: "ulat sa pagbabalot"
+        customer_report: "ibinalot ng Customer"
+        supplier_report: "ibinalot ng Supplier"
     subscriptions:
       index:
         title: "mga nauulit na order"
@@ -1414,6 +1434,7 @@ fil_PH:
   checkout_back_to_cart: "bumalik sa cart"
   cost_currency: "halaga ng pera"
   split_checkout:
+    your_details_without_number: ang inyong detalye
     step1:
       your_details:
         title: ang inyong detalye
@@ -1427,6 +1448,7 @@ fil_PH:
           label: telepono
       billing_address:
         title: Billing address
+      address:
         city:
           label: Lungsod
         state_id:
@@ -3320,6 +3342,7 @@ fil_PH:
           shipment_state: "status ng kargamento"
           email: "Email"
           total: "kabuuan"
+          bill_address_lastname: "Pangalan"
       general_settings:
         edit:
           legal_settings: "Legal Settings"
@@ -3342,6 +3365,8 @@ fil_PH:
           used_saved_card: "gumamit ng naka-save na card:"
           or_enter_new_card: "o ipasok ang detalye para sa bagong card:"
           remember_this_card: Naaalala ba ang card na ito?
+    date_picker:
+      close: "isara"
     orders:
       edit:
         login_to_view_order: "Maglog-in para makita ang inyong order."

@@ -6,14 +6,13 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}.git" }
 
 gem 'dotenv-rails', require: 'dotenv/rails-now' # Load ENV vars before other gems
 
-gem 'rails', '~> 6.1.4'
+gem 'rails', '>= 6.1.4'
 
 gem 'activemerchant', '>= 1.78.0'
 gem 'angular-rails-templates', '>= 0.3.0'
 gem 'awesome_nested_set'
 gem 'ransack', '2.4.2'
 gem 'responders'
-gem 'sass-rails', '< 5.1.0' # this restriction originates from the compass-rails's version
 gem 'webpacker', '~> 5'
 
 gem 'i18n'
@@ -32,8 +31,9 @@ gem 'dfc_provider', path: './engines/dfc_provider'
 gem "order_management", path: "./engines/order_management"
 gem 'web', path: './engines/web'
 
-gem 'activerecord-postgresql-adapter'
-gem 'pg', '~> 1.2.3'
+gem "activerecord-postgresql-adapter"
+gem "arel-helpers", "~> 2.12"
+gem "pg", "~> 1.2.3"
 
 gem 'acts_as_list', '1.0.4'
 gem 'cancancan', '~> 1.15.0'
@@ -50,13 +50,13 @@ gem 'stripe'
 
 gem 'devise'
 gem 'devise-encryptable'
+gem 'devise-i18n'
 gem 'devise-token_authenticatable'
-gem 'jwt', '~> 2.2'
+gem 'jwt', '~> 2.3'
 gem 'oauth2', '~> 1.4.7' # Used for Stripe Connect
 
-gem 'pagy', '~> 4.11'
+gem 'pagy', '~> 5.1'
 
-gem 'andand'
 gem 'angularjs-rails', '1.8.0'
 gem 'aws-sdk', '1.67.0'
 gem 'bugsnag'
@@ -72,8 +72,6 @@ gem 'acts-as-taggable-on', '~> 8.1'
 gem 'angularjs-file-upload-rails', '~> 2.4.1'
 gem 'bigdecimal', '3.0.2'
 gem 'bootsnap', require: false
-gem 'custom_error_message', github: 'jeremydurham/custom-err-msg'
-gem 'dalli'
 gem 'geocoder'
 gem 'gmaps4rails'
 gem 'mimemagic', '> 0.3.5'
@@ -83,11 +81,13 @@ gem 'rack-rewrite'
 gem 'rack-ssl', require: 'rack/ssl'
 gem 'roadie-rails'
 
-gem 'puma'
 gem 'hiredis'
+gem 'puma'
 gem 'redis', '>= 4.0', require: ['redis', 'redis/connection/hiredis']
 gem 'sidekiq'
 gem 'sidekiq-scheduler'
+
+gem "cable_ready", "5.0.0.pre2"
 
 gem 'combine_pdf'
 gem 'wicked_pdf'
@@ -95,22 +95,19 @@ gem 'wkhtmltopdf-binary'
 
 gem 'immigrant'
 gem 'roo', '~> 2.8.3'
+gem 'spreadsheet_architect'
 
 gem 'whenever', require: false
 
-gem 'test-unit', '~> 3.4'
+gem 'test-unit', '~> 3.5'
 
 gem 'coffee-rails', '~> 5.0.0'
-gem 'compass-rails'
 
 gem 'mini_racer', '0.4.0'
 
 gem 'uglifier', '>= 1.0.3'
 
 gem 'angular_rails_csrf'
-gem 'foundation-icons-sass-rails'
-
-gem 'foundation-rails', '= 5.5.2.1'
 
 gem 'jquery-rails', '4.4.0'
 gem 'jquery-ui-rails', '~> 4.2'
@@ -137,6 +134,7 @@ group :test, :development do
   gem 'awesome_print'
   gem 'bullet'
   gem 'capybara'
+  gem 'cuprite'
   gem 'database_cleaner', require: false
   gem "factory_bot_rails", '6.2.0', require: false
   gem 'fuubar', '~> 2.5.1'
@@ -150,12 +148,10 @@ group :test, :development do
   gem 'shoulda-matchers'
   gem 'timecop'
   gem 'webdrivers'
-  gem 'cuprite'
 end
 
 group :test do
   gem 'byebug'
-  gem 'codecov', require: false
   gem 'pdf-reader'
   gem 'rails-controller-testing'
   gem 'simplecov', require: false
@@ -168,6 +164,7 @@ end
 group :development do
   gem 'debugger-linecache'
   gem 'foreman'
+  gem 'listen'
   gem 'pry', '~> 0.13.0'
   gem 'pry-byebug', '~> 3.9.0'
   gem 'rubocop'

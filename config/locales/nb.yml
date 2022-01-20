@@ -4,6 +4,8 @@ nb:
     attributes:
       spree/user:
         password: "Passord"
+        password_confirmation: "Passord-bekreftelse"
+        reset_password_token: Tilbakestill passordtoken
       enterprise_fee:
         fee_type: Avfgiftstype
       spree/order:
@@ -39,6 +41,8 @@ nb:
           attributes:
             email:
               taken: "Det finnes allerede en konto for denne eposten. Vennligst logg inn eller tilbakestill passordet ditt."
+            reset_password_token:
+              invalid: er ugyldig
         spree/order:
           no_card: Det er ingen gyldige kredittkort tilgjengelig for å trekke
         spree/credit_card:
@@ -54,6 +58,20 @@ nb:
             using_producer_stock_settings_but_count_on_hand_set: "må være tomt fordi du bruker produsentens lagerinnstillinger"
             on_demand_but_count_on_hand_set: "må være tom hvis på forespørsel"
             limited_stock_but_no_count_on_hand: "må spesifiseres fordi det tvinger begrenset lager"
+  stripe:
+    error_code:
+      incorrect_number: "Kortnummeret er feil."
+      invalid_number: "Kortnummeret er ikke et gyldig kredittkortnummer."
+      invalid_expiry_month: "Kortets utløpsmåned er ugyldig."
+      invalid_expiry_year: "Kortets utløpsår er ugyldig."
+      invalid_cvc: "Kortets sikkerhetskode er ugyldig."
+      expired_card: "Kortet er utløpt."
+      incorrect_cvc: "Kortets sikkerhetskode er feil."
+      incorrect_zip: "Kortets postnummer kunne ikke valideres."
+      card_declined: "Kortet ble avvist."
+      missing: "Det er ikke noe kort på en kunde som blir belastet."
+      processing_error: "Det oppstod en feil under behandling av kortet."
+      rate_limit: "Det oppstod en feil på grunn av forespørsler som traff API-en for raskt. Gi oss beskjed hvis du stadig opplever denne feilen."
   activemodel:
     attributes:
       order_management/reports/enterprise_fee_summary/parameters:
@@ -93,6 +111,9 @@ nb:
   community_forum_url: "URL for diskusjonsforum"
   customer_instructions: "Kundeinstruksjoner"
   devise:
+    passwords:
+      spree_user:
+        cannot_be_blank: "Brukerpassord kan ikke være tomt. Vennligst skriv inn et passord."
     confirmations:
       send_instructions: "Du vil motta en epost med instruksjoner om hvordan du bekrefter kontoen din om noen få minutter."
       failed_to_send: "Det oppsto en feil under sending av bekreftelses-eposten din."
@@ -231,6 +252,7 @@ nb:
   search_by_name: Søk på navn eller sted...
   producers_join: Norske produsenter er nå velkommen til å bli med i Open Food Network.
   charges_sales_tax: MVA-pliktig?
+  business_address: "Forretningsadresse"
   print_invoice: "Skriv ut Faktura"
   print_ticket: "Skriv ut kvittering"
   select_ticket_printer: "Velg skriver for kvitteringer"
@@ -302,6 +324,7 @@ nb:
   no_pending_payments: "Ingen ventende betalinger"
   invalid_payment_state: "Ugyldig betalingsstatus: %{state}"
   filter_results: Filtrer Resultater
+  clear_filters: Fjern filtre
   quantity: Mengde
   pick_up: Hent
   copy: Kopier
@@ -319,6 +342,8 @@ nb:
   height: "Høyde"
   width: "Bredde"
   depth: "Dybde"
+  payment_could_not_process: "Betalingen kunne ikke behandles"
+  payment_could_not_complete: "Betalingen kunne ikke fullføres"
   actions:
     create_and_add_another: "Opprett og legg til en annen"
     create: "Opprett"
@@ -401,8 +426,16 @@ nb:
       enable_embedded_shopfronts: "Aktiver Innebygd Nettbutikk"
       embedded_shopfronts_whitelist: "Hviteliste for Eksterne Domener"
     terms_of_service_files:
+      create:
+        select_file: "Vennligst velg en fil først."
       show:
+        title: "Filer for Tjenestevilkår"
+        no_files: "Ingen vilkår for tjenester er lastet opp ennå."
+        using_default_terms_html: "Nettstedet lenker for øyeblikket til din gamle %{tos_link}."
+        current_terms_html: "Se gjeldende %{tos_link}. Opplastingstidspunkt: %{datetime}."
         terms_of_service: "Vilkår for bruk"
+        delete: "Slett fil"
+        confirm_delete: "Er du sikker på at du vil slette gjeldende Vilkår for bruk?"
     number_localization:
       number_localization_settings: "Innstillinger for nummerlokalisering"
       enable_localized_number: "Bruk internasjonale tusen- og desimalskilletegn"
@@ -699,6 +732,15 @@ nb:
           terms_and_conditions: "Vilkår og Betingelser"
           remove_terms_and_conditions: "Fjern Fil"
           uploaded_on: "lastet opp den"
+          reset_form: "Tilbakestill skjema"
+        business_address:
+          company_legal_name: Selskapets juridiske navn
+          company_placeholder: Eksempel AS
+          address1: Juridisk adresse
+          address1_placeholder: 123 High St.
+          address2: Adresse (forts.)
+          legal_phone_number: Juridisk telefonnummer
+          phone_placeholder: "98 123 4565"
         contact:
           name: Navn
           name_placeholder: f.eks. Gustav Plum
@@ -810,6 +852,9 @@ nb:
           shopfront_category_ordering_note: "(topp til bunn)"
           open_date: "Åpningsdato"
           close_date: "Stengedato"
+          display_ordering_in_shopfront: "Vis sortering i butikken:"
+          shopfront_sort_by_category: "Etter kategori"
+          shopfront_sort_by_producer: "Etter produsent"
           shopfront_sort_by_category_placeholder: "Kategori"
           shopfront_sort_by_producer_placeholder: "Produsent"
         social:
@@ -1009,6 +1054,7 @@ nb:
         schedule: Tidsplan
         schedules: Tidsplaner
         new_schedule: Ny tidsplan
+        new_schedule_tooltip: Frekvensen som en abonnementsordre legges til
       name_and_timing_form:
         name: Navn
         orders_open: Bestillinger åpner
@@ -1101,11 +1147,40 @@ nb:
       xero_invoices:
         name: Xero-fakturaer
         description: Fakturaer for import til Xero
-      packing:
-        name: Pakkerapporter
       enterprise_fee_summary:
         name: "Sammendrag Bedriftsavgift"
         description: "Sammendrag av bedriftsavgifter innsamlet"
+      errors:
+        no_report_type: "Vennligst spesifiser en rapporttype"
+        report_not_found: "Rapporten ble ikke funnet"
+        missing_ransack_params: "Vennligst oppgi Ransack søkeparametere i forespørselen"
+      hidden_field: "&lt; Skjult &gt;"
+      summary_row:
+        total: "SUM"
+      table:
+        select_and_search: "Velg filtre og klikk på %{option} for å få tilgang til dine data."
+        headings:
+          hub: "Hub"
+          customer_code: "Kode"
+          first_name: "Fornavn"
+          last_name: "Etternavn"
+          supplier: "Leverandør"
+          product: "Produkt"
+          variant: "Variant"
+          quantity: "Mengde"
+          is_temperature_controlled: "Temperaturkontrollert?"
+          temp_controlled: "Temperaturkontrollert?"
+      rendering_options:
+        generate_report: "Generer rapport:"
+        on_screen: "På skjermen"
+        csv_spreadsheet: "CSV-regneark"
+        excel_spreadsheet: "Excel regneark"
+        openoffice_spreadsheet: "OpenOffice-regneark"
+        hide_summary_rows: "Skjul sammendragsrader"
+      packing:
+        name: "Pakkerapporter"
+        customer_report: "Pakk etter Kunde"
+        supplier_report: "Pakk etter Leverandør"
     subscriptions:
       index:
         title: "Abonnement"
@@ -1230,6 +1305,7 @@ nb:
       message_html: "Jeg godtar selgerens %{terms_and_conditions_link} og plattformens %{tos_link}."
       terms_and_conditions: "Vilkår og Betingelser"
     failed: "Utsjekk fra kassen mislyktes. Gi oss beskjed slik at vi kan behandle bestillingen din."
+    payment_cancelled_due_to_stock: "Betaling kansellert: utsjekk kunne ikke fullføres på grunn av lagerproblemer."
   shops:
     hubs:
       show_closed_shops: "Vis stengte butikker"
@@ -1357,6 +1433,12 @@ nb:
   address2: Adresse (forts.)
   city: Kommune
   city_placeholder: f.eks. Northcote
+  latitude: Breddegrad
+  latitude_placeholder: f.eks. -37.4713077
+  latitude_longitude_tip: Bredde- og lengdegrad er nødvendig for å vise bedriften din på kartet.
+  longitude: Lengdegrad
+  longitude_placeholder: f.eks. 144.7851531
+  use_geocoder: Beregne breddegrad og lengdegrad automatisk fra adresse?
   postcode: Postnummer
   postcode_placeholder: f.eks. 3070
   suburb: Område
@@ -1506,39 +1588,89 @@ nb:
   checkout_back_to_cart: "Tilbake til Handlekurv"
   cost_currency: "Kostnadsvaluta"
   split_checkout:
+    your_details_without_number: Dine detaljer
+    payment_method_without_number: Betalingsmetode
+    order_summary_without_number: Sammendrag Bestilling
     step1:
       your_details:
         title: Dine detaljer
         first_name:
           label: Fornavn
+          placeholder: f.eks. Jane
         last_name:
           label: Etternavn
+          placeholder: f.eks. Doe
         email:
           label: Epost
+          placeholder: f.eks. janedoe@email.com
         phone:
           label: Telefonnummer
+          placeholder: f.eks. 07987654321
       billing_address:
         title: Fakturaadresse
+      address:
+        address1:
+          label: Adresse (gate + husnummer)
+          placeholder: f.eks. Flat 1 Elm leiligheter
+        address2:
+          label: Tilleggsinfo adresse (valgfritt)
+          placeholder: f.eks. Cavalier avenur
         city:
           label: By
+          placeholder: f.eks London
         state_id:
           label: Tilstand
         zipcode:
           label: Postnummer
+          placeholder: f.eks. SW11 3QN
         country_id:
           label: Land
       delivery_address:
         title: Leveringsadresse
+      submit: Neste - Betalingsmåte
+      cancel: Tilbake til Rediger kurv
+    step2:
+      payment_method:
+        title: Betalingsmetode
+      form:
+        card_number:
+          label: Kortnummer
+        card_month:
+          label: Måned
+        card_year:
+          label: År
+      explaination: Du kan gå gjennom og bekrefte bestillingen din i neste trinn som inkluderer de endelige kostnadene.
+      submit: Neste - Bestillingssammendrag
+      cancel: Tilbake til dine detaljer
     step3:
       your_details:
         title: Dine detaljer
+        edit: Rediger detaljene dine
       billing_address:
         title: Fakturaadresse
+      shipping_address:
+        title: Leveringsadresse
+      delivery_info:
+        title: Leveringsinformasjon
+      payment_method:
+        title: Betalingsmetode
+        edit: Rediger betalingsmåte
+      order:
+        title: Totalt for bestillingen
       terms_and_conditions:
         message_html: "Jeg godtar selgers %{terms_and_conditions_link}."
         link_text: "Vilkår og Betingelser"
+      agree: Ved å klikke &quot;Fullfør bestilling&quot; godtar du at bestillingen din blir behandlet.
+      submit: Fullfør bestillingen
+      cancel: Tilbake til Betalingsmåte
     errors:
+      global: "Lagring mislyktes, vennligst oppdater de uthevede feltene."
+      terms_not_accepted: Vennligst godta vilkår og betingelser
+      required: Feltet kan ikke være tomt
+      invalid_number: "Vennligst oppgi et gyldig telefonnummer"
       invalid_email: "Vennligst oppgi en gyldig epostadresse"
+      select_a_shipping_method: Velg en leveringsmetode
+      select_a_payment_method: Velg en betalingsmetode
   order_paid: BETALT
   order_not_paid: IKKE BETALT
   order_total: Sum bestilling
@@ -1593,6 +1725,7 @@ nb:
   email_order_summary_includes_tax: "(inkluderer avgift):"
   email_payment_paid: BETALT
   email_payment_not_paid: IKKE BETALT
+  email_payment_description: Betalingsbeskrivelse i kassen
   email_payment_summary: Betalingssammendrag
   email_payment_method: "Betaler via:"
   email_so_placement_intro_html: "Du har en ny bestilling med <strong> %{distributor} </strong>"
@@ -1637,6 +1770,7 @@ nb:
   producer_mail_order_text: "Her er en oppsummering av bestillingene:"
   producer_mail_delivery_instructions: "Henting / leveringsdetaljer :"
   producer_mail_signoff: "Med vennlig hilsen"
+  producer_mail_order_customer_text: "Her er en oppsummering av bestillingene gruppert etter kunder"
   shopping_oc_closed: Stengt for bestilling
   shopping_oc_closed_description: "Vent til neste runde åpner (eller kontakt oss direkte for å se om vi tar i mot sene bestillinger)"
   shopping_oc_last_closed: "Den siste runden stengte for %{distance_of_time} siden"
@@ -1938,6 +2072,11 @@ nb:
         state_field_error: "Fylke påkrevd"
         country_field: "Land:"
         country_field_error: "Vennligst velg et land"
+        map_location: "Kartplassering"
+        locate_address: "Finn adressen på kartet"
+        drag_pin: "Dra og slipp pinnen til riktig sted hvis den ikke er nøyaktig."
+        confirm_address: "Jeg bekrefter at den angitte posisjonen til bedriften på kartet er riktig."
+        drag_map_marker: "På grunn av mange produsenter som opererer i landlige områder, blir kartets nøyaktighet alltid forbedret. Hjelp oss å forstå hvor du befinner deg bedre ved å samhandle med kartet ovenfor for å flytte pinnen ved å klikke eller trykke for å holde pinnen og deretter dra til stedet som er mer nøyaktig basert på din kunnskap."
       contact:
         title: "Kontakt"
         who_is_managing_enterprise: "Hvem er ansvarlig for å administrere %{enterprise}?"
@@ -2040,6 +2179,8 @@ nb:
   fundraising_fee: "Innsamlingsgebyr"
   price_graph: "Prisgraf"
   included_tax: "Inkludert avgift"
+  tax: "Avgift"
+  tax_amount_included: "%{amount} (inkludert)"
   balance: "Balanse"
   transaction: "Transaksjon"
   transaction_date: "Dato"
@@ -2111,6 +2252,7 @@ nb:
   calculator_values: "Kalkulatorverdier"
   calculator_settings_warning: "Hvis du endrer kalkulatortypen, må du lagre først før du kan redigere kalkulatorinnstillingene"
   calculator_preferred_unit_error: "må være kg eller lb."
+  calculator_preferred_value_error: "Ugyldig input. Vennligst bruk kun tall. For eksempel: 10, 5.5, -20"
   flat_percent_per_item: "Flat prosent (per stk)"
   flat_rate_per_item: "Flat rate (per vare)"
   flat_rate_per_order: "Flat Rate (per bestilling)"
@@ -2118,6 +2260,7 @@ nb:
   price_sack: "Prissekk"
   new_order_cycles: "Nye Bestillingsrunder"
   new_order_cycle: "Ny bestillingsrunde"
+  new_order_cycle_tooltip: "Åpne butikken i en bestemt periode"
   select_a_coordinator_for_your_order_cycle: "Velg en koordinator for bestillingsrunde"
   notify_producers: 'Meld produsenter'
   edit_order_cycle: "Endre Bestillingsrunde"
@@ -2484,7 +2627,7 @@ nb:
     resolve_errors: Vennligst løse følgende feil
     more_items: "+ %{count} Flere"
     default_card_updated: Standardkort oppdatert
-    default_card_voids_auth: Hvis du endrer standardkortet ditt, fjernes butikkens eksisterende autorisasjoner til å belaste det. Du kan autorisere butikker på nytt etter oppdatering av standardkortet. Ønsker du å endre standardkortet?
+    default_card_voids_auth: Hvis du endrer standardkortet ditt, fjernes butikkenes eksisterende autorisasjoner til å belaste det. Du kan autorisere butikker på nytt etter å ha oppdatert standardkortet. Ønsker du å endre standardkortet?
     cart:
       add_to_cart_failed: >
           Det oppsto et problem med å legge dette produktet til handlekurven. Kanskje
@@ -2523,6 +2666,8 @@ nb:
           title: "Laster opp vilkår og betingelser"
           message_1: "Alle kundene dine må godta dem én gang i kassen. Hvis du oppdaterer filen, må alle dine kunder godta dem igjen i kassen."
           message_2: "For kunder med abonnement, må du sende dem en epost med vilkårene (eller endringene) for nå, ingenting vil varsle dem om disse nye vilkårene."
+        business_address_info:
+          message: "Selskapets juridiske navn, juridiske adresse og juridiske telefonnummer brukes for virksomheter som fakturerer fra en juridisk enhet som er registrert med andre detaljer enn deres offentlige handelsinformasjon. Disse opplysningene vil KUN bli brukt på fakturaer. Hvis disse opplysningene er tomme, vil ditt offentlige navn, adresse og telefonnummer bli brukt på fakturaer."
       panels:
         save: LAGRE
         saved: LAGRET
@@ -2674,11 +2819,13 @@ nb:
           failed: "feilet"
           paid: "betalt"
           pending: "i påvente av"
+          requires_authorization: "autorisasjon kreves"
           processing: "behandler"
           void: "ugyldig"
           invalid: "ugyldig"
         quantity_adjusted: "Utilstrekkelig lager tilgjengelig. Ordrelinje oppdatert til maksimalt tilgjengelig antall."
         quantity_unchanged: "Antall uendret fra forrige mengde."
+        cannot_remove_last_item: "Kan ikke fjerne siste vare fra bestillingen. Avslutt bestillingen i stedet."
       resend_user_email_confirmation:
         resend: "Send på nytt"
         sending: "Send på nytt ..."
@@ -3461,6 +3608,7 @@ nb:
             no_payment_via_admin_backend: Paypal-betalinger kan ikke behandles i Backoffice
       products:
         image_upload_error: "Produktbildet ble ikke gjenkjent. Last opp et bilde i PNG- eller JPG-format."
+        paperclip_image_error: "Paperclip returnerte feil for filen &#39;%{attachment_file_name}&#39; - sjekk ImageMagick-installasjonen eller kildefilen til bildet."
         new:
           title: "Nytt produkt"
           new_product: "Nytt produkt"
@@ -3573,6 +3721,7 @@ nb:
           shipment_state: "Leveringsstatus"
           email: "Epost"
           total: "Total"
+          bill_address_lastname: "Navn"
       general_settings:
         edit:
           legal_settings: "Juridiske innstillinger"
@@ -3601,6 +3750,7 @@ nb:
       flatpickr_datetime_format: "Y-m-d H:i"
       today: "I dag"
       now: "Nå"
+      close: "Lukk"
     orders:
       error_flash_for_unavailable_items: "En vare i handlekurven din er blitt utilgjengelig. Oppdater valgte mengder."
       edit:
@@ -3627,6 +3777,7 @@ nb:
       paid: betalt
       pending: ventende
       processing: behandler
+      requires_authorization: "autorisasjon kreves"
       void: ugyldig
       invalid: ugyldig
       authorise: autorisere
@@ -3674,6 +3825,7 @@ nb:
     shipment_mailer:
       shipped_email:
         dear_customer: "Kjære Kunde,"
+        instructions: "Bestillingen din fra %{distributor} er sendt"
         shipment_summary: "Leveringssammendrag"
         subject: "Leveringsvarsling"
         thanks: "Takk for handelen."
@@ -3690,6 +3842,7 @@ nb:
       awaiting_return: avventer retur
       canceled: avbrutt
       cart: ' handlekurv'
+      confirmation: "bekreftelse"
       complete: fullført
       confirm: bekreft
       delivery: levering

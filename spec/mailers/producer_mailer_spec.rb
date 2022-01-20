@@ -26,6 +26,7 @@ describe ProducerMailer, type: :mailer do
   let(:p3) { create(:product, name: "Banana", price: 34.56, supplier: s1) }
   let(:p4) { create(:product, name: "coffee", price: 45.67, supplier: s1) }
   let(:p5) { create(:product, name: "Daffodil", price: 56.78, supplier: s1) }
+  let(:p6) { create(:product, name: "Eggs", price: 67.89, supplier: s1) }
   let(:order_cycle) { create(:simple_order_cycle) }
   let!(:incoming_exchange) {
     order_cycle.exchanges.create! sender: s1, receiver: d1, incoming: true,
@@ -103,6 +104,22 @@ describe ProducerMailer, type: :mailer do
     expect(mail.body.encoded).not_to include p5.name
   end
 
+  context "when a cancelled order has been resumed" do
+    let!(:order_resumed) do
+      order = create(:order, distributor: d1, order_cycle: order_cycle, state: 'complete')
+      order.line_items << create(:line_item, variant: p6.variants.first)
+      order.finalize!
+      order.cancel
+      order.resume
+      order.save!
+      order
+    end
+
+    it "includes items from resumed orders" do
+      expect(mail.body.encoded).to include p6.name
+    end
+  end
+
   it "includes the total" do
     expect(mail.body.encoded).to include 'Total: $50.00'
     expect(body_as_html(mail).find("tr.total-row"))
@@ -126,6 +143,50 @@ describe ProducerMailer, type: :mailer do
   it 'shows deleted products' do
     p1.delete
     expect(mail.body.encoded).to include(p1.name)
+  end
+
+  context 'when flag show_customer_names_to_suppliers is true' do
+    before do
+      order_cycle.coordinator.show_customer_names_to_suppliers = true
+    end
+
+    it "adds customer names table" do
+      expect(body_as_html(mail).find(".order-summary.customer-order")).to_not be_nil
+    end
+
+    it "displays last name for each order" do
+      product_name = order.line_items.first.product.name
+      last_name = order.billing_address.lastname
+      expect(body_as_html(mail).find("table.order-summary.customer-order tr",
+                                     text: product_name)).to have_selector("td", text: last_name)
+    end
+
+    it "displays first name for each order" do
+      product_name = order.line_items.first.product.name
+      first_name = order.billing_address.firstname
+      expect(body_as_html(mail).find("table.order-summary.customer-order tr",
+                                     text: product_name)).to have_selector("td", text: first_name)
+    end
+
+    it "it orders list via last name" do
+      create(:order, :with_line_item, distributor: d1, order_cycle: order_cycle, state: 'complete',
+                                      bill_address: FactoryBot.create(:address, last_name: "Abby"))
+      create(:order, :with_line_item, distributor: d1, order_cycle: order_cycle, state: 'complete',
+                                      bill_address: FactoryBot.create(:address, last_name: "maggie"))
+      expect(mail.body.encoded).to match(/.*Abby.*Doe.*maggie/m)
+    end
+  end
+
+  context 'when flag show_customer_names_to_suppliers is false' do
+    before do
+      order_cycle.coordinator.show_customer_names_to_suppliers = false
+    end
+
+    it "does not add customer names table" do
+      expect {
+        body_as_html(mail).find(".order-summary.customer-order")
+      }.to raise_error(Capybara::ElementNotFound)
+    end
   end
 
   private

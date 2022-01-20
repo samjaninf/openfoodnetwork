@@ -7,6 +7,7 @@ ENV["RAILS_ENV"] ||= 'test'
 require 'simplecov' if ENV["COVERAGE"]
 require 'rubygems'
 require 'pry' unless ENV['CI']
+require 'view_component/test_helpers'
 
 require_relative "../config/environment"
 require 'rspec/rails'
@@ -37,6 +38,7 @@ WebMock.disable_net_connect!(
 Dir[Rails.root.join("spec/support/**/*.rb")].sort.each { |f| require f }
 
 Capybara.server = :puma
+Capybara.disable_animation = true
 
 Capybara.configure do |config|
   config.match = :prefer_exact
@@ -44,9 +46,10 @@ Capybara.configure do |config|
 end
 
 # Override setting in Spree engine: Spree::Core::MailSettings
-ActionMailer::Base.default_url_options[:host] = 'test.host'
+ActionMailer::Base.default_url_options[:host] = ENV["SITE_URL"]
 
 FactoryBot.use_parent_strategy = false
+FactoryBot::SyntaxRunner.include FileHelper
 
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
@@ -139,4 +142,7 @@ RSpec.configure do |config|
   config.include ActionView::Helpers::DateHelper
   config.include OpenFoodNetwork::PerformanceHelper
   config.include ActiveJob::TestHelper
+
+  config.include Features::DatepickerHelper, type: :system
+  config.include DownloadsHelper, type: :system
 end

@@ -104,6 +104,20 @@ module Admin
       end
     end
 
+    describe "show" do
+      context 'a distributor manages an order cycle' do
+        let(:distributor) { create(:distributor_enterprise, owner: distributor_owner) }
+        let(:oc) { create(:simple_order_cycle, coordinator: distributor) }
+
+        context "distributor navigates to order cycle show page" do
+          it 'redirects to edit page' do
+            get :show, params: { id: oc.id }
+            expect(response).to redirect_to edit_admin_order_cycle_path(oc.id)
+          end
+        end
+      end
+    end
+
     describe "create" do
       let(:shop) { create(:distributor_enterprise) }
 
@@ -201,6 +215,17 @@ module Admin
 
           spree_put :update, params.
             merge(order_cycle: { preferred_product_selection_from_coordinator_inventory_only: true })
+        end
+
+        it "can update preference automatic_notifications" do
+          expect(OrderCycleForm).to receive(:new).
+            with(order_cycle,
+                 { "automatic_notifications" => true },
+                 anything) { form_mock }
+          allow(form_mock).to receive(:save) { true }
+
+          spree_put :update, params.
+            merge(order_cycle: { automatic_notifications: true })
         end
       end
     end

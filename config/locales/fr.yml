@@ -5,6 +5,7 @@ fr:
       spree/user:
         password: "Mot de passe"
         password_confirmation: "Confirmation du mot de passe"
+        reset_password_token: La demande de réinitialisation du mot de passe
       enterprise_fee:
         fee_type: Type de marge
       spree/order:
@@ -40,6 +41,8 @@ fr:
           attributes:
             email:
               taken: "Un compte existe déjà pour cet e-mail. Connectez-vous ou demandez un nouveau mot de passe."
+            reset_password_token:
+              invalid: est invalide
         spree/order:
           no_card: Aucune carte de paiement autorisée disponible
         spree/credit_card:
@@ -55,6 +58,58 @@ fr:
             using_producer_stock_settings_but_count_on_hand_set: "doit être vide car utilise les informations de stock du producteur"
             on_demand_but_count_on_hand_set: "doit être vide si \"à volonté\""
             limited_stock_but_no_count_on_hand: "doit être spécifié car pas \"à volonté\""
+  stripe:
+    error_code:
+      incorrect_number: "Le numéro de carte bancaire est incorrect."
+      invalid_number: "Le numéro de carte bancaire n'est pas un numéro valide."
+      invalid_expiry_month: "Le mois d'expiration de la carte bancaire est erroné."
+      invalid_expiry_year: "L'année d'expiration de la carte bancaire est erronée."
+      invalid_cvc: "Le code de sécurité de la carte bancaire est erroné."
+      expired_card: "La carte bancaire a expiré."
+      incorrect_cvc: "Le code de sécurité de la carte bancaire est erroné."
+      incorrect_zip: "Le code postal de la carte bancaire est erroné."
+      card_declined: "La carte bancaire a été refusée."
+      missing: "Il n'y a pas de carte bancaire liée à cet acheteur."
+      processing_error: "Une erreur est survenue durant le traitement du paiement."
+      rate_limit: "Une erreur est survenue suite à un grand nombre de requête quasi-simultanée sur notre API. Veuillez contacter notre support si vous observez cette erreur trop souvent."
+      authentication_required: "Le paiement a été refusé car la transaction nécessite une authentification."
+      approve_with_id: "Le paiement ne peut pas être autorisé."
+      call_issuer: "La carte bancaire a été refusée pour une raison inconnue."
+      card_not_supported: "La carte bancaire ne supporte pas ce type d'achat."
+      card_velocity_exceeded: "L'acheteur a dépassé son plafond de carte bancaire."
+      currency_not_supported: "La carte bancaire ne supporte pas la monnaie indiquée."
+      do_not_honor: "La carte a été refusée pour une raison inconnue."
+      do_not_try_again: "La carte a été refusée pour une raison inconnue."
+      duplicate_transaction: "Une transaction avec un montant identique et la même carte bancaire a été réalisée très récemment."
+      fraudulent: "Le paiement a été refusé car Stripe soupçonne une opération frauduleuse."
+      generic_decline: "La carte a été refusée pour une raison inconnue."
+      incorrect_pin: "Le code PIN renseigné est incorrect. Ce code de refus s'applique uniquement pour les paiements effectués depuis un terminal de vente."
+      insufficient_funds: "La carte bancaire n'a pas les fonds suffisants pour finaliser la commande."
+      invalid_account: "La carte bancaire, ou le compte lié à la carte bancaire, est invalide."
+      invalid_amount: "Le montant du paiement est invalide, ou dépasse les plafonds autorisés."
+      invalid_pin: "Le code PIN renseigné est incorrect. Ce code de refus s'applique uniquement pour les paiements effectués depuis un terminal de vente."
+      issuer_not_available: "L'émetteur de la carte n'a pas pu être contacté, donc le paiement n'a pas pu être autorisé."
+      lost_card: "Le paiement a été refusé car la carte bancaire est considérée perdue par son émetteur."
+      merchant_blacklist: "Le paiement a été refusé car il correspond à une valeur listée comme bloquée sur le compte Stripe de la boutique."
+      new_account_information_available: "La carte bancaire, ou le compte lié à la carte bancaire, est invalide."
+      no_action_taken: "La carte a été refusée pour une raison inconnue."
+      not_permitted: "Le paiement n'est pas autorisé."
+      offline_pin_required: "La carte bancaire a été refusée car elle nécessite un code PIN."
+      online_or_offline_pin_required: "La carte bancaire a été refusée car elle nécessite un code PIN."
+      pickup_card: "La carte bancaire ne peut pas être utilisée pour réaliser ce paiement (il est possible qu'elle soit identifiée comme perdue ou volée)."
+      pin_try_exceeded: "Vous avez dépassé le nombre d'essai du code PIN."
+      reenter_transaction: "Le paiement ne peut pas être effectué par l'émetteur de la carte bancaire pour une raison inconnue."
+      restricted_card: "La carte bancaire ne peut pas être utilisée pour réaliser ce paiement (il est possible qu'elle ait été reportée comme perdue ou volée)."
+      revocation_of_all_authorizations: "La carte a été refusée pour une raison inconnue."
+      revocation_of_authorization: "La carte a été refusée pour une raison inconnue."
+      security_violation: "La carte a été refusée pour une raison inconnue."
+      service_not_allowed: "La carte a été refusée pour une raison inconnue."
+      stolen_card: "Le paiement a été refusé parce que la carte bancaire est considérée comme volée."
+      stop_payment_order: "La carte a été refusée pour une raison inconnue."
+      testmode_decline: "Un code de carte bancaire de test a été utilisé."
+      transaction_not_allowed: "La carte a été refusée pour une raison inconnue."
+      try_again_later: "La carte a été refusée pour une raison inconnue."
+      withdrawal_count_limit_exceeded: "L'acheteur a dépassé son plafond de carte bancaire."
   activemodel:
     attributes:
       order_management/reports/enterprise_fee_summary/parameters:
@@ -94,6 +149,9 @@ fr:
   community_forum_url: "Lien vers le forum"
   customer_instructions: "Précisions pour l'acheteur"
   devise:
+    passwords:
+      spree_user:
+        cannot_be_blank: "Le champ mot de passe ne peut pas être vide. Veuillez renseigner un mot de passe."
     confirmations:
       send_instructions: "Un email a été envoyé avec des instructions pour confirmer votre adresse email. Vérifiez votre boite mail!"
       failed_to_send: "Une erreur est survenue lors de l'envoi de l'email de confirmation."
@@ -117,6 +175,9 @@ fr:
       already_registered: "Cet email est déjà associé à un utilisateur et a déjà été validé. Veuillez vous connecter pour continuer, ou utiliser un autre email."
     success:
       logged_in_succesfully: "Vous êtes désormais connecté !"
+    sessions:
+      signed_out: "Vous êtes désormais déconnecté."
+      already_signed_out: "Vous êtes désormais déconnecté."
     user_passwords:
       spree_user:
         updated_not_active: "Votre mot de passe a bien été réinitialisé, mais votre email n'a pas encore été confirmé."
@@ -232,6 +293,7 @@ fr:
   search_by_name: Recherche par nom ou département...
   producers_join: Les producteurs et autres circuits courts basés en France sont invités à rejoindre CoopCircuits.
   charges_sales_tax: Soumis à la TVA?
+  business_address: "Adresse du siège social"
   print_invoice: "Imprimer la facture"
   print_ticket: "Imprimer ticket de caisse"
   select_ticket_printer: "Choisir l'imprimante tickets"
@@ -711,6 +773,15 @@ fr:
           terms_and_conditions: "CGU & CGV"
           remove_terms_and_conditions: "Supprimer le fichier"
           uploaded_on: "mis en ligne le"
+          reset_form: "Vider les champs"
+        business_address:
+          company_legal_name: Raison sociale
+          company_placeholder: Indiquez ici le nom légal de votre entreprise
+          address1: Adresse du siège social
+          address1_placeholder: 123, rue de la Chèvre
+          address2: Adresse (suite)
+          legal_phone_number: Numéro de téléphone
+          phone_placeholder: "09 00 00 00 00"
         contact:
           name: Nom
           name_placeholder: 'ex: Bernard Michelet'
@@ -956,6 +1027,8 @@ fr:
         back_to_list: "Retour à la liste"
         save_and_back_to_list: "Sauvegarder et revenir à la liste"
         choose_products_from: "Choisir produits depuis :"
+        re_notify_producers: Notifier les producteurs
+        notify_producers_tip: Cette action va envoyer un mail à tous les producteurs avec le contenu du cycle de vente.
       incoming:
         incoming: "Produits entrants (pouvant être mis en vente par les boutiques du cycle de vente)"
         supplier: "Fournisseur"
@@ -996,6 +1069,8 @@ fr:
         add_supplier: 'Ajouter un fournisseur'
         add_distributor: 'Ajouter un distributeur'
       advanced_settings:
+        automatic_notifications: Notifications automatiques
+        automatic_notifications_tip: Envoi un email automatiquement à tous les producteurs lorsque le cycle de vente ferme.
         title: Paramétrages avancés
         choose_product_tip: Vous pouvez restreindre les produits entrants et sortants uniquement au catalogue boutique de %{inventory}
         preferred_product_selection_from_coordinator_inventory_only_here: Uniquement les produits du catalogue boutique
@@ -1049,7 +1124,7 @@ fr:
       bulk_update:
         no_data: Une erreur s'est produite. Aucune donnée trouvée.
       date_warning:
-        msg: Ce cycle de vente est lié à %{n}abonnements ouverts. Changer cette date maintenant n'impactera pas les commandes déjà réalisée, mais nous vous déconseillons cette action néanmoins. Etes-vous sûrs de vouloir poursuivre ?
+        msg: Ce cycle de vente est lié à %{n} abonnements ouverts. Changer cette date maintenant n'impactera pas les commandes déjà réalisée, mais nous vous déconseillons cette action néanmoins. Etes-vous sûrs de vouloir poursuivre ?
         cancel: Annuler
         proceed: Continuer
     producer_properties:
@@ -1073,7 +1148,7 @@ fr:
       has_no_payment_methods: "%{enterprise} n'a pas de méthode de paiement active"
       has_no_shipping_methods: "%{enterprise} n'a pas de méthode de livraison active"
       email_confirmation: "L'adresse e-mail doit être confirmée. Nous avons envoyé un lien de confirmation à %{email}."
-      not_visible: "%{enterprise}n'est pas visible et ne peut être trouvé sur la carte ou dans les recherches sur le site."
+      not_visible: "%{enterprise} n'est pas visible et ne peut être trouvé sur la carte ou dans les recherches sur le site."
     reports:
       hidden: Masqué
       unitsize: Unité de mesure
@@ -1119,11 +1194,40 @@ fr:
       xero_invoices:
         name: Facture Xero
         description: Factures pour import dans Xero
-      packing:
-        name: Rapports de préparation des paniers
       enterprise_fee_summary:
         name: "Résumé des marges et commissions"
         description: "Résumé des marges et commissions collectées"
+      errors:
+        no_report_type: "Merci de sélectionner un type de rapport"
+        report_not_found: "Le rapport n'a pas été trouvé"
+        missing_ransack_params: "Veuillez renseigner un filtre ou une sélection de dates"
+      hidden_field: "< Masqué >"
+      summary_row:
+        total: "Total"
+      table:
+        select_and_search: "Sélectionner les filtres et cliquer sur %{option} pour accéder aux données."
+        headings:
+          hub: "Boutique"
+          customer_code: "Code"
+          first_name: "Prénom"
+          last_name: "Nom"
+          supplier: "Fournisseur"
+          product: "Produit"
+          variant: "Variante"
+          quantity: "Quantité"
+          is_temperature_controlled: "Temp Contrôlée ?"
+          temp_controlled: "Temp Contrôlée ?"
+      rendering_options:
+        generate_report: "Générer le rapport :"
+        on_screen: "A l'écran"
+        csv_spreadsheet: "CSV"
+        excel_spreadsheet: "Excel"
+        openoffice_spreadsheet: "OpenOffice"
+        hide_summary_rows: "Masquer les lignes de totaux"
+      packing:
+        name: "Rapports de préparation des paniers"
+        customer_report: "Préparation des commandes par Acheteur"
+        supplier_report: "Préparation des commandes par Producteur"
     subscriptions:
       index:
         title: "Abonnements"
@@ -1249,6 +1353,7 @@ fr:
       terms_and_conditions: "CGU & CGV"
     failed: "La validation du paiement a échoué. Contactez-nous afin de finaliser votre commande."
     payment_cancelled_due_to_stock: "Paiement annulé : la commande n'a pas été finalisée car un ou plusieurs articles ne sont plus en stock."
+    order_not_loaded: "Aucune commande n'a été trouvée pour poursuivre le parcours d'achat."
   shops:
     hubs:
       show_closed_shops: "Afficher les boutiques fermées"
@@ -1388,7 +1493,7 @@ fr:
   state: Département
   country: Pays
   unauthorized: Non authorisé
-  terms_of_service: "Conditions d'utilisation"
+  terms_of_service: "Conditions Générales d'Utilisation de CoopCircuits"
   on_demand: A volonté
   none: Aucun
   not_allowed: Non autorisé
@@ -1451,7 +1556,7 @@ fr:
     cookies_policy:
       header: "Notre usage des Cookies"
       desc_part_1: "Les cookies sont de tout petits fichiers texte qui sont stockés sur votre ordinateur quand vous naviguez sur certains sites web."
-      desc_part_2: "Chez CoopCircuits nous sommes particulièrement soucieux de votre vie privée. Nous n'utilisons que les cookies nécessaires pour vous offrir un service d'achat/vente en ligne performant. Nous ne vendons aucunes de vos données. Peut-être nous proposerons-vous dans le futur de jolies projets qui peuvent être utiles pour faire progresser la vente en circuits courts, et pour lesquels vos données pourraient nous permettre de trouver de nouvelles solutions aux problèmes que vous rencontrez, comme par exemple la construction de services logistiques mutualisés. Mais nous n'y sommes pas encore, et nous ne ferons rien sans votre autorisation :-)"
+      desc_part_2: "Chez CoopCircuits nous sommes particulièrement soucieux de votre vie privée. Nous n'utilisons que les cookies nécessaires pour vous offrir un service d'achat/vente en ligne performant. Nous ne vendons aucunes de vos données. Peut-être vous proposerons-nous dans le futur de jolis projets qui peuvent être utiles pour faire progresser la vente en circuits courts, et pour lesquels vos données pourraient nous permettre de trouver de nouvelles solutions aux problèmes que vous rencontrez, comme par exemple la construction de services logistiques mutualisés. Mais nous n'y sommes pas encore, et nous ne ferons rien sans votre autorisation :-)"
       desc_part_3: "Nous utilisons des cookies principalement pour vous permettre de rester connecté(e) après votre première connexion si vous le souhaitez (et éviter de saisir votre mot de passe à chaque fois!), ou encore pour mémoriser les produits dans votre panier. Si vous naviguez sur le site sans cliquer sur \"Accepter les cookies\", cela vaut consentement à l'utilisation des cookies nécessaires au bon fonctionnement du site coopcircuits.fr. Voilà la liste détaillée des cookies que nous utilisons."
       essential_cookies: "Cookies essentiels"
       essential_cookies_desc: "Les cookies suivants sont nécessaires au fonctionnement du site coopcircuits.fr."
@@ -1531,9 +1636,9 @@ fr:
   checkout_back_to_cart: "Retour au Panier"
   cost_currency: "Devise du Coût"
   split_checkout:
-    your_details: 1 - Vos coordonnées
-    payment_method: 2 - Moyen de paiement
-    order_summary: 3 - Récapitulatif de la commande
+    your_details_without_number: Vos informations
+    payment_method_without_number: Moyen de paiement
+    order_summary_without_number: Récapitulatif de la commande
     step1:
       your_details:
         title: Vos informations
@@ -1551,6 +1656,7 @@ fr:
           placeholder: ex. 0798765432
       billing_address:
         title: Adresse de facturation
+      address:
         address1:
           label: Adresse (Numéro et rue)
           placeholder: ex. 17 rue de la chèvre
@@ -1574,6 +1680,21 @@ fr:
     step2:
       payment_method:
         title: Moyen de paiement
+      form:
+        card_number:
+          label: Numéro de la carte
+          placeholder: par ex. 4242 4242 4242 4242
+        card_verification_value:
+          label: CVC
+        card_month:
+          label: Mois
+        card_year:
+          label: Année
+        stripe:
+          use_saved_card: Utilisez une carte enregistrée
+          use_new_card: Entrez les informations de votre carte
+          save_card: Enregistrez votre carte pour vos prochains achats
+          create_new_card: ou entrez les détails de votre nouvelle carte ci-dessous
       explaination: Vous pourrez vérifier et confirmer votre commande à l'étape suivante.
       submit: Etape suivante - Récapitulatif de commande
       cancel: Retour à vos coordonnées
@@ -1583,6 +1704,8 @@ fr:
         edit: Modifier vos coordonnées
       billing_address:
         title: Adresse de facturation
+      shipping_address:
+        title: Adresse de livraison
       delivery_info:
         title: Information concernant la livraison
       payment_method:
@@ -1597,9 +1720,13 @@ fr:
       submit: Valider ma commande
       cancel: Retour à la méthode de paiement
     errors:
+      global: "La sauvegarde a échoué, merci de mettre à jour les champs mis en évidence."
+      terms_not_accepted: Merci d'accepter les CGU & CGV.
       required: Ce champ ne peut pas être vide
       invalid_number: "Merci de renseigner un numéro de téléphone valide"
       invalid_email: "Veuillez entrer un email valide"
+      select_a_shipping_method: Sélectionner une méthode de livraison
+      select_a_payment_method: Sélectionner une méthode de paiement
   order_paid: RÉGLÉ
   order_not_paid: NON RÉGLÉ
   order_total: Total commande
@@ -1699,6 +1826,7 @@ fr:
   producer_mail_order_text: "Voilà la liste et les quantités des produits commandés vous concernant:"
   producer_mail_delivery_instructions: "Modalités de livraison des produits:"
   producer_mail_signoff: "Merci et belle fin de journée!"
+  producer_mail_order_customer_text: "Voici un résumé des commandes rangées par acheteurs"
   shopping_oc_closed: La boutique est actuellement fermée
   shopping_oc_closed_description: "Veuillez attendre l'ouverture du prochain cycle de vente (ou contactez-nous directement pour voir si nous pouvons accepter une commande tardive)"
   shopping_oc_last_closed: "Le dernier cycle de vente s'est terminé il y a %{distance_of_time}"
@@ -1933,7 +2061,7 @@ fr:
   error_number: "saisir un nombre"
   error_email: "saisir une adresse email"
   error_not_found_in_database: "%{name} n'existe pas"
-  error_not_primary_producer: "%{name}n'est pas enregistré comme \"producteur\""
+  error_not_primary_producer: "%{name} n'est pas enregistré comme \"producteur\""
   error_no_permission_for_enterprise: "\"%{name}\" : vous n'avez pas les droits requis pour gérer les produits de cette entreprise"
   item_handling_fees: "Frais logistiques (inclus dans le prix affiché)"
   january: "Janvier"
@@ -2180,6 +2308,7 @@ fr:
   calculator_values: "Valeurs applicables"
   calculator_settings_warning: "Si vous modifiez le type de calculateur, vous devez sauvegarder avant de modifier les paramètres du calculateur."
   calculator_preferred_unit_error: "doit être kg ou lb"
+  calculator_preferred_value_error: "La valeur renseignée n'est pas valide. Veuillez utiliser des nombres uniquement. Par exemple : 10, 5.5, -20"
   flat_percent_per_item: "Pourcentage net"
   flat_rate_per_item: "Montant fixe par article"
   flat_rate_per_order: "Montant fixe par commande"
@@ -2240,7 +2369,7 @@ fr:
   spree_admin_single_enterprise_hint: "Astuce: Pour permettre aux gens de vous trouver, activez votre visibilité "
   spree_admin_eg_pickup_from_school: "ex : \"Retrait des produits à l'Ecole Marimati / Au Café du coin / chez Babette / ...\""
   spree_admin_eg_collect_your_order: "ex : \"Veuillez récupérer votre commande au 34 rue Victor Hugo, 75018 Paris\""
-  spree_classification_primary_taxon_error: "La catégorie %{taxon}est utilisée par %{product} et ne peut être supprimée"
+  spree_classification_primary_taxon_error: "La catégorie %{taxon} est utilisée par %{product} et ne peut être supprimée"
   spree_order_availability_error: "Le distributeur ne peut fournir les produits de votre panier pour ce cycle de vente."
   spree_order_populator_error: "Le distributeur ne peut fournir tous les produits de votre panier pour ce cycle de vente. Merci de choisir un autre distributeur ou un autre cycle de vente."
   spree_order_cycle_error: "Veuillez sélectionner une option pour cette commande."
@@ -2269,7 +2398,7 @@ fr:
   new_order: "Nouvelle commande"
   enterprise_tos_link: "Lien vers les Conditions Générales d'Utilisation"
   enterprise_tos_message: "Nous soutenons la mise en place d'un système de distribution résilient et durable, et souhaitons œuvrer avec des entreprises qui partagent nos valeurs et notre vision. Ainsi, nous demandons aux organisations s'enregistrant sur CoopCircuits de valider nos "
-  enterprise_tos_agree: "J'adhère aux valeurs de CoopCircuits et valide les Conditions Générales d'Utilisation."
+  enterprise_tos_agree: "Je valide les Conditions Générales d'Utilisation de CoopCircuits."
   tax_settings: "Paramètres TVA"
   products_require_tax_category: "vous devez choisir la TVA applicable"
   admin_shared_address_1: "Adresse"
@@ -2456,7 +2585,7 @@ fr:
   products_unsaved: "Des changements sur %{n} produits n'ont pas été sauvegardés."
   is_already_manager: "est déjà gestionnaire !"
   no_change_to_save: "Pas de changement à sauvegarder"
-  user_invited: "%{email}a été invité à gérer cette entreprise"
+  user_invited: "%{email} a été invité à gérer cette entreprise"
   add_manager: "Ajouter un utilisateur existant"
   users: "Gestionnaires"
   about: "A propos"
@@ -2481,7 +2610,7 @@ fr:
   tag_rules: "Règles de tag"
   shop_preferences: "Préférences boutique"
   enterprise_fee_whole_order: Commande totale
-  enterprise_fee_by: "%{type}marges/frais par %{role} %{enterprise_name}"
+  enterprise_fee_by: "%{type} marges/frais par %{role} %{enterprise_name}"
   validation_msg_relationship_already_established: "^Un lien est déjà établi entre ces entreprises."
   validation_msg_at_least_one_hub: "^Sélectionnez au moins une boutique"
   validation_msg_tax_category_cant_be_blank: "^Veuillez sélectionner la TVA applicable"
@@ -2556,14 +2685,14 @@ fr:
     resolve_errors: Veuillez corriger les erreurs suivantes
     more_items: "+ %{count} en plus"
     default_card_updated: La carte bancaire par défaut a été mise à jour
-    default_card_voids_auth: Modifier votre carte de paiement par défaut va supprimer les autorisations attribuées à certaines boutiques. vous pouvez les remettre en place dans les paramètres de votre compte. Souhaitez-vous modifier la carte par défaut ?
+    default_card_voids_auth: Modifier votre carte de paiement par défaut va supprimer les autorisations attribuées à certaines boutiques. Vous pouvez les remettre en place dans les paramètres de votre compte, une fois la carte par défaut modifiée. Souhaitez-vous modifier la carte par défaut ?
     cart:
       add_to_cart_failed: >
           Il y a eu un problème lors de l'ajout de votre produit au panier. Peut-être
           qu'il n'est plus en stock ou que la boutique sur laquelle vous étiez a fermé.
     admin:
       unit_price_tooltip: "Le prix unitaire permet aux acheteurs de comparer les prix entre les produits et/ou les conditionnements. Attention, le prix final observé par l'acheteur peut être différent si des marges et/ou commissions sont appliquées."
-      enterprise_limit_reached: "Vous avez atteint le nombre limite d'entreprises autorisées par défaut. Ecrivez à %{contact_email}si vous avez besoin d'augmenter cette limite."
+      enterprise_limit_reached: "Vous avez atteint le nombre limite d'entreprises autorisées par défaut. Ecrivez à %{contact_email} si vous avez besoin d'augmenter cette limite."
       modals:
         got_it: "J'ai compris"
         close: "Fermer"
@@ -2595,6 +2724,8 @@ fr:
           title: "Mise à jour des CGU & CGV"
           message_1: "Vos acheteurs devront valider vos CGV lors de leur commande."
           message_2: "Si vos acheteurs bénéficient de la fonctionnalité d'abonnement, vous devez pour l'instant leur communiquer vos CGV (et leurs mises à jour) par email. N'hésitez pas à nous contacter pour toute question."
+        business_address_info:
+          message: "Ces informations légales seront utilisées sur vos factures. Si vous ne renseignez pas ces champs, vos coordonnées publiques (présentes dans le menu Adresse) seront utilisées sur les factures."
       panels:
         save: Enregistrer
         saved: Enregistré
@@ -3105,7 +3236,6 @@ fr:
     notice_messages:
       variant_deleted: "Variante supprimée"
     or: "Ou"
-    order_processed_successfully: "Commande traitée avec succès"
     payment_method_not_supported: "Mode de paiement non pris en charge"
     resend_authorization_email: "Renvoyer l'e-mail d'autorisation"
     rma_credit: "Crédit ARM"
@@ -3407,6 +3537,7 @@ fr:
       orders:
         add_product:
           cannot_add_item_to_canceled_order: "Il n'est pas possible d'ajouter des produits sur une commande annulée"
+          include_out_of_stock_variants: "Inclure les variantes sans stock"
         index:
           listing_orders: "Liste des commandes"
           new_order: "Nouvelle commande"
@@ -3563,6 +3694,7 @@ fr:
             no_payment_via_admin_backend: 'Il n''est pas encore possible de payer avec Paypal via l''administration. '
       products:
         image_upload_error: "L'image du produit n'a pas été reconnue. Veuillez importer une image au format PNG ou JPG."
+        paperclip_image_error: "Erreur pour le ficher '%{attachment_file_name}' - veuillez vérifier la source du fichier."
         new:
           title: "Nouveau Produit"
           new_product: "Nouveau Produit"
@@ -3617,7 +3749,7 @@ fr:
           bulk_coop_packing_sheets: 'Achats groupés - Feuilles de préparation des paniers'
           bulk_coop_customer_payments: 'Achats groupés - Paiement des acheteurs'
         customer_names_message:
-          customer_names_tip: "Si les noms des acheteurs sont masqué, vous pouvez contacter le gestionnaire de la boutique. Il pourra vous donner accès à cette information."
+          customer_names_tip: "Si les noms des acheteurs sont masqués, vous pouvez contacter le gestionnaire de la boutique. Il pourra vous donner accès à cette information."
       users:
         index:
           listing_users: "Liste des utilisateurs"
@@ -3675,6 +3807,7 @@ fr:
           shipment_state: "Statut livraison"
           email: "Email"
           total: "Total"
+          bill_address_lastname: "Nom"
       general_settings:
         edit:
           legal_settings: "Configuration légales"
@@ -3703,6 +3836,7 @@ fr:
       flatpickr_datetime_format: "d-m-Y H:i"
       today: "Aujourd'hui"
       now: "Maintenant"
+      close: "Fermer"
     orders:
       error_flash_for_unavailable_items: "Un élément de votre panier est épuisé. Veuillez mettre à jour les quantités sélectionnées."
       edit:
@@ -3741,7 +3875,7 @@ fr:
         order_summary_canceled_html: "<strong>[ANNULATION] Commande #%{number}</strong>"
         details: "Voici le détail des produits commandés:"
         unpaid_order: "Votre commande n'avait pas été réglée, aucun remboursement n'a donc été effectué"
-        paid_order: "Votre commande avait été réglée, ainsi %{distributor}a remboursé la totalité du montant"
+        paid_order: "Votre commande avait été réglée, ainsi %{distributor} a remboursé la totalité du montant"
         credit_order: "Votre commande avait été payée, votre compte a donc été crédité"
         subject: "Annulation de Commande"
       cancel_email_for_shop:
@@ -3901,7 +4035,7 @@ fr:
     distance_in_words:
       about_x_hours:
         one: environ 1 heure
-        other: environ %{count}heures
+        other: environ %{count} heures
       about_x_months:
         one: environ 1 mois
         other: environ %{count} mois

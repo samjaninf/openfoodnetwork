@@ -4,6 +4,7 @@ es_US:
     attributes:
       spree/user:
         password: "Contraseña"
+        reset_password_token: token de restablecimiento de contraseña
       enterprise_fee:
         fee_type: Tipo de Comisión
       spree/order:
@@ -682,6 +683,8 @@ es_US:
           terms_and_conditions: "Términos y Condiciones"
           remove_terms_and_conditions: "Eliminar archivo"
           uploaded_on: "Subido en"
+        business_address:
+          address2: Dirección (cont.)
         contact:
           name: Nombre
           name_placeholder: ej. Gustav Plum
@@ -1086,11 +1089,28 @@ es_US:
       xero_invoices:
         name: Facturas Xero
         description: Facturas para la importación en Xero
-      packing:
-        name: Informes de empaquetado
       enterprise_fee_summary:
         name: "Resumen de las comisiones de la organización"
         description: "Resumen de las comisiones de la organización recolectadas"
+      summary_row:
+        total: "TOTAL"
+      table:
+        select_and_search: "Seleccione filtros y haga clic en %{option} para acceder a sus datos."
+        headings:
+          hub: "Grupo"
+          customer_code: "Código"
+          first_name: "Nombre"
+          last_name: "Apellido"
+          supplier: "Proveedor"
+          product: "Producto"
+          variant: "Variedad"
+          quantity: "Cantidad"
+          is_temperature_controlled: "¿Control de Temperatura?"
+          temp_controlled: "¿Control de Temperatura?"
+      packing:
+        name: "Informes de empaquetado"
+        customer_report: "Pack por Consumidor"
+        supplier_report: "Pack por proveedor"
     subscriptions:
       index:
         title: "Suscripciones"
@@ -1490,6 +1510,7 @@ es_US:
   checkout_back_to_cart: "De vuelta al carrito"
   cost_currency: "Moneda"
   split_checkout:
+    your_details_without_number: Sus detalles
     step1:
       your_details:
         title: Sus detalles
@@ -1503,6 +1524,7 @@ es_US:
           label: Número de teléfono
       billing_address:
         title: Dirección de cobro
+      address:
         city:
           label: Ciudad
         state_id:
@@ -1513,6 +1535,14 @@ es_US:
           label: País
       delivery_address:
         title: Dirección de entrega
+    step2:
+      form:
+        card_number:
+          label: Número de tarjeta
+        card_month:
+          label: Mes
+        card_year:
+          label: Año
     step3:
       your_details:
         title: Sus detalles
@@ -2471,7 +2501,6 @@ es_US:
     resolve_errors: Resuelve los siguientes errores
     more_items: "+ %{count} Más"
     default_card_updated: Tarjeta predeterminada actualizada
-    default_card_voids_auth: Cambiar su tarjeta predeterminada eliminará las autorizaciones existentes de las tiendas para cargarla. Puede volver a autorizar las tiendas después de actualizar la tarjeta predeterminada. ¿Desea cambiar la tarjeta predeterminada?
     cart:
       add_to_cart_failed: >
           Ha habido un problema al añadir este producto en el carrito. Puede que haya
@@ -3548,6 +3577,7 @@ es_US:
           shipment_state: "Estado del envío"
           email: "Email"
           total: "Total"
+          bill_address_lastname: "Nombre"
       general_settings:
         edit:
           legal_settings: "Configuraciones legales"
@@ -3576,6 +3606,7 @@ es_US:
       flatpickr_datetime_format: "d-m-Y H:i"
       today: "Hoy"
       now: "Ahora"
+      close: "Cerrar"
     orders:
       error_flash_for_unavailable_items: "Un artículo de tu carrito ahora no está disponible. Por favor actualiza las cantidades seleccionadas"
       edit:

@@ -2,6 +2,10 @@ pl:
   language_name: "Polski"
   activerecord:
     attributes:
+      spree/user:
+        password: "Hasło"
+        password_confirmation: "Potwierdzenie hasła"
+        reset_password_token: Token resetowania hasła
       enterprise_fee:
         fee_type: Typ opłaty
       spree/order:
@@ -24,6 +28,9 @@ pl:
       spree/credit_card:
         base: "Karta kredytowa"
         number: "Numer zamówienia"
+        month: "Miesiąc"
+        verification_value: "Wartość weryfikacyjna"
+        year: "Rok"
       order_cycle:
         orders_close_at: Data zakończenia
       variant_override:
@@ -34,6 +41,8 @@ pl:
           attributes:
             email:
               taken: "Istnieje już konto dla tego adresu e-mail. Zaloguj się lub zresetuj hasło."
+            reset_password_token:
+              invalid: jest błędny
         spree/order:
           no_card: Brak autoryzowanych kart kredytowych, które można by obciążyć.
         spree/credit_card:
@@ -49,6 +58,12 @@ pl:
             using_producer_stock_settings_but_count_on_hand_set: "musi być puste, ponieważ używane są ustawienia zapasów producenta"
             on_demand_but_count_on_hand_set: "musi być puste, jeśli na żądanie"
             limited_stock_but_no_count_on_hand: "należy określić, z powodu ograniczonych zapasów"
+  stripe:
+    error_code:
+      incorrect_number: "Numer karty jest nieprawidłowy."
+      invalid_number: "Numer karty nie jest prawidłowym numerem karty kredytowej."
+      invalid_expiry_month: "Miesiąc ważności karty jest nieprawidłowy."
+      invalid_expiry_year: "Rok ważności karty jest nieprawidłowy."
   activemodel:
     attributes:
       order_management/reports/enterprise_fee_summary/parameters:
@@ -1038,11 +1053,21 @@ pl:
       xero_invoices:
         name: Faktury Xero
         description: Faktury do importu do Xero
-      packing:
-        name: Raporty pakowania
       enterprise_fee_summary:
         name: "Podsumowanie opłat dla podmiotów"
         description: "Podsumowanie pobranych opłat dla podmiotów"
+      summary_row:
+        total: "RAZEM"
+      table:
+        headings:
+          hub: "Hub"
+          customer_code: "Kod"
+          supplier: "Dostawca"
+          product: "Produkt"
+          variant: "Wariant"
+          quantity: "Ilość"
+      packing:
+        name: "Raporty pakowania"
     subscriptions:
       index:
         title: "Subskrypcje"
@@ -1382,7 +1407,7 @@ pl:
       cookies_policy_link: "polityka plików cookies"
       cookies_accept_button: "Akceptuje ciasteczka"
   home_shop: Zrób zakupy
-  brandstory_headline: "Żywność bez korporacji."
+  brandstory_headline: "Żywność, uspołeczniona."
   brandstory_intro: "Czasami najlepszym sposobem naprawienia systemu jest rozpoczęcie nowego…"
   brandstory_part1: "Zaczynamy od podstaw. Z rolnikami i hodowcami gotowymi do dumnego i prawdziwego opowiadania swoich historii. Z dystrybutorami gotowymi do uczciwego i uczciwego łączenia ludzi z produktami. Z kupującymi, którzy wierzą, że lepsze cotygodniowe decyzje zakupowe mogą poważnie zmienić świat."
   brandstory_part2: "Następnie potrzebujemy sposobu, aby to urzeczywistnić. Sposób na wzmocnienie pozycji każdego, kto uprawia, sprzedaje i kupuje żywność. Sposób na opowiedzenie wszystkich historii, załatwienie całej logistyki. Sposób na codzienną transformację transakcji."
@@ -1433,9 +1458,15 @@ pl:
       your_details:
         email:
           label: E-mail
-      billing_address:
+      address:
         state_id:
           label: Status
+    step2:
+      form:
+        card_month:
+          label: Miesiąc
+        card_year:
+          label: Rok
   order_paid: OPŁACONY
   order_not_paid: NIEZAPŁACONE
   order_total: Całkowite zamówienie
@@ -3379,6 +3410,7 @@ pl:
           shipment_state: "Status dostawy"
           email: "E-mail"
           total: "Razem"
+          bill_address_lastname: "Nazwa"
       general_settings:
         edit:
           legal_settings: "Ustawienia prawne"
@@ -3403,6 +3435,7 @@ pl:
           remember_this_card: Pamiętasz tę kartę?
     date_picker:
       now: "Teraz"
+      close: "Zamknij"
     orders:
       error_flash_for_unavailable_items: "Produkt w Twoim koszyku stał się niedostępny. Zaktualizuj wybrane ilości."
       edit:

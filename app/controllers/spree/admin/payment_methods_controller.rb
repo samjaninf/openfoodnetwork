@@ -7,6 +7,7 @@ module Spree
       before_action :load_data
       before_action :validate_payment_method_provider, only: [:create]
       before_action :load_hubs, only: [:new, :edit, :update]
+      before_action :validate_calculator_preferred_value, only: [:update]
 
       respond_to :html
 
@@ -100,12 +101,7 @@ module Spree
       end
 
       def load_data
-        @providers = if Rails.env.dev? || Rails.env.test?
-                       Gateway.providers.sort_by(&:name)
-                     else
-                       Gateway.providers.reject{ |p| p.name.include? "Bogus" }.sort_by(&:name)
-                     end
-        @providers.reject!{ |provider| stripe_provider?(provider) } unless show_stripe?
+        @providers = load_providers
         @calculators = PaymentMethod.calculators.sort_by(&:name)
       end
 
@@ -125,6 +121,26 @@ module Spree
         # rubocop:enable Style/TernaryParentheses
       end
 
+      def load_providers
+        providers = Gateway.providers.sort_by(&:name)
+
+        unless Rails.env.development? || Rails.env.test?
+          providers.reject! { |provider| provider.name.include? "Bogus" }
+        end
+
+        unless show_stripe?
+          providers.reject! { |provider| stripe_provider?(provider) }
+        end
+
+        # This method is deprecated and will be removed soon:
+        unless @payment_method&.type == "Spree::Gateway::StripeConnect" ||
+               OpenFoodNetwork::FeatureToggle.enabled?("StripeConnect")
+          providers.reject! { |provider| provider.name.ends_with?("StripeConnect") }
+        end
+
+        providers
+      end
+
       # Show Stripe as an option if enabled, or if the
       # current payment_method is already a Stripe method
       def show_stripe?
@@ -135,7 +151,7 @@ module Spree
       def restrict_stripe_account_change
         return unless @payment_method
         return unless stripe_payment_method?
-        return unless @payment_method.preferred_enterprise_id.andand > 0
+        return unless @payment_method.preferred_enterprise_id&.positive?
 
         @stripe_account_holder = Enterprise.find(@payment_method.preferred_enterprise_id)
         return if spree_current_user.enterprises.include? @stripe_account_holder
@@ -157,11 +173,14 @@ module Spree
           call.to_h.with_indifferent_access
       end
 
+      def gateway_params
+        raw_params[ActiveModel::Naming.param_key(@payment_method)] || {}
+      end
+
       # Merge payment method params with gateway params like :gateway_stripe_connect
       # Also, remove password if present and blank
       def update_params
         @update_params ||= begin
-          gateway_params = raw_params[ActiveModel::Naming.param_key(@payment_method)] || {}
           params_for_update = base_params.merge(gateway_params)
 
           params_for_update.each do |key, value|
@@ -172,6 +191,31 @@ module Spree
 
           params_for_update
         end
+      end
+
+      def validate_calculator_preferred_value
+        return if calculator_preferred_values.all? do |value|
+          preferred_value_from_params = gateway_params.dig(:calculator_attributes, value)
+          preferred_value_from_params.nil? || Float(preferred_value_from_params,
+                                                    exception: false)
+        end
+
+        flash[:error] = I18n.t(:calculator_preferred_value_error)
+        redirect_to spree.edit_admin_payment_method_path(@payment_method)
+      end
+
+      def calculator_preferred_values
+        [
+          :preferred_amount,
+          :preferred_flat_percent,
+          :preferred_flat_percent,
+          :preferred_first_item,
+          :preferred_additional_item,
+          :preferred_max_items,
+          :preferred_normal_amount,
+          :preferred_discount_amount,
+          :preferred_minimal_amount
+        ]
       end
     end
   end

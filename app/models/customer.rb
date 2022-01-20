@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 class Customer < ApplicationRecord
+  include SetUnusedAddressFields
+
   acts_as_taggable
 
   searchable_attributes :name, :email, :code
 
   belongs_to :enterprise
-  belongs_to :user, class_name: Spree.user_class.to_s
+  belongs_to :user, class_name: "Spree::User"
   has_many :orders, class_name: "Spree::Order"
   before_destroy :check_for_orders
 
@@ -35,7 +37,7 @@ class Customer < ApplicationRecord
   private
 
   def downcase_email
-    email.andand.downcase!
+    email&.downcase!
   end
 
   def empty_code

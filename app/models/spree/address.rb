@@ -13,7 +13,11 @@ module Spree
     has_one :enterprise, dependent: :restrict_with_exception
     has_many :shipments
 
-    validates :firstname, :lastname, :address1, :city, :country, presence: true
+    validates :address1, :city, :country, :phone, presence: true
+    validates :company, presence: true, unless: -> { first_name.blank? || last_name.blank? }
+    validates :firstname, :lastname, presence: true, if: -> do
+      company.blank? || company == 'unused'
+    end
     validates :zipcode, presence: true, if: :require_zipcode?
 
     validate :state_validate
@@ -90,7 +94,7 @@ module Spree
     end
 
     def full_address
-      render_address([address1, address2, city, zipcode, state.andand.name])
+      render_address([address1, address2, city, zipcode, state&.name])
     end
 
     def address_part1
@@ -98,7 +102,7 @@ module Spree
     end
 
     def address_part2
-      render_address([city, zipcode, state.andand.name])
+      render_address([city, zipcode, state&.name])
     end
 
     private

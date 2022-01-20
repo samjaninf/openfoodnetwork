@@ -28,6 +28,8 @@ class OrderCycle < ApplicationRecord
 
   attr_accessor :incoming_exchanges, :outgoing_exchanges
 
+  before_update :reset_processed_at, if: :will_save_change_to_orders_close_at?
+
   validates :name, :coordinator_id, presence: true
   validate :orders_close_at_after_orders_open_at?
 
@@ -52,6 +54,7 @@ class OrderCycle < ApplicationRecord
     where('order_cycles.orders_close_at < ?',
           Time.zone.now).order("order_cycles.orders_close_at DESC")
   }
+  scope :unprocessed, -> { where(processed_at: nil) }
   scope :undated, -> { where('order_cycles.orders_open_at IS NULL OR orders_close_at IS NULL') }
   scope :dated, -> { where('orders_open_at IS NOT NULL AND orders_close_at IS NOT NULL') }
 
@@ -148,7 +151,7 @@ class OrderCycle < ApplicationRecord
   def clone!
     oc = dup
     oc.name = I18n.t("models.order_cycle.cloned_order_cycle_name", order_cycle: oc.name)
-    oc.orders_open_at = oc.orders_close_at = nil
+    oc.orders_open_at = oc.orders_close_at = oc.mails_sent = oc.processed_at = nil
     oc.coordinator_fee_ids = coordinator_fee_ids
     # rubocop:disable Layout/LineLength
     oc.preferred_product_selection_from_coordinator_inventory_only = preferred_product_selection_from_coordinator_inventory_only
@@ -231,15 +234,15 @@ class OrderCycle < ApplicationRecord
   end
 
   def receival_instructions_for(supplier)
-    exchange_for_supplier(supplier).andand.receival_instructions
+    exchange_for_supplier(supplier)&.receival_instructions
   end
 
   def pickup_time_for(distributor)
-    exchange_for_distributor(distributor).andand.pickup_time || distributor.next_collection_at
+    exchange_for_distributor(distributor)&.pickup_time || distributor.next_collection_at
   end
 
   def pickup_instructions_for(distributor)
-    exchange_for_distributor(distributor).andand.pickup_instructions
+    exchange_for_distributor(distributor)&.pickup_instructions
   end
 
   def exchanges_carrying(variant, distributor)
@@ -274,5 +277,13 @@ class OrderCycle < ApplicationRecord
     return if orders_close_at > orders_open_at
 
     errors.add(:orders_close_at, :after_orders_open_at)
+  end
+
+  def reset_processed_at
+    return unless orders_close_at.present? && orders_close_at_was.present?
+    return unless orders_close_at > orders_close_at_was
+
+    self.processed_at = nil
+    self.mails_sent = false
   end
 end

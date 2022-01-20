@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class Subscription < ApplicationRecord
+  include SetUnusedAddressFields
+
   ALLOWED_PAYMENT_METHOD_TYPES = ["Spree::PaymentMethod::Check",
-                                  "Spree::Gateway::StripeConnect",
                                   "Spree::Gateway::StripeSCA"].freeze
 
   searchable_attributes :shop_id, :canceled_at, :paused_at

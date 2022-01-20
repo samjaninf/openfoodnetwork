@@ -13,14 +13,6 @@ module CheckoutRequestsHelper
     find("button", text: "Place order now").click
   end
 
-  def toggle_accordion(id)
-    find("##{id} dd a").click
-  end
-
-  def toggle_details
-    toggle_accordion :details
-  end
-
   def fill_out_details
     within "#details" do
       fill_in "First Name", with: "Will"
@@ -41,17 +33,28 @@ module CheckoutRequestsHelper
   end
 
   def fill_out_form(shipping_method_name, payment_method_name, save_default_addresses: true)
-    choose shipping_method_name
-    choose payment_method_name
+    within "#shipping" do
+      choose shipping_method_name
+    end
+
+    within "#payment" do
+      choose payment_method_name
+    end
 
     fill_out_details
-    check "Save as default billing address" if save_default_addresses
+
+    within "#billing" do
+      check "Save as default billing address" if save_default_addresses
+    end
 
     fill_out_billing_address
 
     return unless save_default_addresses
 
-    check "Shipping address same as billing address?"
-    check "Save as default shipping address"
+    within "#shipping" do
+      find(:xpath, '//*[@id="shipping"]/ng-form/dd').click
+      check "Shipping address same as billing address?"
+      check "Save as default shipping address"
+    end
   end
 end

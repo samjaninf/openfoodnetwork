@@ -27,18 +27,13 @@ module Spree
 
     # Endpoint for queries to check if a user is already registered
     def registered_email
-      user = Spree.user_class.find_by email: params[:email]
+      user = Spree::User.find_by email: params[:email]
       render json: { registered: user.present? }
     end
 
     def create
       @user = Spree::User.new(user_params)
       if @user.save
-
-        if current_order
-          session[:guest_token] = nil
-        end
-
         redirect_back_or_default(main_app.root_url)
       else
         render :new

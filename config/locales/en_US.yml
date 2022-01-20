@@ -5,6 +5,7 @@ en_US:
       spree/user:
         password: "Password"
         password_confirmation: "Password confirmation"
+        reset_password_token: Reset password token
       enterprise_fee:
         fee_type: Fee Type
       spree/order:
@@ -40,6 +41,8 @@ en_US:
           attributes:
             email:
               taken: "There's already an account registered for this email. Please login or reset your password."
+            reset_password_token:
+              invalid: is invalid
         spree/order:
           no_card: There are no authorized credit cards available to charge
         spree/credit_card:
@@ -55,6 +58,20 @@ en_US:
             using_producer_stock_settings_but_count_on_hand_set: "must be blank because using producer stock settings"
             on_demand_but_count_on_hand_set: "must be blank if on demand"
             limited_stock_but_no_count_on_hand: "must be specified because forcing limited stock"
+  stripe:
+    error_code:
+      incorrect_number: "The card number is incorrect."
+      invalid_number: "The card number is not a valid credit card number."
+      invalid_expiry_month: "The card's expiration month is invalid."
+      invalid_expiry_year: "The card's expiration year is invalid."
+      invalid_cvc: "The card's security code is invalid."
+      expired_card: "The card has expired."
+      incorrect_cvc: "The card's security code is incorrect."
+      incorrect_zip: "The card's zip code failed validation."
+      card_declined: "The card was declined."
+      missing: "There is no card on a customer that is being charged."
+      processing_error: "An error occurred while processing the card."
+      rate_limit: "An error occurred due to requests hitting the API too quickly. Please let us know if you're consistently running into this error."
   activemodel:
     attributes:
       order_management/reports/enterprise_fee_summary/parameters:
@@ -94,6 +111,9 @@ en_US:
   community_forum_url: "Community forum URL"
   customer_instructions: "Customer instructions"
   devise:
+    passwords:
+      spree_user:
+        cannot_be_blank: "User password cannot be blank. Please enter a password."
     confirmations:
       send_instructions: "You will receive an email with instructions about how to confirm your account in a few minutes."
       failed_to_send: "An error occurred while sending your confirmation email."
@@ -173,7 +193,8 @@ en_US:
       userguide: "Harvest To Order User Guide"
       email_admin_html: "You can manage your account by logging into the %{link} or by clicking on the cog in the top right hand side of the homepage, and selecting Administration."
       admin_panel: "Admin Panel"
-      email_community_html: "We also have an online forum for community discussion related to Harvest To Order software and the unique challenges of running a food enterprise. You are encouraged to join in. We are constantly evolving and your input into this forum will shape what happens next. %{link}"
+      # email_community_html: "We also have an online forum for community discussion related to Harvest To Order software and the unique challenges of running a food enterprise. You are encouraged to join in. We are constantly evolving and your input into this forum will shape what happens next. %{link}"
+      email_community_html: "We'll leave you to explore the platform and our community for now and will check back in soon with more information and resources!   In the meantime, please make sure emails from addresses at harvesttoorder.com aren't intercepted by your spam filter.   If you have any questions at all, please don't hesitate to contact us at support@harvesttoorder.com.  Once again, welcome to our community, we're glad you are here!"
       join_community: "Join the community"
     invite_manager:
       subject: "%{enterprise} has invited you to be a manager"
@@ -232,6 +253,7 @@ en_US:
   search_by_name: Search by name or city...
   producers_join: US producers are now welcome to join the Harvest To Order.
   charges_sales_tax: Charges Sales Tax?
+  business_address: "Business Address"
   print_invoice: "Invoice"
   print_ticket: "Print invoice"
   select_ticket_printer: "Select printer for invoices"
@@ -711,6 +733,15 @@ en_US:
           terms_and_conditions: "Terms and Conditions"
           remove_terms_and_conditions: "Remove File"
           uploaded_on: "uploaded on"
+          reset_form: "Reset Form"
+        business_address:
+          company_legal_name: Company Legal Name
+          company_placeholder: Example Inc.
+          address1: Legal address
+          address1_placeholder: 123 High St.
+          address2: Address (contd.)
+          legal_phone_number: Business phone number
+          phone_placeholder: "777 555-1212"
         contact:
           name: Name
           name_placeholder: eg. Justin Jones
@@ -954,6 +985,8 @@ en_US:
         back_to_list: "Back To List"
         save_and_back_to_list: "Save and Back to List"
         choose_products_from: "Choose Products From:"
+        re_notify_producers: Re notify producers
+        notify_producers_tip: This will send an email to each producer with the list of their orders.
       incoming:
         incoming: "Incoming"
         supplier: "Supplier"
@@ -988,6 +1021,8 @@ en_US:
         add_supplier: "Add supplier"
         add_distributor: "Add distributor"
       advanced_settings:
+        automatic_notifications: Automatic notifications
+        automatic_notifications_tip: Automatically notify producers with their orders via emails when order cycles close
         title: Advanced Settings
         choose_product_tip: You can restrict products incoming and outgoing to only %{inventory}'s inventory.
         preferred_product_selection_from_coordinator_inventory_only_here: Coordinator's Inventory Only
@@ -1111,11 +1146,40 @@ en_US:
       xero_invoices:
         name: Xero Invoices
         description: Invoices for import into Xero
-      packing:
-        name: Packing Reports
       enterprise_fee_summary:
         name: "Enterprise Fee Summary"
         description: "Summary of Enterprise Fees collected"
+      errors:
+        no_report_type: "Please specify a report type"
+        report_not_found: "Report not found"
+        missing_ransack_params: "Please supply Ransack search params in the request"
+      hidden_field: "< Hidden >"
+      summary_row:
+        total: "TOTAL"
+      table:
+        select_and_search: "Select filters and click on %{option} to access your data."
+        headings:
+          hub: "Hub"
+          customer_code: "Code"
+          first_name: "First Name"
+          last_name: "Last Name"
+          supplier: "Supplier"
+          product: "Product"
+          variant: "Variant"
+          quantity: "Quantity"
+          is_temperature_controlled: "TempControlled?"
+          temp_controlled: "TempControlled?"
+      rendering_options:
+        generate_report: "Generate report:"
+        on_screen: "On screen"
+        csv_spreadsheet: "CSV Spreadsheet"
+        excel_spreadsheet: "Excel Spreadsheet"
+        openoffice_spreadsheet: "OpenOffice Spreadsheet"
+        hide_summary_rows: "Hide summary Rows"
+      packing:
+        name: "Packing Reports"
+        customer_report: "Pack By Customer"
+        supplier_report: "Pack By Supplier"
     subscriptions:
       index:
         title: "Subscriptions"
@@ -1547,9 +1611,9 @@ en_US:
   checkout_back_to_cart: "Back to cart"
   cost_currency: "Cost Currency"
   split_checkout:
-    your_details: 1 - Your details
-    payment_method: 2 - Payment method
-    order_summary: 3 - Order summary
+    your_details_without_number: Your details
+    payment_method_without_number: Payment method
+    order_summary_without_number: Order summary
     step1:
       your_details:
         title: Your details
@@ -1567,6 +1631,7 @@ en_US:
           placeholder: e.g. 07987654321
       billing_address:
         title: Billing address
+      address:
         address1:
           label: Address (Street + House Number)
           placeholder: e.g. Flat 1 Elm apartments
@@ -1590,6 +1655,21 @@ en_US:
     step2:
       payment_method:
         title: Payment method
+      form:
+        card_number:
+          label: Card number
+          placeholder: e.g. 4242 4242 4242 4242
+        card_verification_value:
+          label: CVC
+        card_month:
+          label: Month
+        card_year:
+          label: Year
+        stripe:
+          use_saved_card: Use saved card
+          use_new_card: Enter your card identifiers
+          save_card: Save card for future use
+          create_new_card: or enter new card details below
       explaination: You can review and confirm your order in the next step which includes the final costs.
       submit: Next - Order summary
       cancel: Back to your details
@@ -1599,6 +1679,8 @@ en_US:
         edit: Edit your details
       billing_address:
         title: Billing address
+      shipping_address:
+        title: Shipping address
       delivery_info:
         title: Delivery info
       payment_method:
@@ -1613,9 +1695,13 @@ en_US:
       submit: Complete order
       cancel: Back to Payment method
     errors:
+      global: "Saving failed, please update the highlighted fields."
+      terms_not_accepted: Please accept Terms and Conditions
       required: Field cannot be blank
       invalid_number: "Please enter a valid phone number"
       invalid_email: "Please enter a valid email address"
+      select_a_shipping_method: Select a shipping method
+      select_a_payment_method: Select a payment method
   order_paid: PAID
   order_not_paid: NOT PAID
   order_total: Total order
@@ -1715,6 +1801,7 @@ en_US:
   producer_mail_order_text: "Here is a summary of the orders for your products:"
   producer_mail_delivery_instructions: "Stock pickup/delivery instructions:"
   producer_mail_signoff: "Thanks and best wishes"
+  producer_mail_order_customer_text: "Here is a summary of the orders grouped by customers"
   shopping_oc_closed: Orders are closed
   shopping_oc_closed_description: "Please wait until the next cycle opens (or contact us directly to see if we can accept any late orders)"
   shopping_oc_last_closed: "The last cycle closed %{distance_of_time} ago"
@@ -2212,6 +2299,7 @@ en_US:
   calculator_values: "Calculator values"
   calculator_settings_warning: "If you are changing the calculator type, you must save first before you can edit the calculator settings"
   calculator_preferred_unit_error: "must be kg or lb"
+  calculator_preferred_value_error: "Invalid input. Please use only numbers. For example: 10, 5.5, -20"
   flat_percent_per_item: "Flat Percent (per item)"
   flat_rate_per_item: "Flat Rate (per item)"
   flat_rate_per_order: "Flat Rate (per order)"
@@ -2587,7 +2675,7 @@ en_US:
     resolve_errors: Please resolve the following errors
     more_items: "+ %{count} More"
     default_card_updated: Default Card Updated
-    default_card_voids_auth: Changing your default card will remove shops' existing authorizations to charge it. You can re-authorize shops after updating the default card. Do you wish to change the default card?"
+    default_card_voids_auth: Changing your default card will remove shops' existing authorizations to charge it. You can re-authorize shops after updating the default card. Do you wish to change the default card?
     cart:
       add_to_cart_failed: >
         There was a problem adding this product to the cart. Perhaps it has become
@@ -2626,6 +2714,8 @@ en_US:
           title: "Uploading Terms and Conditions"
           message_1: "All your buyers will have to agree to them once at checkout. If you update the file, all your buyers will have to agree to them again at checkout."
           message_2: "For buyers with subscriptions, you need to email them the Terms and Conditions (or the changes to them) for now, nothing will notify them about these new Terms and Conditions."
+        business_address_info:
+          message: "Company Legal Name, Legal Address and Legal Phone number are used for businesses that invoice from a legal entity registered with different details to their public trading information. These details will ONLY be used on invoices. If these details are blank your public Name, Address and Phone Number will be used on invoices."
       panels:
         save: SAVE
         saved: SAVED
@@ -2783,6 +2873,7 @@ en_US:
           invalid: "Invalid"
         quantity_adjusted: "Insufficient stock available. Line item updated to maximum available quantity."
         quantity_unchanged: "Quantity unchanged from previous amount."
+        cannot_remove_last_item: "Sorry, we can't remove last item from order. Please cancel order instead."
       resend_user_email_confirmation:
         resend: "Resend"
         sending: "Resend..."
@@ -3403,6 +3494,7 @@ en_US:
       orders:
         add_product:
           cannot_add_item_to_canceled_order: "Cannot add item to canceled order"
+          include_out_of_stock_variants: "Include variants with no available stock"
         index:
           listing_orders: "Listing Orders"
           new_order: "New Order"
@@ -3556,6 +3648,7 @@ en_US:
             no_payment_via_admin_backend: Paypal payments cannot be captured in the Backoffice
       products:
         image_upload_error: "The product image was not recognised. Please upload an image in PNG or JPG format."
+        paperclip_image_error: "Paperclip returned errors for file '%{attachment_file_name}' - check ImageMagick installation or image source file."
         new:
           title: "New Product"
           new_product: "New Product"
@@ -3660,6 +3753,7 @@ en_US:
           shipment_state: "Shipment State"
           email: "Email"
           total: "Total"
+          bill_address_lastname: "Name"
       general_settings:
         edit:
           legal_settings: "Legal Settings"
@@ -3689,6 +3783,7 @@ en_US:
       flatpickr_datetime_format: "d-m-Y H:i"
       today: "Today"
       now: "Now"
+      close: "Close"
     orders:
       error_flash_for_unavailable_items: "An item in your cart has become unavailable. Please update the selected quantities."
       edit:

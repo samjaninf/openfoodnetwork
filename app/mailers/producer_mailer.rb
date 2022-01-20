@@ -38,6 +38,7 @@ class ProducerMailer < Spree::BaseMailer
     @receival_instructions = @order_cycle.receival_instructions_for(@producer)
     @total = total_from_line_items(line_items)
     @tax_total = tax_total_from_line_items(line_items)
+    @customer_line_items = set_customer_data(line_items)
   end
 
   def subject
@@ -64,7 +65,7 @@ class ProducerMailer < Spree::BaseMailer
       from_order_cycle(order_cycle).
       sorted_by_name_and_unit_value.
       merge(Spree::Product.with_deleted.in_supplier(producer)).
-      merge(Spree::Order.by_state('complete'))
+      merge(Spree::Order.by_state(["complete", "resumed"]))
   end
 
   def total_from_line_items(line_items)
@@ -73,5 +74,20 @@ class ProducerMailer < Spree::BaseMailer
 
   def tax_total_from_line_items(line_items)
     Spree::Money.new line_items.to_a.sum(&:included_tax)
+  end
+
+  def set_customer_data(line_items)
+    return unless @coordinator.show_customer_names_to_suppliers?
+
+    line_items.map do |line_item|
+      {
+        sku: line_item.variant.sku,
+        supplier_name: line_item.product.supplier.name,
+        product_and_full_name: line_item.product_and_full_name,
+        quantity: line_item.quantity,
+        first_name: line_item.order.billing_address.first_name,
+        last_name: line_item.order.billing_address.last_name
+      }
+    end.sort_by { |line_item| [line_item[:last_name].downcase, line_item[:first_name].downcase] }
   end
 end
